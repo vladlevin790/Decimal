@@ -148,7 +148,7 @@ Return value - code error:
 - *If there is a fractional part in a decimal number, it should be discarded (for example, 0.9 is converted to 0)*
 
 
-### Another functions
+### Other functions
 
 | Description | Function                                                         | 
 | ------ |------------------------------------------------------------------|
