@@ -12,7 +12,7 @@ int s21_get_bit(int src, int index);
 // @param start начальный индекс бита
 // @param end конечный индекс бита
 // @return Возвращает диапазон бит в виде числа
-int s21_get_range(int src, int start, int end);
+int s21_get_range_bits(int src, int start, int end);
 
 // @brief Установка бита числа по индексу
 // @param src число, для которого нужно установить бит
