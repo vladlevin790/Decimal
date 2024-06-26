@@ -2,7 +2,7 @@
 #define S21_DECIMAL_HELPER_H_
 
 #include "s21_decimal.h"
-#include "s21_binary.h"
+#include "binary/s21_binary.h"
 
 // @brief Получение знака десятичного числа
 // @param s21_decimal decimal, в котором лежат bits
