@@ -1,5 +1,4 @@
 #include <check.h>
-
 #include "../s21_decimal.h"
 #include "../binary/s21_binary.h"
 

@@ -1,8 +1,4 @@
 #include "main.h"
-#include "../binary/s21_binary.h"
-#include "../s21_decimal.h"
-
-#include <stdio.h>
 
 int main(void) {
   // Suite* suite = suite_create("s21_decimal_tests");

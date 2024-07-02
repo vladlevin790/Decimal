@@ -1,7 +1,7 @@
 #ifndef S21_DECIMAL_H_
 #define S21_DECIMAL_H_
 
-#include <stdio.h>
+#include <stdio.h> // TODO: убрать
 
 #ifndef INT_MIN
 #define INT_MIN -2147483648
