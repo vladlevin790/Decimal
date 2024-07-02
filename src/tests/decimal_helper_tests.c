@@ -1,9 +1,8 @@
 #include <check.h>
-#include <limits.h>
 
 #include "../s21_decimal.h"
 #include "../binary/s21_binary.h"
-#include "../s21_decimal_helper.h"
+#include "../decimal_helper/s21_decimal_helper.h"
 
 START_TEST(test_0) {
   s21_decimal decimal = {0};
