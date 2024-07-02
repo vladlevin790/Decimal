@@ -16,6 +16,10 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
         for (int i = 0; i < 32; i++) {
             *dst += get_decimal_digit_by_index(truncated_decimal, i) * pow(2, i);
         }
+
+        if (get_decimal_sign(src) && *dst != INT_MIN) {
+            *dst *= -1;
+        }
     }
     
     return result_code;
