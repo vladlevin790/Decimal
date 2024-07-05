@@ -35,6 +35,7 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
 
 s21_decimal parse_float_str_to_decimal(char* float_str) {
     s21_decimal decimal = get_new_decimal();
+    s21_decimal decimal_tmp = get_new_decimal();
 
     int is_fractional = 0, curr_fractional_pow = 1, count_digits = 7;
     while (*float_str && *float_str != 'e' && count_digits > 0) {
@@ -42,7 +43,7 @@ s21_decimal parse_float_str_to_decimal(char* float_str) {
             if (is_fractional && *float_str == '0') {
                 curr_fractional_pow++;
             } else {
-                s21_decimal decimal_tmp = get_new_decimal();
+                clear_decimal(&decimal_tmp);
 
                 s21_from_int_to_decimal(pow(10, curr_fractional_pow), &decimal_tmp);
                 s21_mul(decimal, decimal_tmp, &decimal);
@@ -62,7 +63,7 @@ s21_decimal parse_float_str_to_decimal(char* float_str) {
 
     // Заполнение целой части нулями, если в 7 чисел она не влезла
     while (*float_str && *float_str >= '0' && *float_str <= '9' && !is_fractional) {
-        s21_decimal decimal_tmp = get_new_decimal();
+        clear_decimal(&decimal_tmp);
 
         s21_from_int_to_decimal(10, &decimal_tmp);
         s21_mul(decimal, decimal_tmp, &decimal);
