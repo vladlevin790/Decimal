@@ -44,6 +44,10 @@ s21_decimal get_new_decimal();
 // @param s21_decimal* число, в котором лежат bits
 void clear_decimal(s21_decimal* decimal);
 
+// @brief Проверяет, является ли s21_decimal корректным
+// @param s21_decimal число
+// @return 0 - число является корректным, 1 - в противном случае
+int check_decimal(s21_decimal decimal);
 
 // @brief Проверяет, находится ли int в допустимом диапазоне
 // @param decimal - число, которое нужно проверить

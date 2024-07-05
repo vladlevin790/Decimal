@@ -5,12 +5,12 @@
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
     int result_code = 0;
 
-    if (dst == s21_NULL) {
+    if (dst == s21_NULL || check_decimal(src)) {
         result_code = 1;
     } else {
         // TODO: возможно тут нужно считать сначала в double,
         // а уже после переводить double во float и возращать
-        
+
         *dst = 0;
 
         for (int i = 0; i < 96; i++) {

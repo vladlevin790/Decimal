@@ -71,6 +71,17 @@ void clear_decimal(s21_decimal* decimal) {
 }
 
 
+int check_decimal(s21_decimal decimal) {
+    int result_code = 0;
+
+    int exponent = get_decimal_exponent(decimal);
+    if (exponent < 0 || exponent > 28) {
+        result_code = 1;
+    }
+
+    return result_code;
+}
+
 int check_int_range(s21_decimal decimal) {
     int is_error = 0;
 
