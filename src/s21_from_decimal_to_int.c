@@ -9,7 +9,7 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
     if (dst == s21_NULL || check_int_range(src)) {
         result_code = 1;
     } else {
-        s21_decimal truncated_decimal = {0};
+        s21_decimal truncated_decimal = get_new_decimal();
         // TODO: s21_truncate(src, &truncated_decimal);
 
         *dst = 0;

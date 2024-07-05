@@ -36,9 +36,13 @@ int get_decimal_digit_by_index(s21_decimal decimal, int index);
 // @param value Значение, которое устанавливается в разряд (0 или 1)
 void set_decimal_digit_by_index(s21_decimal* decimal, int index, int value);
 
-// @brief Сбрасывает число (bits[0], bits[1], bits[2] обнуляются)
+// @brief Создает и инициализирует новый экземпляр структуры s21_decimal
+// @return Новый экземпляр структуры s21_decimal
+s21_decimal get_new_decimal();
+
+// @brief Сбрасывает все биты у s21_decimal
 // @param s21_decimal* число, в котором лежат bits
-void clear_decimal_digit(s21_decimal* decimal);
+void clear_decimal(s21_decimal* decimal);
 
 
 // @brief Проверяет, находится ли int в допустимом диапазоне

@@ -7,7 +7,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
         return 1;
     }
 
-    clear_decimal_digit(dst);
+    clear_decimal(dst);
     set_decimal_sign(dst, src < 0);
     set_decimal_exponent(dst, 0);
 
@@ -24,7 +24,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
 
     // Если число == INT_MIN, то добавляем 1
     if (is_min_value) {
-        s21_decimal tmp_decimal = {0};
+        s21_decimal tmp_decimal = get_new_decimal();
         tmp_decimal.bits[0] = s21_set_bit(tmp_decimal.bits[0], 0);
 
         // TODO: s21_add(*dst, tmp_decimal, dst);

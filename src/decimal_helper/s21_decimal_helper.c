@@ -56,10 +56,18 @@ void set_decimal_digit_by_index(s21_decimal* decimal, int index, int value) {
     }
 }
 
-void clear_decimal_digit(s21_decimal* decimal) {
+s21_decimal get_new_decimal() {
+    s21_decimal decimal = {0};
+    clear_decimal(&decimal);
+
+    return decimal;
+}
+
+void clear_decimal(s21_decimal* decimal) {
     decimal->bits[0] = 0;
     decimal->bits[1] = 0;
     decimal->bits[2] = 0;
+    decimal->bits[3] = 0;
 }
 
 

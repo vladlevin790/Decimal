@@ -13,8 +13,10 @@ int main(void) {
   // srunner_run_all(runner, CK_NORMAL);
   // srunner_free(runner);
 
-  int a = (0b00000001000000000110000000001100);
-  printf("a = %d\n", a);
+  char s[1024] = {0};
+  float a = 0.000000000000000000000000000123451234567899873654321f * pow(10, 23);
+  sprintf(s, "%.15f", a);
+  printf("%s\n", s);
 
   return 0;
 }
