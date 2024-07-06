@@ -42,9 +42,3 @@ int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
 
     return result_code;
 }
-
-
-// 123      123.333
-// 1230     123.333
-// 12300    123.333
-// 123000   123.333
