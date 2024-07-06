@@ -8,8 +8,6 @@ int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
     int sign_1 = get_decimal_sign(value_1);
     int sign_2 = get_decimal_sign(value_2);
 
-    
-
     if (sign_1 != sign_2) {
         // Если второе число отрицательное, то возвращаем 1 - TRUE
         result_code = sign_2;
@@ -36,7 +34,7 @@ int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
             int bit_2 = get_decimal_digit_by_index(value_2, i);
 
             if (bit_1 != bit_2) {
-                result_code = bit_1 > bit_2;
+                result_code = (sign_1 && bit_1 < bit_2) || (!sign_1 && bit_1 > bit_2);
                 is_exit = 1;
             }
         }
