@@ -25,23 +25,29 @@ void set_decimal_sign(s21_decimal* decimal, int sign);
 void set_decimal_exponent(s21_decimal* decimal, int exponent);
 
 // @brief Получает значение бита у decimal в указанной позиции
-// @param decimal Указатель на структуру s21_decimal, в которой устанавливается значение разряда
+// @param s21_decimal Указатель на структуру s21_decimal, в которой устанавливается значение разряда
 // @param index Индекс разряда (0 - 95)
 // @return Значение бита (0 или 1)
 int get_decimal_digit_by_index(s21_decimal decimal, int index);
 
 // @brief Устанавливает бит для decimal в указанной позиции
-// @param decimal Указатель на структуру s21_decimal, в которой устанавливается значение разряда
+// @param s21_decimal* Указатель на структуру s21_decimal, в которой устанавливается значение разряда
 // @param index Индекс разряда (0 - 95)
 // @param value Значение, которое устанавливается в разряд (0 или 1)
 void set_decimal_digit_by_index(s21_decimal* decimal, int index, int value);
+
+// @brief Побитово сдвигает число влево
+// @param s21_decimal* Указатель на структуру s21_decimal
+// @param shift Количество позиций для сдвига
+// @return Код результата операции (0, если сдвиг возможен без потерь битов, 1 в противном случае)
+int left_shift_decimal(s21_decimal *decimal, int shift);
 
 // @brief Создает и инициализирует новый экземпляр структуры s21_decimal
 // @return Новый экземпляр структуры s21_decimal
 s21_decimal get_new_decimal();
 
 // @brief Сбрасывает все биты у s21_decimal
-// @param s21_decimal* число, в котором лежат bits
+// @param s21_decimal* Указатель на структуру s21_decimal
 void clear_decimal(s21_decimal* decimal);
 
 // @brief Получает количество битов в десятичном числе

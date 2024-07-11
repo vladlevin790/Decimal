@@ -56,6 +56,29 @@ void set_decimal_digit_by_index(s21_decimal* decimal, int index, int value) {
     }
 }
 
+int left_shift_decimal(s21_decimal *decimal, int shift) {
+    int result_code = 0;
+
+    // Проверяем, возможно ли сдвинуть без потери битов
+    for (int i = 95; i > 95 - shift && result_code == 0; i--) {
+        if (get_decimal_digit_by_index(*decimal, i)) {
+            result_code = 1;
+        }
+    }
+
+    if (result_code == 0) {
+        for (int i = 95; i >= 0; i--) {
+            if (i < shift) {
+                set_decimal_digit_by_index(decimal, i, 0);
+            } else {
+                set_decimal_digit_by_index(decimal, i, get_decimal_digit_by_index(*decimal, i - shift));
+            }
+        }
+    }
+
+    return result_code;
+}
+
 s21_decimal get_new_decimal() {
     s21_decimal decimal = {0};
     clear_decimal(&decimal);
