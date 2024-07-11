@@ -44,6 +44,11 @@ s21_decimal get_new_decimal();
 // @param s21_decimal* число, в котором лежат bits
 void clear_decimal(s21_decimal* decimal);
 
+// @brief Получает количество битов в десятичном числе
+// @param s21_decimal число
+// @return Количество битов в десятичном числе
+int get_count_digits(s21_decimal decimal);
+
 // @brief Проверяет, является ли s21_decimal корректным
 // @param s21_decimal число
 // @return 0 - число является корректным, 1 - в противном случае

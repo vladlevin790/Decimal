@@ -70,6 +70,17 @@ void clear_decimal(s21_decimal* decimal) {
     decimal->bits[3] = 0;
 }
 
+int get_count_digits(s21_decimal decimal) {
+    int count = 0;
+
+    for (int i = 95; i >= 0 && count == 0; i--) {
+        if (get_decimal_digit_by_index(decimal, i)) {
+            count = i + 1;
+        }
+    }
+
+    return count;
+}
 
 int check_decimal(s21_decimal decimal) {
     int result_code = 0;
