@@ -30,16 +30,7 @@ int s21_div_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result
     int count_digits_1 = get_count_digits(value_1);
     int count_digits_2 = get_count_digits(value_2);
 
-    for (int i = 0; i < count_digits_2 && result_code == 0; i++) {
-        // Если сейчас идёт умножение на 0
-        if (!get_decimal_digit_by_index(value_2, i)) {
-            continue;
-        }
-        
-        for (int j = 0; j < count_digits_1 && result_code == 0; j++) {
-            result_code = s21_add(result, value_1, &result);
-        }
-    }
+    
 
     return result_code;
 }

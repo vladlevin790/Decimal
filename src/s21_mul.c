@@ -10,7 +10,12 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         // TODO: какой код ошибки?
     } else {
         set_decimal_sign(result, get_decimal_sign(value_1) || get_decimal_sign(value_2));
-        set_decimal_exponent(result, get_decimal_exponent(value_1) + get_decimal_exponent(value_2));
+
+        int exponent = get_decimal_exponent(value_1) + get_decimal_exponent(value_2);
+        if (exponent > 28) {
+            exponent = 28;
+        }
+        set_decimal_exponent(result, exponent);
 
         // всю дробную часть воспринимаем, как целые числа
         set_decimal_exponent(&value_1, 0);
@@ -38,18 +43,10 @@ int s21_mul_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result
     int count_digits_2 = get_count_digits(value_2);
 
     for (int i = 0; i < count_digits_2 && result_code == 0; i++) {
-        if (i > 0) {
-            result_code = left_shift_decimal(&value_1, 1);
-        }
-
-        // Если сейчас идёт умножение на 0
-        if (!get_decimal_digit_by_index(value_2, i)) {
-            continue;
-        }
-        
-        for (int j = 0; j < count_digits_1 && result_code == 0; j++) {
+        if (get_decimal_digit_by_index(value_2, i)) {
             result_code = s21_add(result, value_1, &result);
         }
+        left_shift_decimal(&value_1, 1);
     }
 
     return result_code;
