@@ -24,7 +24,7 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
 
     float tmp = 0.0;
     s21_from_decimal_to_float(value, &tmp);
-    int tmp_res = (int)tmp;
+    int tmp_res = (int)tmp; // TODO: int здесь не подойдёт, т.к. decimal в 3 раза больше int
     s21_from_int_to_decimal(tmp_res, result);
   }
   return result_code;
@@ -54,7 +54,7 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
     s21_decimal tmp_sub = {0};
     s21_truncate(value, &tmp);
     s21_sub(value, tmp, &tmp_sub);
-    for (int i = 0; i < 95; i++) {
+    for (int i = 0; i < 96; i++) {
       if (!(s21_get_bit)) {
         s21_decimal tmp_1 = {0};
         s21_from_int_to_decimal(1, &tmp_1);
