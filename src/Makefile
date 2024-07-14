@@ -6,7 +6,6 @@ all: clean s21_decimal.a
 
 s21_decimal.a: $(C_OBJS)
 	ar rcs ./$@ $^
-	ranlib s21_decimal.a
 
 %.o: %.c
 	gcc -c -std=c11 -g -Wall -Werror -Wextra $< -o $@
@@ -20,8 +19,8 @@ clean:
 	rm -rf *.gcno *.gcda *.info report.out *.gcov
 
 gcov_report: clean s21_decimal.a
-	gcc -fprofile-arcs -ftest-coverage -Wall -Werror -Wextra -std=c11 *.c ./common/*.c $(TESTS_DIR)/*.c -o a.o -L. s21_decimal.a -lcheck -lm
-	./a.o
+	gcc -fprofile-arcs -ftest-coverage -Wall -Werror -Wextra -std=c11 $(TESTS_DIR)/*.c -o tmp_gcov.o -L. s21_decimal.a -lcheck -lm
+	./tmp_gcov.o
 	gcov -f $(C_SRCS)
 	lcov -t "gcov_report" -o Coverage_Report.info -c -d .
 	genhtml -o ./report Coverage_Report.info

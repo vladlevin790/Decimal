@@ -6,7 +6,7 @@
 
 int s21_div_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_set_decimal_from_int_part(int* arr, int arr_length, s21_decimal *result);
-int s21_set_decimal_from_fract_part(int* arr, int arr_length, s21_decimal *result)
+int s21_set_decimal_from_fract_part(int* arr, int arr_length, s21_decimal *result);
 
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int result_code = 0;
