@@ -46,6 +46,16 @@ int left_shift_decimal(s21_decimal *decimal, int shift);
 // @return Новый экземпляр структуры s21_decimal
 s21_decimal get_new_decimal();
 
+// @brief Создает и инициализирует новый экземпляр структуры s21_decimal со значением
+// @param value Значение decimal
+// @return Новый экземпляр структуры s21_decimal
+s21_decimal get_decimal_with_int_value(int value);
+
+// @brief Создает и инициализирует новый экземпляр структуры s21_decimal со значением
+// @param value Значение decimal
+// @return Новый экземпляр структуры s21_decimal
+s21_decimal get_decimal_with_float_value(int value);
+
 // @brief Сбрасывает все биты у s21_decimal
 // @param s21_decimal* Указатель на структуру s21_decimal
 void clear_decimal(s21_decimal* decimal);

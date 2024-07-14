@@ -86,6 +86,22 @@ s21_decimal get_new_decimal() {
     return decimal;
 }
 
+s21_decimal get_decimal_with_int_value(int value) {
+    s21_decimal decimal = get_new_decimal();
+
+    s21_from_int_to_decimal(value, &decimal);
+
+    return decimal;
+}
+
+s21_decimal get_decimal_with_float_value(float value) {
+    s21_decimal decimal = get_new_decimal();
+
+    s21_from_float_to_decimal(value, &decimal);
+
+    return decimal;
+}
+
 void clear_decimal(s21_decimal* decimal) {
     decimal->bits[0] = 0;
     decimal->bits[1] = 0;
