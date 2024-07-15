@@ -59,7 +59,7 @@ START_TEST(test_5) {
   
   ck_assert_int_eq(0, result);
   ck_assert_int_eq(1, get_decimal_sign(decimal));
-for (int i = 31; i >= 0; i--)
+  for (int i = 31; i >= 0; i--)
     {
         printf("%d", s21_get_bit(decimal.bits[0], i));
     }

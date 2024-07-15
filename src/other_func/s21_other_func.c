@@ -38,7 +38,7 @@ int s21_round(s21_decimal value, s21_decimal *result) {
     clear_decimal(result);
     s21_decimal tmp = {0};
     s21_from_float_to_decimal(0.5, &tmp);
-    s21_add(value, tmp, *result);
+    s21_add(value, tmp, result);
     s21_truncate(*result, result);
   }
   return result_code;
@@ -46,19 +46,23 @@ int s21_round(s21_decimal value, s21_decimal *result) {
 
 int s21_floor(s21_decimal value, s21_decimal *result) {
   int result_code = 0;
+
   if (result == s21_NULL || check_decimal(value)) {
     result_code = 1;
   } else {
     clear_decimal(result);
-    s21_decimal tmp = {0};
-    s21_decimal tmp_sub = {0};
-    s21_truncate(value, &tmp);
-    s21_sub(value, tmp, &tmp_sub);
-    for (int i = 0; i < 96; i++) {
-      if (!(s21_get_bit)) {
-        s21_decimal tmp_1 = {0};
-        s21_from_int_to_decimal(1, &tmp_1);
-        s21_sub(value, tmp_1, &value);
+
+    s21_decimal tmp = get_new_decimal();
+    s21_decimal tmp_sub = get_new_decimal();;
+
+    result_code = s21_truncate(value, &tmp);
+    if (result_code == 0) {
+      result_code = s21_sub(value, tmp, &tmp_sub);
+    }
+
+    for (int i = 0; i < 96 && result_code == 0; i++) {
+      if (get_decimal_digit_by_index(tmp_sub, i)) {
+        s21_sub(value, get_decimal_with_int_value(1), &value);
         break;
       }
     }

@@ -39,12 +39,11 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 int s21_mul_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int result_code = 0;
     
-    int count_digits_1 = get_count_digits(value_1);
     int count_digits_2 = get_count_digits(value_2);
 
     for (int i = 0; i < count_digits_2 && result_code == 0; i++) {
         if (get_decimal_digit_by_index(value_2, i)) {
-            result_code = s21_add(result, value_1, &result);
+            result_code = s21_add(*result, value_1, result);
         }
         left_shift_decimal(&value_1, 1);
     }

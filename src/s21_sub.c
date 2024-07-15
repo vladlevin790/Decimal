@@ -2,6 +2,81 @@
 #include "binary/s21_binary.h"
 #include "decimal_helper/s21_decimal_helper.h"
 
+int comparison_of_numbers(s21_decimal value_1, s21_decimal value_2) { //сравнивает value1  с вторым если 1-ое больше возвращает 0 иначе 1
+    int count_1 = 0, count_2 = 0, flag = 0, bit_flag = 0;
+    for (int i = 0; i<=2; i++) {
+        for (int j = 0; j<32; j++) {
+            if (s21_get_bit(value_1.bits[i], j) == 1) {
+                if (i>0 && bit_flag == 0) {
+                    count_1 = 0;
+                    count_2 =0;
+                    bit_flag =1;
+                }
+                count_1+= j+1;                
+                flag = 1;
+            }
+            if (s21_get_bit(value_2.bits[i], j) == 1) {
+                if (i>0 && bit_flag == 0) {
+                    count_1 =0;
+                    count_2 = 0;
+                    bit_flag = 1;
+                }
+                count_2+= j+1;                
+                flag = 0;
+            }
+        }
+        bit_flag = 0;
+    }
+    printf("value 1 = %d,  value 2 = %d\n", count_1, count_2);
+    if (count_1 >= count_2 || flag == 1) return 0;
+    return 1;
+}
+
+void swap(s21_decimal *value_1, s21_decimal *value_2) {
+    s21_decimal temp = *value_2;
+    *value_2 = *value_1;
+    *value_1 = temp;
+}
+
+void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2) { // выравнивает экспоненту
+  s21_decimal res = {0}, temp;
+  if (get_decimal_exponent(*value_1) != get_decimal_exponent(*value_2)) {
+    if (get_decimal_exponent(*value_1) > get_decimal_exponent(*value_2)) {
+      temp = *value_2;
+      int i = get_decimal_exponent(*value_1) - get_decimal_exponent(*value_2);
+      while (i >= 0) {
+        *value_2 = temp;
+        for (int j=0; j<9; j++) {
+          s21_add(temp, *value_2, &res);
+          temp = res;
+          // printf("функция экспонент\n");
+          // print_decimal(temp);
+          // printf("\n");
+          for (int i = 0; i<3; res.bits[i]=0, i++); // за нуляем структуру result
+        }
+        i--;
+      }
+      int exp = get_decimal_exponent(*value_1);
+      set_decimal_exponent(value_2, exp);
+    } else {
+        temp = *value_1;
+        int i = get_decimal_exponent(*value_2) - get_decimal_exponent(*value_1);
+        while (i >= 0) {
+          *value_1 = temp;
+          for (int j=0; j<9; j++) {
+            s21_add(temp, *value_1, &res);
+            temp = res;
+            for (int i = 0; i<3; res.bits[i]=0, i++); // за нуляем структуру result
+          }
+          i--;
+        }
+      int exp = get_decimal_exponent(*value_2);
+      set_decimal_exponent(value_1, exp);
+    }
+  }
+}
+
+
 void helper_sub(int *digit, int index); // функция которая ищет у какого индекса числа можно занять десяток "1" если находит заменяет еденицу "0"
 // далее бежит назад от наеденного индекса до начального индекса при этом попутно заменяя индексы которые были пропущены так как уних нельзя было занять десяток 
 // были равны 0, на еденицы (1), 
@@ -102,7 +177,7 @@ void helper_sub(int *digit, int index) { // функция которая ище
 // были равны 0, на еденицы (1), 
     int s_index; // переменаая для индекса первого вхождения еденицы;
     int d = *digit; //За сейвил на всякий случай на входе значение числа
-    for (int i = (index + 1); i < 33 ; i++) {
+    for (int i = (index + 1); i < 32 ; i++) {
         if (s21_get_bit(d, i) == 1) {s_index = i; break;}
         s_index = i; // выполниться если не найдеться бита у кторого можно занять еденицу;
     }
