@@ -35,8 +35,8 @@ int s21_div_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result
     
     int digit_index_1 = get_count_digits(value_1) - 1;
     
-    int int_digits[BYTES_FOR_DIGIT] = {{0, 0, 0, 0}};
-    int fract_digits[BYTES_FOR_DIGIT] = {{0, 0, 0, 0}};
+    int int_digits[BYTES_FOR_DIGIT] = {0, 0, 0, 0};
+    int fract_digits[BYTES_FOR_DIGIT] = {0, 0, 0, 0};
     int curr_int_index = 0, curr_fract_index = 0;
 
     const int max_index = (BYTES_FOR_DIGIT * sizeof(int) * 8) - 1;
@@ -49,7 +49,7 @@ int s21_div_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result
         // Если можем взять число из делимого
         if (digit_index_1 >= 0) {
             if (get_decimal_digit_by_index(value_1, digit_index_1)) {
-                result_code = s21_add(curr_divisible, get_decimal_with_value(1), &curr_divisible);
+                result_code = s21_add(curr_divisible, get_decimal_with_int_value(1), &curr_divisible);
             }
             digit_index_1--;
         }
