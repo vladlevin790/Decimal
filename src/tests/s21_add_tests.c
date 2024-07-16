@@ -214,11 +214,11 @@ END_TEST
 START_TEST(test_0) {
 	s21_decimal num_1 = {{0, 5, 3, 0}};
   set_decimal_exponent(&num_1, 3);
-	s21_decimal num_2 = {{65, 0, 4, 131072}};
+	s21_decimal num_2 = {{65, 0, 4, 0}};
   set_decimal_exponent(&num_2, 2);
 	s21_decimal result = {0};
 	s21_decimal expected = {{650, 5, 43, 0}};
-  set_decimal_exponent(&result, 3);
+  set_decimal_exponent(&expected, 3);
 
 	int res_code = s21_sub(num_1, num_2, &result);
 	ck_assert_int_eq(res_code, 0);
@@ -242,6 +242,8 @@ START_TEST(test_1) {
 }
 END_TEST
 
+
+
 START_TEST(test_2) {
 	s21_decimal num_1 = {{1742750924, -765097718, 2020532269, 720896}};
 	s21_decimal num_2 = {{-1135548987, -1729193528, 1968365552, -2146238464}};
@@ -253,6 +255,20 @@ START_TEST(test_2) {
 	for (int i = 0; i < 4; ++i) {
 		ck_assert_int_eq(result.bits[i], expected.bits[i]);
 	}
+}
+END_TEST
+
+START_TEST(test_3) {
+        s21_decimal num_1 = {{742984849, -675958617, 1113850927, -2147483648}};
+        s21_decimal num_2 = {{-135023630, 1435092952, -1173774756, 0}};
+        s21_decimal result = {0};
+        s21_decimal expected = {{-878008479, 2111051569, 2007341612, 0}};
+
+        int res_code = s21_add(num_1, num_2, &result);
+        ck_assert_int_eq(res_code, 0);
+        for (int i = 0; i < 4; ++i) {
+                ck_assert_int_eq(result.bits[i], expected.bits[i]);
+        }
 }
 END_TEST
 
@@ -276,6 +292,7 @@ TCase *arithmetic_add_tests(void) {
   tcase_add_test(test_cases, test_0);
   tcase_add_test(test_cases, test_1);
   tcase_add_test(test_cases, test_2);
+  tcase_add_test(test_cases, test_3);
 
   return test_cases;
 }

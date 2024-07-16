@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+// #include "s21_decimal.h"
 
 // void print_binary(int num){
 //     for(int i=31; i>=0; i--){
@@ -37,17 +37,14 @@
 //     num->bits[3] |= sign << 31;  // |= это побитовое сложение
 // }
 
+#include "s21_decimal.h"
+
 void set_sign(s21_decimal *num, int sign) {
     if (sign)
         num->bits[3] |= 1 << 31;
     else
         num->bits[3] &= ~(1 << 31);
 }
-
-// // устанавливает степень для децимал
-// void set_scale(s21_decimal *num, int scale){
-//     num->bits[3] |= scale << 16;
-// }
 
 void set_scale(s21_decimal *num, int scale) {
     num->bits[3] &= ~(0xFF << 16);  // Clear current scale
@@ -58,19 +55,23 @@ int get_sign(s21_decimal num) {
     return (num.bits[3] >> 31) & 1;
 }
 
-
-
 int get_scale(s21_decimal num) {
     return (num.bits[3] >> 16) & 0xFF;
 }
 
-void get_mantissa(s21_decimal num, int *mantissa) {
+void get_mantissa(s21_decimal num, unsigned int *mantissa) {
     mantissa[0] = num.bits[0];
     mantissa[1] = num.bits[1];
     mantissa[2] = num.bits[2];
 }
 
-int compare_mantissa(int *mantissa1, int *mantissa2) {
+void set_mantissa(s21_decimal *num, unsigned int *mantissa) {
+    num->bits[0] = mantissa[0];
+    num->bits[1] = mantissa[1];
+    num->bits[2] = mantissa[2];
+}
+
+int compare_mantissa(unsigned int *mantissa1, unsigned int *mantissa2) {
     for (int i = 2; i >= 0; i--) {
         if (mantissa1[i] > mantissa2[i]) return 1;
         if (mantissa1[i] < mantissa2[i]) return -1;
@@ -78,17 +79,17 @@ int compare_mantissa(int *mantissa1, int *mantissa2) {
     return 0;
 }
 
-int add_mantissa(int *mantissa1, int *mantissa2, int *result) {
+int add_mantissa(unsigned int *mantissa1, unsigned int *mantissa2, unsigned int *result) {
     unsigned long long carry = 0;
     for (int i = 0; i < 3; i++) {
-        unsigned long long sum = (unsigned long long)(unsigned int)mantissa1[i] + (unsigned int)mantissa2[i] + carry;
-        result[i] = (int)sum;
+        unsigned long long sum = (unsigned long long)mantissa1[i] + mantissa2[i] + carry;
+        result[i] = (unsigned int)sum;
         carry = sum >> 32;
     }
     return carry ? 1 : 0;  // Возвращаем 1, если произошло переполнение
 }
 
-void subtract_mantissa(int *mantissa1, int *mantissa2, int *result) {
+void subtract_mantissa(unsigned int *mantissa1, unsigned int *mantissa2, unsigned int *result) {
     long long borrow = 0;
     for (int i = 0; i < 3; i++) {
         long long diff = (long long)mantissa1[i] - mantissa2[i] - borrow;
@@ -98,10 +99,18 @@ void subtract_mantissa(int *mantissa1, int *mantissa2, int *result) {
         } else {
             borrow = 0;
         }
-        result[i] = (int)diff;
+        result[i] = (unsigned int)diff;
     }
 }
 
+void shift_mantissa_right(unsigned int *mantissa) {
+    unsigned long long borrow = 0;
+    for (int i = 2; i >= 0; i--) {
+        unsigned long long temp = ((unsigned long long)mantissa[i] >> 1) | (borrow << 31);
+        borrow = mantissa[i] & 1;
+        mantissa[i] = (unsigned int)temp;
+    }
+}
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int sign1 = get_sign(value_1);
@@ -109,31 +118,40 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int scale1 = get_scale(value_1);
     int scale2 = get_scale(value_2);
 
-    int mantissa1[3], mantissa2[3];
+    unsigned int mantissa1[3], mantissa2[3], result_mantissa[3] = {0, 0, 0};
     get_mantissa(value_1, mantissa1);
     get_mantissa(value_2, mantissa2);
 
     // Приведение к общему масштабу
     while (scale1 < scale2) {
         if (scale1 < 28) {
-            for (int i = 0; i < 3; i++) mantissa1[i] *= 10;
+            for (int i = 2; i >= 0; i--) {
+                unsigned long long temp = (unsigned long long)mantissa1[i] * 10;
+                if (i > 0) temp += mantissa1[i - 1] >> 28;
+                mantissa1[i] = temp & 0xFFFFFFFF;
+            }
             scale1++;
         } else {
-            return 1;  // Число слишком велико
+            shift_mantissa_right(mantissa2);
+            scale2--;
         }
     }
 
     while (scale2 < scale1) {
         if (scale2 < 28) {
-            for (int i = 0; i < 3; i++) mantissa2[i] *= 10;
+            for (int i = 2; i >= 0; i--) {
+                unsigned long long temp = (unsigned long long)mantissa2[i] * 10;
+                if (i > 0) temp += mantissa2[i - 1] >> 28;
+                mantissa2[i] = temp & 0xFFFFFFFF;
+            }
             scale2++;
         } else {
-            return 2;  // Число слишком велико
+            shift_mantissa_right(mantissa1);
+            scale1--;
         }
     }
-
-    int result_mantissa[3] = {0, 0, 0};
     
+
     if (sign1 == sign2) {
         // Оба числа с одинаковыми знаками
         if (add_mantissa(mantissa1, mantissa2, result_mantissa)) {
@@ -159,6 +177,7 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     }
 
     set_scale(result, scale1);
-    for (int i = 0; i < 3; i++) result->bits[i] = result_mantissa[i];
+    set_mantissa(result, result_mantissa);
     return 0;
 }
+
