@@ -16,7 +16,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     } else if (s21_is_equal(value_2, get_decimal_with_int_value(0))) {
         // TODO: деление на 0
     } else {
-        set_decimal_sign(result, get_decimal_sign(value_1) || get_decimal_sign(value_2));
+        int result_sign = get_decimal_sign(value_1) != get_decimal_sign(value_2);
         
         set_decimal_exponent(&value_1, 0);
         set_decimal_exponent(&value_2, 0);
@@ -25,6 +25,10 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         set_decimal_sign(&value_2, 0);
 
         result_code = s21_div_handle(value_1, value_2, result);
+
+        if (result_code == 0) {
+            set_decimal_sign(result, result_sign);
+        }
     }
 
     return result_code;

@@ -9,7 +9,7 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
         // TODO: какой код ошибки?
     } else {
-        set_decimal_sign(result, get_decimal_sign(value_1) || get_decimal_sign(value_2));
+        int result_sign = get_decimal_sign(value_1) != get_decimal_sign(value_2);
 
         int exponent = get_decimal_exponent(value_1) + get_decimal_exponent(value_2);
         if (exponent > 28) {
@@ -30,6 +30,10 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         // Число слишком мало или равно отрицательной бесконечности
         if (result_code == 0 && get_decimal_exponent(*result) > 28) {
             result_code = 2;
+        }
+
+        if (result_code == 0) {
+            set_decimal_sign(result, result_sign);
         }
     }
 
