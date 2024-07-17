@@ -442,9 +442,27 @@ START_TEST(case_MIN_add_minus_0_5) {
 }
 END_TEST
 
+START_TEST(case_MIN_add_minus_0_6) {
+  s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 2147483648}};
+  s21_decimal num_2 = {{6, 0, 0, 2147549184}};
+  s21_decimal s21_res = {{0, 0, 0, 0}};
+  int return_s21 = s21_add(num_1, num_2, &s21_res);
+  ck_assert_int_eq(return_s21, ERROR_UNDERFLOW);
+}
+END_TEST
+
 START_TEST(case_MAX_add_05) {
   s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 0}};
   s21_decimal num_2 = {{5, 0, 0, 65536}};
+  s21_decimal s21_res = {{0, 0, 0, 0}};
+  int return_s21 = s21_add(num_1, num_2, &s21_res);
+  ck_assert_int_eq(return_s21, ERROR_OVERFLOW);
+}
+END_TEST
+
+START_TEST(case_MAX_add_06) {
+  s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 0}};
+  s21_decimal num_2 = {{6, 0, 0, 65536}};
   s21_decimal s21_res = {{0, 0, 0, 0}};
   int return_s21 = s21_add(num_1, num_2, &s21_res);
   ck_assert_int_eq(return_s21, ERROR_OVERFLOW);
@@ -883,9 +901,11 @@ TCase *arithmetic_add_tests(void) {
   tcase_add_test(test_cases, case_MIN_add_minus_1);
   tcase_add_test(test_cases, case_MAX_add_1);
   tcase_add_test(test_cases, case_MAX_add_05);
+  tcase_add_test(test_cases, case_MAX_add_06);
   tcase_add_test(test_cases, case_MIN_add_minus_0_5);
   tcase_add_test(test_cases, case_MAX_add_minus_0_6);
   tcase_add_test(test_cases, case_MIN_add_0_6);
+  tcase_add_test(test_cases, case_MIN_add_minus_0_6);
   tcase_add_test(test_cases, case_1e_28_add_1e_28);
   tcase_add_test(test_cases, case_minus_1e_28_add_1e_28);
   tcase_add_test(test_cases, case_1e_28_add_minus_1e_28);
