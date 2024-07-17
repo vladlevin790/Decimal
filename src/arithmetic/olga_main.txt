@@ -6,6 +6,51 @@
 #include "binary/s21_binary.h"
 #include "decimal_helper/s21_decimal_helper.h"
 
+
+
+// int get_sign(s21_decimal number) {
+//     int sign;
+//     if ((number.bits[3] & (1 << 31)) == 0) {
+//         sign = 0;
+//     } else {
+//         sign = 1;
+//     }
+//     return sign;
+// }
+
+// void set_sign(s21_decimal* number, int sign) {
+//     if (sign == 0) {
+//         number->bits[3] = number->bits[3] & ~(1 << 31);
+//     } else {
+//         number->bits[3] = number->bits[3] | (1 << 31);
+//     }
+// }
+
+// int get_scale(s21_decimal number) {
+//     int shift = 16;
+//     int scale = 0, i = 0;
+//     while (shift <= 23) {
+//         int bit = ((number.bits[3] & (1 << shift)) != 0);
+//         scale += bit * pow(2, i);
+//         shift++;
+//         i++;
+//     }
+//     return scale;
+// }
+
+// void set_scale(s21_decimal* number, int scale) {
+//     int shift = 16;
+//     while (shift <= 23) {
+//         if (scale > 0 && scale % 2 == 1) {
+//         number->bits[3] = number->bits[3] | (1 << shift);
+//         } else {
+//         number->bits[3] = number->bits[3] & ~(1 << shift);
+//         }
+//         scale /= 2;
+//         shift++;
+//     }
+// }
+
 int get_bit(s21_decimal number, int bit) {
   int sign;
   if ((number.bits[bit / 32] & (1 << bit % 32)) == 0) {
@@ -30,6 +75,13 @@ void initial_num(s21_decimal *number) {
   }
 }
 
+// int s21_from_int_to_decimal(int src, s21_decimal *dst) {
+//     initial_num(dst);
+//     dst->bits[0] = (src >= 0) ? src : -src;
+//     set_decimal_sign(dst, src < 0);
+//     return OK;
+// }
+
 int s21_is_less_simple(s21_decimal dec1, s21_decimal dec2) {
   int is_less = FALSE;
   for (int i = 95; i >= 0; i--) {
@@ -41,6 +93,18 @@ int s21_is_less_simple(s21_decimal dec1, s21_decimal dec2) {
 
   return is_less;
 }
+
+// int s21_is_equal_simple(s21_decimal dec1, s21_decimal dec2) {
+//     int is_equal = TRUE;
+//     for (int i = 95; i >= 0; i--) {
+//         if (get_bit(dec1, i) != get_bit(dec2, i)) {
+//             is_equal = FALSE;
+//             break;
+//         }
+//     }
+
+//     return is_equal;
+// }
 
 int s21_is_less_or_equal_simple(s21_decimal dec1, s21_decimal dec2) {
   return s21_is_less_simple(dec1, dec2) || s21_is_equal(dec1, dec2);
@@ -229,10 +293,6 @@ void normalize(s21_decimal *dec1, s21_decimal *dec2) {
 }
 
 int s21_add(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
-  if (result == s21_NULL) {
-    return 1;
-  }
-
   int add_res_code = S21_DECIMAL_OK;
 
   normalize(&dec1, &dec2);
@@ -264,3 +324,84 @@ int s21_add(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
 
   return add_res_code;
 }
+
+///////////////////////////////////////////////////////////////////////////
+// void print_binary(int num){
+//     for(int i=31; i>=0; i--){
+//         printf("%d", (num>>i) &1);
+//         // if (i%32 == 0){
+//         //     printf("\n");
+//         // }
+//         // if i ==2 сдвиг вправо 00001010 >> 00000010
+//         // было 2^1 + 2^3 = 10
+//         // стало 2^1 = 2
+//         // 00000010 & 1 = 00000010 & 00000001 = 0
+//     }
+//     printf("\n");
+// }
+
+// void print_decimal(s21_decimal num ) {
+//     for (int i = 3; i >=0; i--) {
+//         print_binary(num.bits[i]);
+//         // printf("%d", num.bits[i]);
+//         // if (i != 0) {
+//         //     printf(".");
+//         // }
+
+//     }
+//     printf("\n");
+// }
+
+// void print_decimal_to_int(s21_decimal num) {
+//     for (int i = 0; i <4; i++){
+//         printf("%d : ", num.bits[i]);
+//     }
+//     printf("\n");
+// }
+
+// int main() {
+//     // int num;
+//     // printf("Enter a number: ");
+//     // scanf("%d", &num);
+//     // print_binary(num);
+
+//     // s21_decimal num = {1, 1, 1, 0};  // 2^1 + 2^32 +2^64 = ...
+//     // bits[3] 10000000 00000011 00000000 00000000 = 2^16 + 2^17 + 2^31 =...
+//     // первый 10000000 значит что отрицательное число
+//     // второй 00000011 равен 10^3
+//     // третий и четвертый всегда нули иначе неверное.
+//     // в итоге мы получаем некое число = 2^16 + 2^17 + 2^31 в котором
+//     записана экспонента и знак
+//     // можно устанавливать знак и экспоненту через функции
+//     // set_sing(&num, 1); // устанавливаем знак - отрицательный
+//     // set_scale(&num, 3); // устанавливаем экспоненту
+//     // либо можно записать в bits[3]-2147287040 это будет значить что мы
+//     установили знак минус и экспоненту равную 3
+//     // т.е  s21_decimal num = {1, 1, 1, -2147287040}
+//     // также можно записывать в виде бита {0b0000001111100001, 1, 1,
+//     -2147287040}
+
+//     s21_decimal num =  {{1742750924, -765097718, 2020532269, 720896}};
+//     // set_sign(&num, 1);
+//     print_decimal(num);
+//     print_decimal_to_int(num);
+
+//     s21_decimal num2 = {{-1135548987, -1729193528, 1968365552, -2146238464}};
+//     // set_sign(&num2, 1);
+//     // set_scale(&num2, 3);
+//     print_decimal(num2);
+//     print_decimal_to_int(num2);
+
+// //   s21_decimal num_1 = {{1742750924, -765097718, 2020532269, 720896}};
+// //   s21_decimal num_2 = {{-1135548987, -1729193528, 1968365552,
+// -2146238464}};
+// //   s21_decimal result = {0};
+// //   s21_decimal expected = {{-1640015172, 593591452, 2020532250, 720896}};
+
+//     s21_decimal res_sum = {0};
+//     s21_add(num, num2, &res_sum);
+//     print_decimal(res_sum);
+//     print_decimal_to_int(res_sum);
+
+//     return 0;
+// }

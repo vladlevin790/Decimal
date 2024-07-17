@@ -6,6 +6,39 @@
 #include "binary/s21_binary.h"
 #include "decimal_helper/s21_decimal_helper.h"
 
+
+
+
+int get_decimal_sign(s21_decimal decimal) {
+    return s21_get_bit(decimal.bits[3], 31);
+}
+
+int get_decimal_exponent(s21_decimal decimal) {
+    return s21_get_range_bits(decimal.bits[3], 16, 23);
+}
+
+void set_decimal_sign(s21_decimal* decimal, int sign) {
+    if (sign == 0) {
+        decimal->bits[3] = s21_clear_bit(decimal->bits[3], 31);
+    } else {
+        decimal->bits[3] = s21_set_bit(decimal->bits[3], 31);
+    }
+}
+
+void set_decimal_exponent(s21_decimal* decimal, int exponent) {
+    if (exponent < 0 || exponent > 28) {
+        return;
+    }
+
+    for (int i = 0; i < 8; i++) {
+        if (s21_get_bit(exponent, i)) {
+            decimal->bits[3] = s21_set_bit(decimal->bits[3], 16 + i);
+        } else {
+            decimal->bits[3] = s21_clear_bit(decimal->bits[3], 16 + i);
+        }
+    }
+}
+
 int get_bit(s21_decimal number, int bit) {
   int sign;
   if ((number.bits[bit / 32] & (1 << bit % 32)) == 0) {
@@ -30,6 +63,37 @@ void initial_num(s21_decimal *number) {
   }
 }
 
+int s21_from_int_to_decimal(int src, s21_decimal *dst) {
+    if (dst == s21_NULL) {
+        return 1;
+    }
+
+    clear_decimal(dst);
+    set_decimal_sign(dst, src < 0);
+    set_decimal_exponent(dst, 0);
+
+    int is_min_value = src == INT_MIN;
+
+    if (src < 0) {
+        src += is_min_value; // Добавляем 1, чтобы не выйти за пределы int
+        src *= -1;
+    }
+    
+    for (int i = 0; i < 31; i++) {
+        set_decimal_digit_by_index(dst, i, s21_get_bit(src, i));
+    }
+
+    // Если число == INT_MIN, то добавляем 1
+    if (is_min_value) {
+        s21_decimal tmp_decimal = get_new_decimal();
+        tmp_decimal.bits[0] = s21_set_bit(tmp_decimal.bits[0], 0);
+
+        // TODO: s21_add(*dst, tmp_decimal, dst);
+    }
+
+    return 0;
+}
+
 int s21_is_less_simple(s21_decimal dec1, s21_decimal dec2) {
   int is_less = FALSE;
   for (int i = 95; i >= 0; i--) {
@@ -40,6 +104,30 @@ int s21_is_less_simple(s21_decimal dec1, s21_decimal dec2) {
   }
 
   return is_less;
+}
+
+int s21_is_equal(s21_decimal value_1, s21_decimal value_2){
+    int result_code = 0;
+
+    if (value_1.bits[0] == 0 && value_1.bits[1] == 0
+        && value_1.bits[2] == 0 && value_2.bits[0] == 0
+        && value_2.bits[1] == 0 && value_2.bits[2] == 0) {
+        result_code = 1;
+    } else {
+        int exponent_1 = get_decimal_exponent(value_1);
+        int exponent_2 = get_decimal_exponent(value_2);
+
+        int sign_1 = get_decimal_sign(value_1);
+        int sign_2 = get_decimal_sign(value_2);
+
+        result_code = value_1.bits[0] == value_2.bits[0]
+            && value_1.bits[1] == value_2.bits[1]
+            && value_1.bits[2] == value_2.bits[2]
+            && exponent_1 == exponent_2
+            && sign_1 == sign_2;
+    }
+
+    return result_code;
 }
 
 int s21_is_less_or_equal_simple(s21_decimal dec1, s21_decimal dec2) {
@@ -229,10 +317,6 @@ void normalize(s21_decimal *dec1, s21_decimal *dec2) {
 }
 
 int s21_add(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
-  if (result == s21_NULL) {
-    return 1;
-  }
-
   int add_res_code = S21_DECIMAL_OK;
 
   normalize(&dec1, &dec2);
@@ -264,3 +348,84 @@ int s21_add(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
 
   return add_res_code;
 }
+
+///////////////////////////////////////////////////////////////////////////
+// void print_binary(int num){
+//     for(int i=31; i>=0; i--){
+//         printf("%d", (num>>i) &1);
+//         // if (i%32 == 0){
+//         //     printf("\n");
+//         // }
+//         // if i ==2 сдвиг вправо 00001010 >> 00000010
+//         // было 2^1 + 2^3 = 10
+//         // стало 2^1 = 2
+//         // 00000010 & 1 = 00000010 & 00000001 = 0
+//     }
+//     printf("\n");
+// }
+
+// void print_decimal(s21_decimal num ) {
+//     for (int i = 3; i >=0; i--) {
+//         print_binary(num.bits[i]);
+//         // printf("%d", num.bits[i]);
+//         // if (i != 0) {
+//         //     printf(".");
+//         // }
+
+//     }
+//     printf("\n");
+// }
+
+// void print_decimal_to_int(s21_decimal num) {
+//     for (int i = 0; i <4; i++){
+//         printf("%d : ", num.bits[i]);
+//     }
+//     printf("\n");
+// }
+
+// int main() {
+//     // int num;
+//     // printf("Enter a number: ");
+//     // scanf("%d", &num);
+//     // print_binary(num);
+
+//     // s21_decimal num = {1, 1, 1, 0};  // 2^1 + 2^32 +2^64 = ...
+//     // bits[3] 10000000 00000011 00000000 00000000 = 2^16 + 2^17 + 2^31 =...
+//     // первый 10000000 значит что отрицательное число
+//     // второй 00000011 равен 10^3
+//     // третий и четвертый всегда нули иначе неверное.
+//     // в итоге мы получаем некое число = 2^16 + 2^17 + 2^31 в котором
+//     записана экспонента и знак
+//     // можно устанавливать знак и экспоненту через функции
+//     // set_sing(&num, 1); // устанавливаем знак - отрицательный
+//     // set_scale(&num, 3); // устанавливаем экспоненту
+//     // либо можно записать в bits[3]-2147287040 это будет значить что мы
+//     установили знак минус и экспоненту равную 3
+//     // т.е  s21_decimal num = {1, 1, 1, -2147287040}
+//     // также можно записывать в виде бита {0b0000001111100001, 1, 1,
+//     -2147287040}
+
+//     s21_decimal num =  {{1742750924, -765097718, 2020532269, 720896}};
+//     // set_sign(&num, 1);
+//     print_decimal(num);
+//     print_decimal_to_int(num);
+
+//     s21_decimal num2 = {{-1135548987, -1729193528, 1968365552, -2146238464}};
+//     // set_sign(&num2, 1);
+//     // set_scale(&num2, 3);
+//     print_decimal(num2);
+//     print_decimal_to_int(num2);
+
+// //   s21_decimal num_1 = {{1742750924, -765097718, 2020532269, 720896}};
+// //   s21_decimal num_2 = {{-1135548987, -1729193528, 1968365552,
+// -2146238464}};
+// //   s21_decimal result = {0};
+// //   s21_decimal expected = {{-1640015172, 593591452, 2020532250, 720896}};
+
+//     s21_decimal res_sum = {0};
+//     s21_add(num, num2, &res_sum);
+//     print_decimal(res_sum);
+//     print_decimal_to_int(res_sum);
+
+//     return 0;
+// }

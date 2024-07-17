@@ -17,16 +17,29 @@ typedef struct s21_decimal {
     int bits[4];
 } s21_decimal;
 
+
+// typedef struct s21_bigdecimal {
+//     int bits[8];
+// } s21_bigdecimal;
+
 typedef enum s21_decimal_sign {
     POSITIVE = 0,
     NEGATIVE = 1
 } s21_decimal_sign;
 
-
-#define S21_DECIMAL_OK 0
-#define S21_DECIMAL_OVERFLOW 1
-#define S21_DECIMAL_UNDERFLOW 2
-#define S21_DECIMAL_DIVISION_BY_ZERO 3
+enum s21_arithmetic_code_error {
+    S21_DECIMAL_OK = 0,
+    // CODE_CONVERTATION_ERROR = 1,
+    FALSE = 0,
+    // TRUE = 1,
+    ERROR_OVERFLOW = 1, //  the number is too large or equal to infinity
+    ERROR_UNDERFLOW = 2, // the number is too small or equal to negative infinity;
+    ERROR_DIVISION_BY_ZERO = 3
+};
+// #define S21_DECIMAL_OK 0
+// #define S21_DECIMAL_OVERFLOW 1
+// #define S21_DECIMAL_UNDERFLOW 2
+// #define S21_DECIMAL_DIVISION_BY_ZERO 3
 
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst);
