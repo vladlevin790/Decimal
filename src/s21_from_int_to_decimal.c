@@ -11,24 +11,11 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
     set_decimal_sign(dst, src < 0);
     set_decimal_exponent(dst, 0);
 
-    int is_min_value = src == INT_MIN;
-
-    if (src < 0) {
-        src += is_min_value; // Добавляем 1, чтобы не выйти за пределы int
-        src *= -1;
-    }
-    
-    for (int i = 0; i < 31; i++) {
-        set_decimal_digit_by_index(dst, i, s21_get_bit(src, i));
+    if (src < 0 && src != INT_MIN) {
+        src = -src;
     }
 
-    // Если число == INT_MIN, то добавляем 1
-    if (is_min_value) {
-        s21_decimal tmp_decimal = get_new_decimal();
-        tmp_decimal.bits[0] = s21_set_bit(tmp_decimal.bits[0], 0);
-
-        // TODO: s21_add(*dst, tmp_decimal, dst);
-    }
+    dst->bits[0] = src;
 
     return 0;
 }
