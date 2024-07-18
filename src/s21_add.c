@@ -30,11 +30,11 @@ void initial_num(s21_decimal *number) {
   }
 }
 
-int s21_is_less_simple(s21_decimal dec1, s21_decimal dec2) {
+int s21_is_less_simple(s21_decimal value_1, s21_decimal value_2) {
   int is_less = FALSE;
   for (int i = 95; i >= 0; i--) {
-    if (get_bit(dec1, i) ^ get_bit(dec2, i)) {
-      is_less = get_bit(dec2, i);
+    if (get_bit(value_1, i) ^ get_bit(value_2, i)) {
+      is_less = get_bit(value_2, i);
       break;
     }
   }
@@ -42,48 +42,48 @@ int s21_is_less_simple(s21_decimal dec1, s21_decimal dec2) {
   return is_less;
 }
 
-int s21_is_less_or_equal_simple(s21_decimal dec1, s21_decimal dec2) {
-  return s21_is_less_simple(dec1, dec2) || s21_is_equal(dec1, dec2);
+int s21_is_less_or_equal_simple(s21_decimal value_1, s21_decimal value_2) {
+  return s21_is_less_simple(value_1, value_2) || s21_is_equal(value_1, value_2);
 }
 
-int s21_is_greater_simple(s21_decimal dec1, s21_decimal dec2) {
-  return !s21_is_less_or_equal_simple(dec1, dec2);
+int s21_is_greater_simple(s21_decimal value_1, s21_decimal value_2) {
+  return !s21_is_less_or_equal_simple(value_1, value_2);
 }
 
-int s21_is_greater_or_equal_simple(s21_decimal dec1, s21_decimal dec2) {
-  return s21_is_greater_simple(dec1, dec2) || s21_is_equal(dec1, dec2);
+int s21_is_greater_or_equal_simple(s21_decimal value_1, s21_decimal value_2) {
+  return s21_is_greater_simple(value_1, value_2) || s21_is_equal(value_1, value_2);
 }
 
-int s21_add_simple(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
+int s21_add_simple(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   initial_num(result);
   int rank = 0;
   for (int i = 0; i < 96; i++) {
-    int bit_dec1 = get_bit(dec1, i);
-    int bit_dec2 = get_bit(dec2, i);
+    int bit_value_1 = get_bit(value_1, i);
+    int bit_value_2 = get_bit(value_2, i);
 
-    set_bit(result, i, bit_dec1 ^ bit_dec2 ^ rank);
+    set_bit(result, i, bit_value_1 ^ bit_value_2 ^ rank);
 
-    rank = (bit_dec1 && bit_dec2) || (bit_dec1 && rank) || (bit_dec2 && rank);
+    rank = (bit_value_1 && bit_value_2) || (bit_value_1 && rank) || (bit_value_2 && rank);
   }
 
   return rank;
 }
 
-void s21_sub_simple(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
+void s21_sub_simple(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   initial_num(result);
   for (int i = 0; i < 96; i++) {
-    int bit_dec1 = get_bit(dec1, i);
-    int bit_dec2 = get_bit(dec2, i);
+    int bit_value_1 = get_bit(value_1, i);
+    int bit_value_2 = get_bit(value_2, i);
 
-    set_bit(result, i, bit_dec1 ^ bit_dec2);
+    set_bit(result, i, bit_value_1 ^ bit_value_2);
 
-    if (!bit_dec1 && bit_dec2) {
+    if (!bit_value_1 && bit_value_2) {
       int k = i + 1;
-      while ((bit_dec1 = get_bit(dec1, k)) != 1) {
-        set_bit(&dec1, k, 1);
+      while ((bit_value_1 = get_bit(value_1, k)) != 1) {
+        set_bit(&value_1, k, 1);
         k++;
       }
-      set_bit(&dec1, k, 0);
+      set_bit(&value_1, k, 0);
     }
   }
 }
@@ -112,13 +112,13 @@ int shift_right(s21_decimal *number) {
   return is_overflow;
 }
 
-int s21_mul_simple(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
+int s21_mul_simple(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   s21_decimal tmp;
   initial_num(&tmp);
   int is_owerfull = 0;
   for (int i = 0; i < 96 && !is_owerfull; i++) {
-    if (get_bit(dec2, i) == 1) {
-      s21_decimal temp = dec1;
+    if (get_bit(value_2, i) == 1) {
+      s21_decimal temp = value_1;
       int k = 0;
       while (k < i) {
         if (shift_left(&temp)) {
@@ -139,76 +139,106 @@ int s21_mul_simple(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
   return is_owerfull;
 }
 
-s21_decimal s21_div_simple(s21_decimal dec1, s21_decimal dec2,
+s21_decimal s21_div_simple(s21_decimal value_1, s21_decimal value_2,
                            s21_decimal *result) {
   if (result)
     initial_num(result);
   s21_decimal fmod = {0};
   s21_decimal temp = {0};
-  if (s21_is_greater_or_equal_simple(dec1, dec2))
+  if (s21_is_greater_or_equal_simple(value_1, value_2))
     set_bit(&temp, 0, 1);
-  if (!s21_is_greater_simple(dec2, dec1)) {
+  if (!s21_is_greater_simple(value_2, value_1)) {
     while (1) {
-      s21_decimal copy_dec2 = dec2;
-      while (s21_is_greater_or_equal_simple(dec1, copy_dec2) &&
-             !(get_bit(dec1, 95) && get_bit(copy_dec2, 95))) {
-        shift_left(&copy_dec2);
+      s21_decimal copy_value_2 = value_2;
+      while (s21_is_greater_or_equal_simple(value_1, copy_value_2) &&
+             !(get_bit(value_1, 95) && get_bit(copy_value_2, 95))) {
+        shift_left(&copy_value_2);
         shift_left(&temp);
       }
 
-      if (!(get_bit(dec1, 95) && get_bit(copy_dec2, 95)) ||
-          (s21_is_greater_or_equal_simple(copy_dec2, dec1))) {
-        shift_right(&copy_dec2);
+      if (!(get_bit(value_1, 95) && get_bit(copy_value_2, 95)) ||
+          (s21_is_greater_or_equal_simple(copy_value_2, value_1))) {
+        shift_right(&copy_value_2);
         shift_right(&temp);
       }
 
-      s21_sub_simple(dec1, copy_dec2, &dec1);
+      s21_sub_simple(value_1, copy_value_2, &value_1);
       if (result)
         s21_add_simple(*result, temp, result);
       initial_num(&temp);
       set_bit(&temp, 0, 1);
-      if (s21_is_less_simple(dec1, dec2)) {
+      if (s21_is_less_simple(value_1, value_2)) {
         break;
       }
     }
   }
-  fmod = dec1;
+  fmod = value_1;
   return fmod;
 }
+
+// void s21_bank_rounding(s21_decimal *value, int count) {
+//   int system_bit = value->bits[3];
+//   int exp = get_decimal_exponent(*value) - count;
+//   while (count > 0) {
+//     s21_decimal base = {0}, one = {0}, two = {0}, two_res = {0};
+//     s21_from_int_to_decimal(10, &base);
+//     s21_from_int_to_decimal(1, &one);
+//     s21_from_int_to_decimal(2, &two);
+//     s21_decimal dec_mod = s21_div_simple(*value, base, value);
+//     if (dec_mod.bits[0] > 5) {
+//       s21_add_simple(*value, one, value);
+//     } else if (dec_mod.bits[0] == 5) {
+//       two_res = s21_div_simple(*value, two, NULL);
+//       if (s21_is_equal(one, two_res))
+//         s21_add_simple(*value, one, value);
+//     }
+//     count--;
+//   }
+//   value->bits[3] = system_bit;
+//   set_decimal_exponent(value, exp);
+// }
 
 void s21_bank_rounding(s21_decimal *value, int count) {
   int system_bit = value->bits[3];
   int exp = get_decimal_exponent(*value) - count;
+
   while (count > 0) {
     s21_decimal base = {0}, one = {0}, two = {0}, two_res = {0};
     s21_from_int_to_decimal(10, &base);
     s21_from_int_to_decimal(1, &one);
     s21_from_int_to_decimal(2, &two);
+
     s21_decimal dec_mod = s21_div_simple(*value, base, value);
-    if (dec_mod.bits[0] > 5) {
+    s21_decimal half_base;
+    s21_from_int_to_decimal(5, &half_base);
+
+    if (s21_is_greater_simple(dec_mod, half_base)) {
       s21_add_simple(*value, one, value);
-    } else if (dec_mod.bits[0] == 5) {
-      two_res = s21_div_simple(*value, two, NULL);
-      if (s21_is_equal(one, two_res))
+    } else if (s21_is_equal(dec_mod, half_base)) {
+      two_res = s21_div_simple(*value, two, s21_NULL);
+      if (s21_is_equal(one, two_res) || (get_bit(*value, 0) == 1)) {
         s21_add_simple(*value, one, value);
+      }
     }
+
     count--;
   }
+
   value->bits[3] = system_bit;
   set_decimal_exponent(value, exp);
 }
 
-void normalize(s21_decimal *dec1, s21_decimal *dec2) {
-  int scl1 = get_decimal_exponent(*dec1);
-  int scl2 = get_decimal_exponent(*dec2);
+void normalize(s21_decimal *value_1, s21_decimal *value_2) {
+  int scl1 = get_decimal_exponent(*value_1);
+  int scl2 = get_decimal_exponent(*value_2);
 
-  int v1 = dec1->bits[3];
-  int v2 = dec2->bits[3];
+  int v1 = value_1->bits[3];
+  int v2 = value_2->bits[3];
 
   int min_scl = (scl1 < scl2) ? scl1 : scl2;
   int max_scl = (scl1 > scl2) ? scl1 : scl2;
-  s21_decimal *min_val = (scl1 < scl2) ? dec1 : dec2;
-  s21_decimal *max_val = (scl1 > scl2) ? dec1 : dec2;
+  s21_decimal *min_val = (scl1 < scl2) ? value_1 : value_2;
+  s21_decimal *max_val = (scl1 > scl2) ? value_1 : value_2;
   s21_decimal ten;
   s21_from_int_to_decimal(10, &ten);
 
@@ -222,42 +252,84 @@ void normalize(s21_decimal *dec1, s21_decimal *dec2) {
     }
   }
 
-  dec1->bits[3] = v1;
-  dec2->bits[3] = v2;
+  value_1->bits[3] = v1;
+  value_2->bits[3] = v2;
   set_decimal_exponent(min_val, min_scl);
   set_decimal_exponent(max_val, min_scl);
 }
 
-int s21_add(s21_decimal dec1, s21_decimal dec2, s21_decimal *result) {
+// int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+//   if (result == s21_NULL) {
+//     return 1;
+//   }
+
+//   int add_res_code = S21_DECIMAL_OK;
+
+//   normalize(&value_1, &value_2);
+//   int exp = get_decimal_exponent(value_1);
+//   int sign_1 = get_decimal_sign(value_1);
+//   int sign_2 = get_decimal_sign(value_2);
+
+//   if (!(sign_1 ^ sign_2)) {
+//     add_res_code = s21_add_simple(value_1, value_2, result);
+//     set_decimal_sign(result, sign_1);
+//     if (add_res_code && sign_1 && sign_2) {
+//       add_res_code = ERROR_UNDERFLOW;
+//     }
+//   } else if (s21_is_less_or_equal_simple(value_1, value_2)) {
+//     s21_sub_simple(value_2, value_1, result);
+//     set_decimal_sign(result, sign_2);
+//   } else {
+//     s21_sub_simple(value_1, value_2, result);
+//     set_decimal_sign(result, sign_1);
+//   }
+
+//   if (add_res_code && get_decimal_exponent(value_1)) {
+//     s21_bank_rounding(&value_1, 1);
+//     s21_bank_rounding(&value_2, 1);
+//     add_res_code = s21_add(value_1, value_2, result);
+//   } else {
+//     set_decimal_exponent(result, exp);
+//   }
+
+//   return add_res_code;
+// }
+
+int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   if (result == s21_NULL) {
     return 1;
   }
-
   int add_res_code = S21_DECIMAL_OK;
 
-  normalize(&dec1, &dec2);
-  int exp = get_decimal_exponent(dec1);
-  int sign_1 = get_decimal_sign(dec1);
-  int sign_2 = get_decimal_sign(dec2);
+  normalize(&value_1, &value_2);
+  int exp = get_decimal_exponent(value_1);
+  int sign_1 = get_decimal_sign(value_1);
+  int sign_2 = get_decimal_sign(value_2);
 
   if (!(sign_1 ^ sign_2)) {
-    add_res_code = s21_add_simple(dec1, dec2, result);
+    add_res_code = s21_add_simple(value_1, value_2, result);
     set_decimal_sign(result, sign_1);
-    if (add_res_code && sign_1 && sign_2) {
-      add_res_code = ERROR_UNDERFLOW;
+    if (add_res_code) {
+      // Если переполнение, результат в ноль . Нужно ли так?
+      initial_num(result);
+      if (sign_1 && sign_2) {
+        add_res_code = ERROR_UNDERFLOW;
+      } else {
+        add_res_code = ERROR_OVERFLOW;
+      }
     }
-  } else if (s21_is_less_or_equal_simple(dec1, dec2)) {
-    s21_sub_simple(dec2, dec1, result);
+  } else if (s21_is_less_or_equal_simple(value_1, value_2)) {
+    s21_sub_simple(value_2, value_1, result);
     set_decimal_sign(result, sign_2);
   } else {
-    s21_sub_simple(dec1, dec2, result);
+    s21_sub_simple(value_1, value_2, result);
     set_decimal_sign(result, sign_1);
   }
 
-  if (add_res_code && get_decimal_exponent(dec1)) {
-    s21_bank_rounding(&dec1, 1);
-    s21_bank_rounding(&dec2, 1);
-    add_res_code = s21_add(dec1, dec2, result);
+  if (add_res_code && get_decimal_exponent(value_1)) {
+    s21_bank_rounding(&value_1, 1);
+    s21_bank_rounding(&value_2, 1);
+    add_res_code = s21_add(value_1, value_2, result);
   } else {
     set_decimal_exponent(result, exp);
   }
