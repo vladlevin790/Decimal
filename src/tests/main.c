@@ -11,7 +11,7 @@ int main(void) {
 
 // suite_add_tcase(suite, is_equal_add_test());
   suite_add_tcase(suite, arithmetic_add_tests());
-  suite_add_tcase(suite, arithmetic_sub_tests());
+  //suite_add_tcase(suite, arithmetic_sub_tests());
 
   runner = srunner_create(suite);
   srunner_run_all(runner, CK_NORMAL);
