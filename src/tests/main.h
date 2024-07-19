@@ -20,4 +20,8 @@ TCase* is_not_equal_add_test(void);
 TCase* arithmetic_add_tests(void);
 TCase* arithmetic_sub_tests(void);
 
+TCase* s21_round_tests(void);
+
+TCase* s21_floor_tests(void);
+
 #endif
