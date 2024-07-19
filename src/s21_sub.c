@@ -167,6 +167,14 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
     }
 // БЛОК РАБОТЫ С ЭКСПОНЕНТОЙ УРАВНИВАНИЕ ЭКСПОНЕНТЫ
 
+    // printf("\n 1 SUPER_PRINT ДО ВЫЧИСЛЕНИЙ\n");
+    // super_print(val_1);
+    // printf("\n 2 SUPER_PRINT ДО ВЫЧИСЛЕНИЙ\n");
+    // super_print(val_2);
+    // printf("\n SUPER_PRINT res ДО ВЫЧИСЛЕНИЙ\n");
+    // super_print(res);
+    // printf("\n");
+
 // ВСЯ ЛОГИКА ВЫЧИТАНИЯ КАК ОНА ЕСТЬ
 // Приступаем к вычитанию
     if (sign_vol1 ==1 && sign_vol2 == 1) { // если оба числа отрицательные
@@ -195,30 +203,30 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
     } else if (sign_vol1 == 0 && sign_vol2 == 1) {
             if (super_comparison_of_numbers(val_1, val_2) == 0) { // так как второе число отрицательно ответ будет положительный всегда
             sign_vol1 = 0;
-            super_decimal_add_mirror(val_1,val_2);
+            res = super_decimal_add_mirror(val_1,val_2);
             printf("\n ФУНКЦИЯ СЛОЖЕНИЯ ДВОЙНЫХ ДЕЦЕМОЛОВ ЕЩЕ НЕ РЕАЛИЗОВАНА  больше 1+ | меньше 2-\n");
-            // set_sign_sub(&res.decimals[0], sign_vol1);
-            // set_decimal_exponent(&res.decimals[0], get_decimal_exponent(val_1.decimals[0]));
+            set_sign_sub(&res.decimals[0], sign_vol1);
+            set_decimal_exponent(&res.decimals[0], get_decimal_exponent(val_1.decimals[0]));
     } else {
             sign_vol1 = 0;
             printf("\n ФУНКЦИЯ СЛОЖЕНИЯ ДВОЙНЫХ ДЕЦЕМОЛОВ ЕЩЕ НЕ РЕАЛИЗОВАНА больше 2- | меньше 1+\n");
-            super_decimal_add_mirror(val_2,val_1);
-            // set_sign_sub(&res.decimals[0], sign_vol1);
-            // set_decimal_exponent(&res.decimals[0], get_decimal_exponent(val_1.decimals[0]));
+            res = super_decimal_add_mirror(val_2,val_1);
+            set_sign_sub(&res.decimals[0], sign_vol1);
+            set_decimal_exponent(&res.decimals[0], get_decimal_exponent(val_1.decimals[0]));
             }
     } else if (sign_vol1 == 1 && sign_vol2 == 0) {
             if (super_comparison_of_numbers(val_1, val_2) == 0) { // так как первое число отрицательно ответ будет отрицательный всегда
             sign_vol1 = 1;
             printf("\n ФУНКЦИЯ СЛОЖЕНИЯ ДВОЙНЫХ ДЕЦЕМОЛОВ ЕЩЕ НЕ РЕАЛИЗОВАНА больше 1- | меньше 2+\n");
-            super_decimal_add_mirror(val_1,val_2);
-            // set_sign_sub(&res.decimals[0], sign_vol1);
-            // set_decimal_exponent(&res.decimals[0], get_decimal_exponent(val_1.decimals[0]));
+            res = super_decimal_add_mirror(val_1,val_2);
+            set_sign_sub(&res.decimals[0], sign_vol1);
+            set_decimal_exponent(&res.decimals[0], get_decimal_exponent(val_1.decimals[0]));
     } else {
             sign_vol1 = 0;
             printf("\n ФУНКЦИЯ СЛОЖЕНИЯ ДВОЙНЫХ ДЕЦЕМОЛОВ ЕЩЕ НЕ РЕАЛИЗОВАНА больше 2+ | меньше 1-\n");
-            super_decimal_add_mirror(val_2,val_1);
-            // set_sign_sub(&res.decimals[0], sign_vol1);
-            // set_decimal_exponent(&res.decimals[0], get_decimal_exponent(val_1.decimals[0]));
+            res = super_decimal_add_mirror(val_2,val_1);
+            set_sign_sub(&res.decimals[0], sign_vol1);
+            set_decimal_exponent(&res.decimals[0], get_decimal_exponent(val_1.decimals[0]));
             }
     }
     

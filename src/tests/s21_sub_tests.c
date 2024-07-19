@@ -186,12 +186,14 @@ void print_decimal(s21_decimal digit) {
 
 START_TEST(test_10) {
 //  s21_decimal num_1 = {{-1577745379, 1410906814, 1975917157, -2146304000}};
-s21_decimal num_1 = {{1, 0, 0, 0}}; 
+s21_decimal num_1 = {{2, 0, 0, 0}}; 
  set_decimal_exponent(&num_1, 0);
+ set_decimal_sign(&num_1,0);
 // s21_decimal num_2 = {{287529920, 500118750, 933490658, -2146500608}};
 s21_decimal num_2 = {{1, 0, 0, 0}};
 //  s21_decimal num_2 = {{45, 0, 0, -2146500608}};
  set_decimal_exponent(&num_2, 1);
+ set_decimal_sign(&num_2,1);
 
 
 
