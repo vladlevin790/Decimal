@@ -75,4 +75,23 @@ int check_decimal(s21_decimal decimal);
 // @return 0 - число находится в диапазоне, 1 - в противном случае
 int check_int_range(s21_decimal decimal);
 
+
+
+
+
+void s21_decimal_equalize(s21_decimal value_1, s21_decimal value_2, s21_big_decimal *big_value_1, s21_big_decimal *big_value_2);
+s21_big_decimal s21_left_shift_big_decimal(s21_big_decimal value, int shift_count);
+s21_big_decimal s21_right_shift_big_decimal(s21_big_decimal value, int count_shift);
+s21_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional);
+s21_big_decimal get_big_decimal_ten_pow(int pow);
+void print_big_decimal(s21_big_decimal value);
+s21_decimal s21_decimal_not(s21_decimal decimal);
+s21_decimal s21_decimal_and(s21_decimal decimal, s21_decimal decimal2);
+s21_decimal s21_decimal_xor(s21_decimal decimal, s21_decimal decimal2);
+//s21_decimal s21_remove_useless_zeros(s21_decimal value);
+
+
+
+
+
 #endif

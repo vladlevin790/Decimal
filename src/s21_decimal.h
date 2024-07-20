@@ -12,15 +12,16 @@
 #endif
 
 #define s21_NULL ((void*)0)
+#define DECIMAL_MAX_BITS 128
 
 typedef struct s21_decimal {
     int bits[4];
 } s21_decimal;
 
 
-// typedef struct s21_bigdecimal {
-//     int bits[8];
-// } s21_bigdecimal;
+typedef struct s21_big_decimal {
+    s21_decimal decimal[2];
+} s21_big_decimal;
 
 typedef enum s21_decimal_sign {
     POSITIVE = 0,
@@ -54,16 +55,27 @@ int s21_floor(s21_decimal value, s21_decimal *result);
 
 // compares
 int s21_is_equal(s21_decimal value_1, s21_decimal value_2);
+int s21_is_full_equal_zero(s21_decimal value_1);
+int s21_is_equal_big(s21_big_decimal value_1, s21_big_decimal value_2, int sign_1, int sign_2);
 int s21_is_not_equal(s21_decimal value_1, s21_decimal value_2);
+int s21_is_not_equal_big(s21_big_decimal value_1, s21_big_decimal value_2, int sign_1, int sign_2);
 int s21_is_greater(s21_decimal value_1, s21_decimal value_2);
+int s21_is_greater_big(s21_big_decimal value_1, s21_big_decimal value_2, int sign_1, int sign_2);
 int s21_is_greater_or_equal(s21_decimal value_1, s21_decimal value_2);
+int s21_is_greater_or_equal_big(s21_big_decimal value_1, s21_big_decimal value_2, int sign_1, int sign_2);
 int s21_is_less(s21_decimal value_1, s21_decimal value_2);
+int s21_is_less_big(s21_big_decimal value_1, s21_big_decimal value_2, int sign_1, int sign_2);
 int s21_is_less_or_equal(s21_decimal value_1, s21_decimal value_2);
+int s21_is_less_or_equal_big(s21_big_decimal value_1, s21_big_decimal value_2, int sign_1, int sign_2);
 
 // arithmetic
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+s21_big_decimal s21_big_sub(s21_big_decimal value_1, s21_big_decimal value_2);
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+s21_big_decimal s21_big_add(s21_big_decimal value_1, s21_big_decimal value_2);
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+s21_big_decimal s21_big_mul(s21_big_decimal big_value_1, s21_big_decimal big_value_2);
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_decimal *div_whole, s21_big_decimal *div_remainder);
 
 #endif

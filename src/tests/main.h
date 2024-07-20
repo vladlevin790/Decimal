@@ -19,5 +19,6 @@ TCase* is_not_equal_add_test(void);
 
 TCase* arithmetic_add_tests(void);
 TCase* arithmetic_sub_tests(void);
+TCase* arithmetic_div_tests(void);
 
 #endif

@@ -17,14 +17,13 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     } else {
         clear_decimal(dst);
         char float_str[64] = {0};
-
         sprintf(float_str, "%.6e", src);
 
         int exponent = get_exponent_from_float_str(float_str);
         if (exponent < 0) {
             sprintf(float_str, "%.28f", src);
         }
-
+        
         *dst = parse_float_str_to_decimal(float_str);
         set_decimal_exponent(dst, exponent);
         set_decimal_sign(dst, signbit(src) != 0);

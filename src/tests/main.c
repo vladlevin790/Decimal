@@ -8,9 +8,10 @@ int main(void) {
   // suite_add_tcase(suite, decimal_helper_get_tests());
 
   // suite_add_tcase(suite, s21_from_int_to_decimal_get_tests());
+  suite_add_tcase(suite, arithmetic_div_tests());
 
 // suite_add_tcase(suite, is_equal_add_test());
-  suite_add_tcase(suite, arithmetic_add_tests());
+  //suite_add_tcase(suite, arithmetic_add_tests());
   //suite_add_tcase(suite, arithmetic_sub_tests());
 
   runner = srunner_create(suite);
