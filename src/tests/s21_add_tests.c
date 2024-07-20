@@ -433,32 +433,60 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(case_MIN_add_minus_0_5) {
-//   s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 2147483648}};
-//   s21_decimal num_2 = {{5, 0, 0, 2147549184}};
-//   s21_decimal s21_res = {{0, 0, 0, 0}};
-//   int return_s21 = s21_add(num_1, num_2, &s21_res);
-//   ck_assert_int_eq(return_s21, ERROR_UNDERFLOW);
-// }
-// END_TEST
 
-// START_TEST(case_MIN_add_minus_0_6) {
-//   s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 2147483648}};
-//   s21_decimal num_2 = {{6, 0, 0, 2147549184}};
-//   s21_decimal s21_res = {{0, 0, 0, 0}};
-//   int return_s21 = s21_add(num_1, num_2, &s21_res);
-//   ck_assert_int_eq(return_s21, ERROR_UNDERFLOW);
-// }
-// END_TEST
+// TODO проверить этот тест в си шарпе
+START_TEST(case_MIN_add_minus_0_4) {
+  s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 2147483648}};
+  s21_decimal num_2 = {{4, 0, 0, 2147549184}};
+  s21_decimal s21_res = {{0, 0, 0, 0}};
+  int return_s21 = s21_add(num_1, num_2, &s21_res);
+  ck_assert_int_eq(s21_res.bits[0], -1);
+  ck_assert_int_eq(s21_res.bits[1], -1);
+  ck_assert_int_eq(s21_res.bits[2], -1);
+  ck_assert_int_eq(s21_res.bits[3], -2147483648);
+  ck_assert_int_eq(return_s21, 0);
+}
+END_TEST
 
-// START_TEST(case_MAX_add_05) {
-//   s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 0}};
-//   s21_decimal num_2 = {{5, 0, 0, 65536}};
-//   s21_decimal s21_res = {{0, 0, 0, 0}};
-//   int return_s21 = s21_add(num_1, num_2, &s21_res);
-//   ck_assert_int_eq(return_s21, ERROR_OVERFLOW);
-// }
-// END_TEST
+START_TEST(case_MIN_add_minus_0_5) {
+  s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 2147483648}};
+  s21_decimal num_2 = {{5, 0, 0, 2147549184}};
+  s21_decimal s21_res = {{0, 0, 0, 0}};
+  int return_s21 = s21_add(num_1, num_2, &s21_res);
+  ck_assert_int_eq(return_s21, ERROR_UNDERFLOW);
+}
+END_TEST
+
+START_TEST(case_MIN_add_minus_0_6) {
+  s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 2147483648}};
+  s21_decimal num_2 = {{6, 0, 0, 2147549184}};
+  s21_decimal s21_res = {{0, 0, 0, 0}};
+  int return_s21 = s21_add(num_1, num_2, &s21_res);
+  ck_assert_int_eq(return_s21, ERROR_UNDERFLOW);
+}
+END_TEST
+
+START_TEST(case_MAX_add_04) {
+  s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 0}};
+  s21_decimal num_2 = {{4, 0, 0, 65536}};
+  s21_decimal s21_res = {{-1, -1, -1, 0}};
+  int return_s21 = s21_add(num_1, num_2, &s21_res);
+  ck_assert_int_eq(s21_res.bits[0], -1);
+  ck_assert_int_eq(s21_res.bits[1], -1);
+  ck_assert_int_eq(s21_res.bits[2], -1);
+  ck_assert_int_eq(s21_res.bits[3], 0);
+  ck_assert_int_eq(return_s21, 0);
+}
+END_TEST
+
+START_TEST(case_MAX_add_05) {
+  s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 0}};
+  s21_decimal num_2 = {{5, 0, 0, 65536}};
+  s21_decimal s21_res = {{0, 0, 0, 0}};
+  int return_s21 = s21_add(num_1, num_2, &s21_res);
+  ck_assert_int_eq(return_s21, ERROR_OVERFLOW);
+}
+END_TEST
 
 START_TEST(case_MAX_add_06) {
   s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 0}};
@@ -1061,6 +1089,8 @@ START_TEST(test_23) {
 }
 END_TEST
 
+
+
 START_TEST(test_24) {
   printf("---test_24---------------------------------\n");
 	s21_decimal num_1 = {{1410555356, -1746906726, 1333513254, -2146172928}};
@@ -1255,7 +1285,14 @@ TCase *arithmetic_add_tests(void) {
   tcase_add_test(test_cases, case_0_add_0);
   tcase_add_test(test_cases, case_0_add_minus_0);
   tcase_add_test(test_cases, case_minus_0_add_0);
+  
+  tcase_add_test(test_cases, case_MAX_add_04);
+  tcase_add_test(test_cases, case_MIN_add_minus_0_6);
+  tcase_add_test(test_cases, case_MIN_add_minus_0_5);
+  tcase_add_test(test_cases, case_MIN_add_minus_0_4);
+
   tcase_add_test(test_cases, case_MAX_add_06);
+  tcase_add_test(test_cases, case_MAX_add_05);
   tcase_add_test(test_cases, case_MAX_add_minus_0_6);
   tcase_add_test(test_cases, case_MIN_add_0_6);
   tcase_add_test(test_cases, case_1e_28_add_1e_28);
