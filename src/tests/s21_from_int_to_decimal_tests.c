@@ -38,8 +38,10 @@ START_TEST(test_3) {
   int result = s21_from_int_to_decimal(-1, &decimal);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(1, get_decimal_sign(decimal));
-  ck_assert_int_eq(-1, decimal.bits[0] * -1);
+  ck_assert_int_eq(1, decimal.bits[0]); // 1, 0, 0, -2147483648
+  ck_assert_int_eq(0, decimal.bits[1]);
+  ck_assert_int_eq(0, decimal.bits[2]);
+  ck_assert_int_eq(-2147483648, decimal.bits[3]);
 }
 END_TEST
 
@@ -59,13 +61,10 @@ START_TEST(test_5) {
   
   ck_assert_int_eq(0, result);
   ck_assert_int_eq(1, get_decimal_sign(decimal));
-  for (int i = 31; i >= 0; i--)
-    {
-        printf("%d", s21_get_bit(decimal.bits[0], i));
-    }
-    
-    printf("\n");
-  ck_assert_int_eq(INT_MIN, ((unsigned int)decimal.bits[0]) * -1);
+  printf("abc - %d\n", decimal.bits[0]);
+  ck_assert_int_eq(INT_MIN, decimal.bits[0]);
+  ck_assert_int_eq(0, decimal.bits[1]);
+  ck_assert_int_eq(0, decimal.bits[2]);
 }
 END_TEST
 
