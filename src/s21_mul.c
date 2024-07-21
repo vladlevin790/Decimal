@@ -10,21 +10,81 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
         // TODO: какой код ошибки?
     } else {
-        s21_big_decimal tmp_big_result = {{get_new_decimal(), get_new_decimal()}};
+        clear_decimal(result);
+        s21_big_decimal big_result = {{get_new_decimal(), get_new_decimal()}};
+
+        int result_sign = get_decimal_sign(value_1) != get_decimal_sign(value_2);
+        int exponent_1 = get_decimal_exponent(value_1), exponent_2 = get_decimal_exponent(value_2);
+
+        set_decimal_sign(&value_1, 0);
+        set_decimal_sign(&value_2, 0);
+
+        set_decimal_exponent(&value_1, 0);
+        set_decimal_exponent(&value_2, 0);
+
         s21_big_decimal big_value_1 = {{value_1, get_new_decimal()}};
         s21_big_decimal big_value_2 = {{value_2, get_new_decimal()}};
 
-        tmp_big_result = s21_big_mul(big_value_1, big_value_2);
+        big_result = s21_big_mul(big_value_1, big_value_2);
 
-        if (tmp_big_result.decimal[1].bits[3] == 1) {
-            printf("tmp\n");
+        int count_out_bounds = s21_count_digits_out_bounds(big_result);
+        int res_power = exponent_1 + exponent_2 - count_out_bounds;
+
+        if (count_out_bounds > exponent_1 + exponent_2) {
+            result_code = 1;
+        } else {
+            s21_big_decimal ten_big_decimal = {{get_decimal_with_int_value(10), get_new_decimal()}};
+            s21_big_decimal tmp = {{get_new_decimal(), get_new_decimal()}};
+
+            while (count_out_bounds > 28) {
+                s21_big_div(big_result, ten_big_decimal, &big_result, &tmp);
+                count_out_bounds--;
+            }
+
+            // Если слишком много цифр после запятой получается в результате, то корректируем результат
+            if (res_power > 28) {
+                tmp = big_result;
+                int tmp_power = res_power;
+                while (tmp_power > 28) {
+                    --tmp_power;
+                }
+                count_out_bounds = res_power - tmp_power + count_out_bounds;
+                res_power = tmp_power;
+            }
+
+            s21_big_decimal remainder = {{get_new_decimal(), get_new_decimal()}};
+            s21_big_decimal powerten = get_big_decimal_ten_pow(count_out_bounds);
+
+            // Уменьшаем результат, чтобы он поместился в 96бит числа decimal
+            // remainder - остаток от деления при этом
+            s21_big_div(big_result, powerten, &big_result, &remainder);
+            // Устанавливаем для остатка степень, чтобы выполнить банковское округление чисел decimal
+            set_decimal_exponent(&remainder.decimal[0], count_out_bounds);
+            // Выполняем банковское округления результата, исходя из остатка от деления remainder
+            big_result.decimal[0] = s21_round_banking(big_result.decimal[0], remainder.decimal[0]);
+            // Устанавливаем степень результата
+            set_decimal_exponent(&big_result.decimal[0], res_power);
+
+            // Анализируем результат на корректность (переполнение)
+            if (!s21_is_full_equal_zero(big_result.decimal[1]) || check_decimal(big_result.decimal[0]) ||
+                s21_get_range_bits(big_result.decimal[0].bits[3], 0, 15) || s21_get_range_bits(big_result.decimal[0].bits[3], 24, 30)) {
+                result_code = 1;
+            } else {
+                *result = big_result.decimal[0];
+            }
+
+            print_m_decimal(*result);
+            print_big_decimal(remainder);
         }
-        // int need_shift = 
 
-        // Число слишком мало или равно отрицательной бесконечности
-        // if (result_code == 0 && get_decimal_exponent(*result) > 28) {
-        //     result_code = 2;
-        // }
+        if (result_code == 1 && result_sign == 1) {
+            result_code = 2;
+        } else {
+            if (!get_count_full_digits(value_1) || !get_count_full_digits(value_2)) {
+                *result = s21_remove_useless_zeros(*result);
+            }
+            set_decimal_sign(result, result_sign);
+        }
     }
 
     return result_code;

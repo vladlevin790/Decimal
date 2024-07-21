@@ -92,6 +92,7 @@ s21_decimal s21_decimal_not(s21_decimal decimal);
 s21_decimal s21_decimal_and(s21_decimal decimal, s21_decimal decimal2);
 s21_decimal s21_decimal_xor(s21_decimal decimal, s21_decimal decimal2);
 s21_decimal s21_remove_useless_zeros(s21_decimal value);
+int s21_count_digits_out_bounds(s21_big_decimal value);
 
 
 

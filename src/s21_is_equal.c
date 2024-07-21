@@ -4,8 +4,8 @@
 int s21_is_equal(s21_decimal value_1, s21_decimal value_2) {
     int result_code = 1;
 
-    //value_1 = s21_remove_useless_zeros(value_1);
-    //value_2 = s21_remove_useless_zeros(value_2);
+    value_1 = s21_remove_useless_zeros(value_1);
+    value_2 = s21_remove_useless_zeros(value_2);
 
     if (value_1.bits[0] == 0 && value_1.bits[1] == 0
         && value_1.bits[2] == 0 && value_2.bits[0] == 0

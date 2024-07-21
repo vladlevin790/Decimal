@@ -23,15 +23,9 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 
         s21_big_decimal div_remainder = {{get_new_decimal(), get_new_decimal()}};
         s21_big_decimal div_whole = {{get_new_decimal(), get_new_decimal()}};
-
-        printf("start whole and remainder\n");
+        
         // Делим выравненное делимое на выравненный делитель, остаток от деления будет записан в remainder
         s21_big_div(big_value_1, big_value_2, &div_whole, &div_remainder);
-        print_big_decimal(big_value_1);
-        print_big_decimal(big_value_2);
-        print_big_decimal(div_whole);
-        print_big_decimal(div_remainder);
-        printf("end whole and remainder\n");
 
         // Если целая часть деления не влезает в s21_decimal
         if (div_whole.decimal[0].bits[3] != 0 || !s21_is_full_equal_zero(div_whole.decimal[1])) {
@@ -41,11 +35,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
                 result_code = 1;
             }
         } else {
-            printf("start div\n");
             result_code = s21_div_handle(big_value_2, div_whole, div_remainder, result);
-            // printf("%d %d %d %d\n", result->bits[3], result->bits[2], result->bits[1], result->bits[0]);
-        // print_big_decimal(div_remainder);
-            printf("end div\n");
 
             // Если знаки делимого и делителя отличаются, то необходимо сделать результат отрицательным
             if (sign1 != sign2) {
@@ -82,7 +72,6 @@ void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_dec
         
         // Флаг необходимости проводить вычитание
         int is_current_sub = 1;
-    printf("shift %d\n", shift);
         // Повторяем действия k+1 раз (один раз пп.2-3 алгоритма и k раз пп.4-6)
         while (shift >= 0) {
             // Определяем необходимое действие (Прибавлять или вычитать Сдвинутый делитель)
