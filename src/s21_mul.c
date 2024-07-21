@@ -1,9 +1,6 @@
 #include "s21_decimal.h"
 #include "decimal_helper/s21_decimal_helper.h"
 
-void left_shift_big_decimal(s21_big_decimal *big_value);
-int is_decimal_overflow(s21_big_decimal big_value);
-
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int result_code = 0;
 
@@ -36,20 +33,18 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
             s21_big_decimal ten_big_decimal = {{get_decimal_with_int_value(10), get_new_decimal()}};
             s21_big_decimal tmp = {{get_new_decimal(), get_new_decimal()}};
 
-            while (count_out_bounds > 28) {
+            // В шарпе почему-то при ~34 знаках после запятой числа учитываются
+            // а при ~35 уже нет
+            while (count_out_bounds > 16) {
                 s21_big_div(big_result, ten_big_decimal, &big_result, &tmp);
                 count_out_bounds--;
             }
 
+            printf("%d\n", res_power);
             // Если слишком много цифр после запятой получается в результате, то корректируем результат
             if (res_power > 28) {
-                tmp = big_result;
-                int tmp_power = res_power;
-                while (tmp_power > 28) {
-                    --tmp_power;
-                }
-                count_out_bounds = res_power - tmp_power + count_out_bounds;
-                res_power = tmp_power;
+                count_out_bounds = res_power - 28 + count_out_bounds;
+                res_power = 28;
             }
 
             s21_big_decimal remainder = {{get_new_decimal(), get_new_decimal()}};
@@ -72,16 +67,13 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
             } else {
                 *result = big_result.decimal[0];
             }
-
-            print_m_decimal(*result);
-            print_big_decimal(remainder);
         }
 
         if (result_code == 1 && result_sign == 1) {
             result_code = 2;
         } else {
-            if (!get_count_full_digits(value_1) || !get_count_full_digits(value_2)) {
-                *result = s21_remove_useless_zeros(*result);
+            if (s21_is_not_equal(value_1, get_decimal_with_int_value(0)) || s21_is_not_equal(value_2, get_decimal_with_int_value(0))) {
+                *result = s21_remove_useless_zeros(*result); // TODO: тут возможно неправильно
             }
             set_decimal_sign(result, result_sign);
         }
