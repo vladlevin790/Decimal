@@ -27,6 +27,10 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         printf("start whole and remainder\n");
         // Делим выравненное делимое на выравненный делитель, остаток от деления будет записан в remainder
         s21_big_div(big_value_1, big_value_2, &div_whole, &div_remainder);
+        print_big_decimal(big_value_1);
+        print_big_decimal(big_value_2);
+        print_big_decimal(div_whole);
+        print_big_decimal(div_remainder);
         printf("end whole and remainder\n");
 
         // Если целая часть деления не влезает в s21_decimal
@@ -39,6 +43,8 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         } else {
             printf("start div\n");
             result_code = s21_div_handle(big_value_2, div_whole, div_remainder, result);
+            // printf("%d %d %d %d\n", result->bits[3], result->bits[2], result->bits[1], result->bits[0]);
+        // print_big_decimal(div_remainder);
             printf("end div\n");
 
             // Если знаки делимого и делителя отличаются, то необходимо сделать результат отрицательным
@@ -48,11 +54,6 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 
             // Корректируем код ответа от вспомогательной функции в случае ошибки и отрицательного результата
             if (get_decimal_sign(*result) == 1 && result_code == 1) {
-                result_code = 2;
-            }
-
-            // Обрабатываем ситуацию, что результат получился слишком маленький (0 < |x| < 1e-28)
-            if (result_code == 0 && s21_is_not_equal(value_1, get_decimal_with_int_value(0)) && s21_is_equal(*result, get_decimal_with_int_value(0))) {
                 result_code = 2;
             }
         }
@@ -69,11 +70,11 @@ void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_dec
         remainder = decimal1;
     } else if (!s21_is_full_equal_zero(decimal1.decimal[0]) || !s21_is_full_equal_zero(decimal1.decimal[1])) {
         // Рассчитываем предварительный сдвиг делителя
-        int left_1 = get_count_digits(decimal1.decimal[1]) - 1;
-        left_1 = left_1 == -1 ? get_count_digits(decimal1.decimal[0]) - 1 : DECIMAL_MAX_BITS + left_1;
+        int left_1 = get_count_full_digits(decimal1.decimal[1]) - 1;
+        left_1 = left_1 == -1 ? get_count_full_digits(decimal1.decimal[0]) - 1 : DECIMAL_MAX_BITS + left_1;
 
-        int left_2 = get_count_digits(decimal2.decimal[1]) - 1;
-        left_2 = left_2 == -1 ? get_count_digits(decimal2.decimal[0]) - 1 : DECIMAL_MAX_BITS + left_2;
+        int left_2 = get_count_full_digits(decimal2.decimal[1]) - 1;
+        left_2 = left_2 == -1 ? get_count_full_digits(decimal2.decimal[0]) - 1 : DECIMAL_MAX_BITS + left_2;
 
         int shift = left_1 - left_2;
 
@@ -81,7 +82,7 @@ void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_dec
         
         // Флаг необходимости проводить вычитание
         int is_current_sub = 1;
-
+    printf("shift %d\n", shift);
         // Повторяем действия k+1 раз (один раз пп.2-3 алгоритма и k раз пп.4-6)
         while (shift >= 0) {
             // Определяем необходимое действие (Прибавлять или вычитать Сдвинутый делитель)
@@ -115,14 +116,9 @@ void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_dec
         if (s21_get_bit(remainder.decimal[1].bits[3], 31)) {
             remainder = s21_big_add(remainder, shifted_divisor);
         }
-        printf("Stepen %d\n", left_1 - left_2);
-        printf("Whole: ");
-    print_big_decimal(whole);
-    printf("Remainder: ");
-    print_big_decimal(remainder);
+
         // Возвращаем на место частичный остаток (п.9 алгоритма)
         remainder = s21_right_shift_big_decimal(remainder, left_1 - left_2);
-        
     }
 
     // Заполняем переменные результата (частное и остаток)
@@ -152,6 +148,7 @@ int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole, s21_big_decim
 
     if (s21_is_equal(tmp_res.decimal[0], half_one_decimal)) {
         if (!s21_is_full_equal_zero(remainder.decimal[0]) || !s21_is_full_equal_zero(remainder.decimal[1])) {
+            printf("ASDASDASDASDASDASDASDASDASDASDASDASDASD\n");
             // Если остаток от деления в виде decimal получился ровно 0.5, но после вычисления остаток от
             // деления не равен 0, то корректируем остаток, т.к. фактически он больше 0.5:
             // 0.5 + 0.0000000000000000000000000001 = 0.5000000000000000000000000001
@@ -161,13 +158,16 @@ int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole, s21_big_decim
             s21_add(tmp_res.decimal[0], min_decimal, &tmp_res.decimal[0]);
         }
     }
-
+    
     // Выполняем банковское округления результата, исходя из остатка от деления
     whole.decimal[0] = s21_round_banking(whole.decimal[0], tmp_res.decimal[0]);
     
     // Устанавливаем степень результата
-    set_decimal_exponent(&whole.decimal[0], power1);
-
+    if (!s21_is_full_equal_zero(whole.decimal[0])) {
+        set_decimal_exponent(&whole.decimal[0], power1);
+        whole.decimal[0] = s21_remove_useless_zeros(whole.decimal[0]);
+    }
+    
     // Анализируем результат на корректность (переполнение)
     if (!s21_is_full_equal_zero(whole.decimal[1]) || check_decimal(whole.decimal[0])
         || s21_get_range_bits(whole.decimal[0].bits[3], 0, 15) != 0
@@ -192,7 +192,6 @@ int s21_div_calc_fractional(s21_big_decimal *result, s21_big_decimal value_2l, s
     
     // Пока остаток не равен 0 или пока decimal не переполнен
     int is_end = 0;
-    int a = 0;
     while ((!s21_is_full_equal_zero(remainder->decimal[0]) || !s21_is_full_equal_zero(remainder->decimal[1]))
             && exponent < 28 && !is_end) {
         // Сохранение чисел, чтобы их вернуть, если будет переполнение decimal
@@ -203,9 +202,6 @@ int s21_div_calc_fractional(s21_big_decimal *result, s21_big_decimal value_2l, s
         *result = s21_big_mul(*result, ten_decimal);
         // Умножаем текущий остаток на 10
         *remainder = s21_big_mul(*remainder, ten_decimal);
-        print_big_decimal(*result);
-    print_big_decimal(*remainder);
-    printf("---\n");
 
         // Делим остаток на делитель и получаем целую часть и остаток
         s21_big_decimal tmp_div_whole = {{get_new_decimal(), get_new_decimal()}};
@@ -213,10 +209,6 @@ int s21_div_calc_fractional(s21_big_decimal *result, s21_big_decimal value_2l, s
 
         // Целую часть от деления прибавляем к результату
         *result = s21_big_add(*result, tmp_div_whole);
-
-        print_big_decimal(*result);
-    print_big_decimal(*remainder);
-    printf("\n\n");
 
         // Если decimal переполнен, то возвращаем предыдущий результат и выходим из цикла
         if (check_decimal(result->decimal[0]) || s21_get_range_bits(result->decimal[0].bits[3], 0, 15) != 0
@@ -228,7 +220,6 @@ int s21_div_calc_fractional(s21_big_decimal *result, s21_big_decimal value_2l, s
         } else {
             exponent++;
         }
-        a++;
     }
 
     return exponent;

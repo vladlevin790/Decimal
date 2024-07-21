@@ -98,6 +98,18 @@ int get_count_digits(s21_decimal decimal) {
     return count;
 }
 
+int get_count_full_digits(s21_decimal decimal) {
+    int count = 0;
+
+    for (int i = 127; i >= 0 && count == 0; i--) {
+        if (s21_get_bit(decimal.bits[i / 32], i % 32)) {
+            count = i + 1;
+        }
+    }
+
+    return count;
+}
+
 int check_decimal(s21_decimal decimal) {
     int result_code = 0;
 
@@ -144,7 +156,7 @@ void s21_decimal_equalize(s21_decimal value_1, s21_decimal value_2, s21_big_deci
 
     big_value_1->decimal[0] = value_1;
     big_value_2->decimal[0] = value_2;
-
+    
     if (exponent_1 > exponent_2) {
        *big_value_2 = s21_big_mul(*big_value_2, get_big_decimal_ten_pow(exponent_1 - exponent_2));
     } else if (exponent_1 < exponent_2) {
@@ -188,7 +200,6 @@ s21_big_decimal s21_left_shift_big_decimal(s21_big_decimal value, int count_shif
 }
 
 s21_big_decimal s21_right_shift_big_decimal(s21_big_decimal value, int count_shift) {
-    printf("enter\n");print_big_decimal(value);
     while (count_shift > 0) {
         int is_set_one = 0;
         for (int i = 7; i >= 0; i--) {
@@ -205,7 +216,6 @@ s21_big_decimal s21_right_shift_big_decimal(s21_big_decimal value, int count_shi
         }
 
         count_shift--;
-        print_big_decimal(value);
     }
 
     return value;
@@ -221,15 +231,21 @@ s21_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional) {
         if ((integral.bits[0] & 1) == 0) {
             result = integral;
         } else {
+            printf("ASDASDASDASDASDASDASDASDASDASDASDASDASD\n");
             s21_add(integral, get_decimal_with_int_value(1), &result);
         }
     } else if (s21_is_greater(fractional, half_one)) {
+        printf("ASDASDASDASDASDASDASDASDASDASDASDASDASD\n");
         s21_add(integral, get_decimal_with_int_value(1), &result);
     } else {
         result = integral;
     }
 
     return result;
+}
+
+void print_m_decimal(s21_decimal value) {
+    printf("%d %d %d %d\n", value.bits[3], value.bits[2], value.bits[1], value.bits[0]);
 }
 
 void print_big_decimal(s21_big_decimal value) {
@@ -266,34 +282,42 @@ s21_decimal s21_decimal_xor(s21_decimal decimal1, s21_decimal decimal2) {
     return result;
 }
 
-// s21_decimal s21_remove_useless_zeros(s21_decimal value) {
-//     s21_decimal result = value;
+s21_decimal s21_remove_useless_zeros(s21_decimal value) {
+    s21_decimal result = value;
 
-//     int exponent = get_decimal_exponent(value);
-//     int sign = get_decimal_sign(value);
+    int exponent = get_decimal_exponent(value);
+    int sign = get_decimal_sign(value);
 
-//     if (exponent > 0 && check_decimal(value)) {
-//         s21_decimal div_remainder = get_new_decimal();
-//         s21_decimal div_integral = value;
+    s21_big_decimal ten_big_decimal = {{get_decimal_with_int_value(10), get_new_decimal()}};
 
-//         set_decimal_exponent(&div_integral, 0);
-//         set_decimal_sign(&div_integral, 0);
+    if (exponent > 0 && !check_decimal(value)) {
+        s21_decimal div_remainder = get_new_decimal();
+        s21_decimal div_integral = value;
+
+        set_decimal_exponent(&div_integral, 0);
+        set_decimal_sign(&div_integral, 0);
         
-//         int has_useless_zeros = 1;
-//         while (has_useless_zeros && exponent > 0) {
-//             s21_big_div(div_integral, get_decimal_with_int_value(10), &div_integral, &div_remainder);
+        int has_useless_zeros = 1;
+        while (has_useless_zeros && exponent > 0) {
+            s21_big_decimal tmp_div_integral = {{div_integral, get_new_decimal()}};
+            s21_big_decimal tmp_div_remainder = {{get_new_decimal(), get_new_decimal()}};
 
-//             if (s21_is_equal(div_remainder, get_decimal_with_int_value(0))) {
-//                 result = div_integral;
-//                 exponent--;
-//             } else {
-//                 has_useless_zeros = 0;
-//             }
-//         }
+            s21_big_div(tmp_div_integral, ten_big_decimal, &tmp_div_integral, &tmp_div_remainder);
 
-//         set_decimal_exponent(&result, exponent);
-//         set_decimal_sign(&result, sign);
-//     }
+            div_integral = tmp_div_integral.decimal[0];
+            div_remainder = tmp_div_remainder.decimal[0];
 
-//     return result;
-// }
+            if (s21_is_equal(div_remainder, get_decimal_with_int_value(0))) {
+                result = div_integral;
+                exponent--;
+            } else {
+                has_useless_zeros = 0;
+            }
+        }
+        
+        set_decimal_exponent(&result, exponent);
+        set_decimal_sign(&result, sign);
+    }
+
+    return result;
+}

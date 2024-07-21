@@ -33,8 +33,8 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 s21_big_decimal s21_big_mul(s21_big_decimal value_1, s21_big_decimal value_2) {
     s21_big_decimal result = {{get_new_decimal(), get_new_decimal()}};
 
-    int max_index = get_count_digits(value_2.decimal[1]) - 1;
-    max_index = max_index == -1 ? get_count_digits(value_2.decimal[0]) - 1 : DECIMAL_MAX_BITS + max_index;
+    int max_index = get_count_full_digits(value_2.decimal[1]) - 1;
+    max_index = max_index == -1 ? get_count_full_digits(value_2.decimal[0]) - 1 : DECIMAL_MAX_BITS + max_index;
 
     for (int i = 0; i <= max_index; i++) {
         int curr_decimal = i / 128;
