@@ -4,7 +4,8 @@
     "s21_decimal.h": "c",
     "check.h": "c",
     "cmath": "c",
-    "type_traits": "c"
+    "type_traits": "c",
+    "s21_binary.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
