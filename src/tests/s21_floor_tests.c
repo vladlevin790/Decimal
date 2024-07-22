@@ -102,23 +102,23 @@ END_TEST
 
 START_TEST(s21_floor_minus_05_to_minus_1) {
   s21_decimal dec = {{0x5, 0x0, 0x0, 0x80010000}};
+  	s21_decimal test = {{1, 0, 0, -2147483648}};
   s21_decimal dec_res;
   // -0.5 -> -1
   int res = s21_floor(dec, &dec_res);
 
-  ck_assert(res == S21_DECIMAL_OK && dec_res.bits[0] == 1 && dec_res.bits[1] == 0 &&
-            dec_res.bits[2] == 0 && dec_res.bits[3] == 2147483648);
+  ck_assert(res == S21_DECIMAL_OK && s21_is_equal(dec_res, test));
 }
 END_TEST
 
 START_TEST(s21_floor_minus_051_to_minus_1) {
   s21_decimal dec = {{0x32, 0x0, 0x0, 0x80020000}};
   s21_decimal dec_res;
+  s21_decimal test = {{1, 0, 0, -2147483648}};
   // -0.51 -> -1
   int res = s21_floor(dec, &dec_res);
 
-  ck_assert(res == S21_DECIMAL_OK && dec_res.bits[0] == 1 && dec_res.bits[1] == 0 &&
-            dec_res.bits[2] == 0 && dec_res.bits[3] == 2147483648);
+  ck_assert(res == S21_DECIMAL_OK && s21_is_equal(dec_res, test));
 }
 END_TEST
 
@@ -257,12 +257,12 @@ END_TEST
 
 START_TEST(s21_floor_minus_1234567_1234567_to_minus_1234568) {
   s21_decimal dec = {{0x73593407, 0xB3A, 0x0, 0x80070000}};
+  s21_decimal test = {{1234568, 0, 0, -2147483648}};
   s21_decimal dec_res;
   // -1234567.1234567 -> -1234568
   int res = s21_floor(dec, &dec_res);
 
-  ck_assert(res == S21_DECIMAL_OK && dec_res.bits[0] == 1234568 && dec_res.bits[1] == 0 &&
-            dec_res.bits[2] == 0 && dec_res.bits[3] == 2147483648);
+  ck_assert(res == S21_DECIMAL_OK && s21_is_equal(test, dec_res));
 }
 END_TEST
 
