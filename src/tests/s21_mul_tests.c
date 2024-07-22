@@ -510,12 +510,14 @@ START_TEST(test_35) {
 END_TEST
 
 START_TEST(test_36) {
+	printf("36\n");
 	s21_decimal num_1 = {{-2035422833, 1720849450, -1301669166, 917504}};
 	s21_decimal num_2 = {{1174230271, -1801654400, -634234110, 1310720}};
 	s21_decimal result = {0};
 	s21_decimal expected = {{982330453, 793578124, 2021332567, 327680}};
 
 	int res_code = s21_mul(num_1, num_2, &result);
+		printf("36\n");
 	ck_assert_int_eq(res_code, 0);
 	for (int i = 0; i < 4; ++i) {
 		ck_assert_int_eq(result.bits[i], expected.bits[i]);
@@ -552,7 +554,6 @@ START_TEST(test_38) {
 END_TEST
 
 START_TEST(test_41) {
-    printf("last\n");
 	s21_decimal num_1 = {{-219011914, -1889548242, 1063391811, -2147024896}};
 	s21_decimal num_2 = {{636932225, -1535283603, 75240318, 1703936}};
 	s21_decimal result = {0};
@@ -561,7 +562,6 @@ START_TEST(test_41) {
 	int res_code = s21_mul(num_1, num_2, &result);
 	ck_assert_int_eq(res_code, 0);
 	for (int i = 0; i < 4; ++i) {
-    printf("last\n");
 		ck_assert_int_eq(result.bits[i], expected.bits[i]);
 	}
 }

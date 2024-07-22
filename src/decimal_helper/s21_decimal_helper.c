@@ -226,16 +226,14 @@ s21_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional) {
     set_decimal_exponent(&half_one, 1);
 
     s21_decimal result = get_new_decimal();
-
+    
     if (s21_is_equal(fractional, half_one)) {
         if ((integral.bits[0] & 1) == 0) {
             result = integral;
         } else {
-            printf("ASDASDASDASDASDASDASDASDASDASDASDASDASD\n");
             s21_add(integral, get_decimal_with_int_value(1), &result);
         }
     } else if (s21_is_greater(fractional, half_one)) {
-        printf("ASDASDASDASDASDASDASDASDASDASDASDASDASD\n");
         s21_add(integral, get_decimal_with_int_value(1), &result);
     } else {
         result = integral;
