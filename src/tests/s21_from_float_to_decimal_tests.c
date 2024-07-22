@@ -32,13 +32,11 @@ START_TEST(test_1) {
 END_TEST
 
 START_TEST(test_3) {
-    printf("----------------------------test3\n");
   float value = 456;
   s21_decimal result = get_new_decimal();
   s21_decimal expected = {{456,0,0,0}};
 
   int result_code = s21_from_float_to_decimal(value, &result);
-  printf("----------------------------test3\n");
 
   ck_assert_int_eq(0, result_code);
   for (int i = 0; i < 4; i++) {
@@ -118,13 +116,11 @@ START_TEST(test_8) {
 END_TEST
 
 START_TEST(test_9) {
-    printf("----------test 9\n");
   float value = 0.1000005f;
   s21_decimal result = get_new_decimal();
   s21_decimal expected = {{1000005,0,0,458752}};
 
   int result_code = s21_from_float_to_decimal(value, &result);
-printf("----------test 9\n");
   ck_assert_int_eq(0, result_code);
   for (int i = 0; i < 4; i++) {
     ck_assert_int_eq(expected.bits[i], result.bits[i]);
@@ -134,7 +130,6 @@ END_TEST
 
 START_TEST(test_10) {
   float value = 1;
-  printf("val %f\n", value);
   s21_decimal result = get_new_decimal();
   s21_decimal expected = {{1,0,0,0}};
 
@@ -149,7 +144,6 @@ END_TEST
 
 START_TEST(test_11) {
   float value = 1000003;
-  printf("val %f\n", value);
   s21_decimal result = get_new_decimal();
   s21_decimal expected = {{1000003,0,0,0}};
 
@@ -164,7 +158,6 @@ END_TEST
 
 START_TEST(test_12) {
   float value = 0.5f;
-  printf("val %f\n", value);
   s21_decimal result = get_new_decimal();
   s21_decimal expected = {{5,0,0,65536}};
 

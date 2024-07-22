@@ -20,7 +20,6 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
         sprintf(float_str, "%.6e", fabs(src));
 
         int exponent = get_exponent_from_float_str(float_str);
-        printf("%d\n", exponent);
         if (exponent < 0) {
             sprintf(float_str, "%.28f", src);
         }
@@ -37,9 +36,7 @@ s21_decimal parse_float_str_to_decimal(char* float_str, int exponent) {
     s21_decimal decimal_tmp = get_new_decimal();
 
     int is_fractional = 0, curr_fractional_pow = 1, count_digits = 7, count_writed_digits = 0;
-    printf("%s\n", float_str);
     while (*float_str && *float_str != 'e' && count_digits > 0) {
-                printf("curr value %c\n", *float_str);
         if (*float_str >= '0' && *float_str <= '9' && (*float_str != '0' || count_digits < 7)) {
             if (is_fractional && *float_str == '0') {
                 curr_fractional_pow++;
@@ -63,10 +60,8 @@ s21_decimal parse_float_str_to_decimal(char* float_str, int exponent) {
         float_str++;
     }
 
-    printf("%d %d\n", *float_str, !is_fractional);
     // Заполнение целой части нулями, если в нем меньше 7 чисел
     while (count_writed_digits < exponent + 1) {
-        printf("asd\n");
         clear_decimal(&decimal_tmp);
 
         s21_from_int_to_decimal(10, &decimal_tmp);
@@ -78,12 +73,9 @@ s21_decimal parse_float_str_to_decimal(char* float_str, int exponent) {
     if (exponent < 0) {
         exponent = -exponent;
         set_decimal_exponent(&decimal, exponent + (count_writed_digits - 1));
-        printf("new exp %d %d\n", count_writed_digits, exponent + (count_writed_digits - 1));
     } else {
-        printf("%d %d\n", count_writed_digits, exponent + 1);
         set_decimal_exponent(&decimal, count_writed_digits - (exponent + 1));
     }
-    
 
     return decimal;
 }

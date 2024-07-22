@@ -4,7 +4,7 @@
 #include "../decimal_helper/s21_decimal_helper.h"
 
 START_TEST(test_0) {
-  s21_decimal decimal = {0};
+  s21_decimal decimal = {{0, 0, 0, 0}};
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);

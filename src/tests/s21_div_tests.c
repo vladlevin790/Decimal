@@ -486,7 +486,6 @@ START_TEST(test_34) {
 	s21_decimal expected = {{939810847, 935148186, 654907273, 1310720}};
 
 	int res_code = s21_div(num_1, num_2, &result);
-	printf("Мой вывод: %d %d %d %d\n", result.bits[0], result.bits[1], result.bits[2], result.bits[3]);
 	ck_assert_int_eq(res_code, 0);
 	for (int i = 0; i < 4; ++i) {
 		ck_assert_int_eq(result.bits[i], expected.bits[i]);

@@ -61,7 +61,6 @@ START_TEST(test_5) {
   
   ck_assert_int_eq(0, result);
   ck_assert_int_eq(1, get_decimal_sign(decimal));
-  printf("abc - %d\n", decimal.bits[0]);
   ck_assert_int_eq(INT_MIN, decimal.bits[0]);
   ck_assert_int_eq(0, decimal.bits[1]);
   ck_assert_int_eq(0, decimal.bits[2]);

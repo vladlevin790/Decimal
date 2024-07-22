@@ -18,7 +18,7 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
         }
         
         *dst /= pow(10, get_decimal_exponent(src));
-        if (get_decimal_sign(src)) {
+        if (*dst != 0 && get_decimal_sign(src)) {
             *dst *= -1;
         }
     }
