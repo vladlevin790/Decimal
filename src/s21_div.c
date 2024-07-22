@@ -24,7 +24,8 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         s21_big_decimal div_remainder = {{get_new_decimal(), get_new_decimal()}};
         s21_big_decimal div_whole = {{get_new_decimal(), get_new_decimal()}};
         
-        // Делим выравненное делимое на выравненный делитель, остаток от деления будет записан в remainder
+        // Делим делимое на делитель. В div_whole будет целая часть деления
+        // в div_remainder остаток от деления
         s21_big_div(big_value_1, big_value_2, &div_whole, &div_remainder);
 
         // Если целая часть деления не влезает в s21_decimal
@@ -35,15 +36,13 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
                 result_code = 1;
             }
         } else {
+            // Получаем конечный результат на основе целой части деления и его остатка
             result_code = s21_div_handle(big_value_2, div_whole, div_remainder, result);
 
             // Если знаки делимого и делителя отличаются, то необходимо сделать результат отрицательным
-            if (sign1 != sign2) {
+            if (result_code == 0 && sign1 != sign2) {
                 set_decimal_sign(result, 1);
-            }
-
-            // Корректируем код ответа от вспомогательной функции в случае ошибки и отрицательного результата
-            if (get_decimal_sign(*result) == 1 && result_code == 1) {
+            } else if (result_code == 1 && sign1 != sign2) {
                 result_code = 2;
             }
         }
@@ -123,33 +122,33 @@ int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole, s21_big_decim
     // power1 - значение степени результата
     int power1 = s21_div_calc_fractional(&whole, value_2, &remainder);
 
-    s21_big_decimal tmp_res = {{get_new_decimal(), get_new_decimal()}};
+    s21_big_decimal second_remainder = {{get_new_decimal(), get_new_decimal()}};
 
     // Переводим остаток, полученный в расчете выше, в decimal, чтобы использовать его для округления
     // power2 - значение степени данного decimal
-    int power2 = s21_div_calc_fractional(&tmp_res, value_2, &remainder);
+    int power2 = s21_div_calc_fractional(&second_remainder, value_2, &remainder);
 
     // Устанавливаем полученную степень для нашего остатка
-    set_decimal_exponent(&tmp_res.decimal[0], power2);
+    set_decimal_exponent(&second_remainder.decimal[0], power2);
 
     s21_decimal half_one_decimal = get_decimal_with_int_value(5);
     set_decimal_exponent(&half_one_decimal, 1);
 
-    if (s21_is_equal(tmp_res.decimal[0], half_one_decimal)) {
-        if (!s21_is_full_equal_zero(remainder.decimal[0]) || !s21_is_full_equal_zero(remainder.decimal[1])) {
-            printf("ASDASDASDASDASDASDASDASDASDASDASDASDASD\n");
-            // Если остаток от деления в виде decimal получился ровно 0.5, но после вычисления остаток от
-            // деления не равен 0, то корректируем остаток, т.к. фактически он больше 0.5:
-            // 0.5 + 0.0000000000000000000000000001 = 0.5000000000000000000000000001
-            s21_decimal min_decimal = get_decimal_with_int_value(1);
-            set_decimal_exponent(&min_decimal, 28);
+    // TODO: Удалить?
+    // if (s21_is_equal(second_remainder.decimal[0], half_one_decimal)) {
+    //     if (!s21_is_full_equal_zero(remainder.decimal[0]) || !s21_is_full_equal_zero(remainder.decimal[1])) {
+    //         // Если остаток от деления в виде decimal получился ровно 0.5, но после вычисления остаток от
+    //         // деления не равен 0, то корректируем остаток, т.к. фактически он больше 0.5:
+    //         // 0.5 + 0.0000000000000000000000000001 = 0.5000000000000000000000000001
+    //         s21_decimal min_decimal = get_decimal_with_int_value(1);
+    //         set_decimal_exponent(&min_decimal, 28);
 
-            s21_add(tmp_res.decimal[0], min_decimal, &tmp_res.decimal[0]);
-        }
-    }
+    //         s21_add(second_remainder.decimal[0], min_decimal, &second_remainder.decimal[0]);
+    //     }
+    // }
     
     // Выполняем банковское округления результата, исходя из остатка от деления
-    whole.decimal[0] = s21_round_banking(whole.decimal[0], tmp_res.decimal[0]);
+    whole.decimal[0] = s21_round_banking(whole.decimal[0], second_remainder.decimal[0]);
     
     // Устанавливаем степень результата
     if (!s21_is_full_equal_zero(whole.decimal[0])) {
