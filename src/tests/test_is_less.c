@@ -1,11 +1,12 @@
 #include <check.h>
 
-#include "../../s21_decimal.h"
-#include "../main.h"
+#include "../s21_decimal.h"
+#include "main.h"
 
 START_TEST(test_1) {
-  s21_decimal value_1 = {{0xD3040000, 0x00000000, 0x00000000, 0x00000100}};
-  s21_decimal value_2 = {{0xD1040000, 0x00000000, 0x00000000, 0x00000100}};
+  //1083450.456789
+  s21_decimal value_1 = {{0xD5FAAD42, 0xFC000000, 0x00000000, 0x00000600}};
+  s21_decimal value_2 = {{0xD5FAAD42, 0xFC000000, 0x00000000, 0x00000600}};
 
   int comparison = s21_is_less(value_1, value_2);
 
@@ -14,8 +15,9 @@ START_TEST(test_1) {
 END_TEST
 
 START_TEST(test_2) {
-  s21_decimal value_1 = {{0xD3040000, 0x00000000, 0x00000000, 0x00000100}};
-  s21_decimal value_2 = {{0xD1040000, 0x00000000, 0x00000000, 0x00000180}};
+  //-1083450.456789
+  s21_decimal value_1 = {{0xD5FAAD42, 0xFC000000, 0x00000000, 0x00000100}};
+  s21_decimal value_2 = {{0xD5FAAD42, 0xFC000000, 0x00000000, 0x00000100}};
 
   int comparison = s21_is_less(value_1, value_2);
 
@@ -24,8 +26,9 @@ START_TEST(test_2) {
 END_TEST
 
 START_TEST(test_3) {
-  s21_decimal value_1 = {{0xD3040000, 0x00000000, 0x00000000, 0x00000100}};
-  s21_decimal value_2 = {{0xD1040000, 0x00000000, 0x00000000, 0x00000180}};
+  //0
+  s21_decimal value_1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal value_2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
 
   int comparison = s21_is_less(value_1, value_2);
 
@@ -34,18 +37,20 @@ START_TEST(test_3) {
 END_TEST
 
 START_TEST(test_4) {
-  s21_decimal value_1 = {{0xD3040000, 0x00000000, 0x00000000, 0x00000100}};
+  //1 = 1347348; 2 = 0
+  s21_decimal value_1 = {{0x148F1400, 0x00000000, 0x00000000, 0x00000000}};
   s21_decimal value_2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
 
   int comparison = s21_is_less(value_1, value_2);
 
-  ck_assert_int_eq(comparison, 1);
+  ck_assert_int_eq(comparison, 0);
 }
 END_TEST
 
 START_TEST(test_5) {
-  s21_decimal value_1 = {{0xD3040000, 0x00000000, 0x00000000, 0x00000100}};
-  s21_decimal value_2 = {{0x6258DC1F, 0x00000000, 0x00000000, 0x00000000}};
+  //1 = 135;  2 = 664363
+  s21_decimal value_1 = {{0x87000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal value_2 = {{0x2B230A00, 0x00000000, 0x00000000, 0x00000000}};
 
   int comparison = s21_is_less(value_1, value_2);
 
@@ -54,9 +59,9 @@ START_TEST(test_5) {
 END_TEST
 
 START_TEST(test_6) {
-  //числа равны друг другу (534534242)
-  s21_decimal value_1 = {{0x6258DC1F, 0x00000000, 0x00000000, 0x00000000}};
-  s21_decimal value_2 = {{0x6258DC1F, 0x00000000, 0x00000000, 0x00000000}};
+  //1 = 5; 2 = -5
+  s21_decimal value_1 = {{0x05000000, 0x00000000, 0x00000000, 0x00000000}};
+  s21_decimal value_2 = {{0x05000000, 0x00000000, 0x00000000, 0x00000080}};
 
   int comparison = s21_is_less(value_1, value_2);
 
@@ -65,9 +70,9 @@ START_TEST(test_6) {
 END_TEST
 
 START_TEST(test_7) {
-  //сравнение с -0.00
-  s21_decimal value_1 = {{0x6258DC1F, 0x00000000, 0x00000000, 0x00000000}};
-  s21_decimal value_2 = {{0x00000000, 0x00000000, 0x00000000, 0x00000280}};
+  //1 = 0.00000; 2 = -35.9439
+  s21_decimal value_1 = {{0x00000000, 0x00000000, 0x00000000, 0x00000500}};
+  s21_decimal value_2 = {{0x0F7C0500, 0x00000000, 0x00000000, 0x00000480}};
 
   int comparison = s21_is_less(value_1, value_2);
 
