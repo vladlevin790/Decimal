@@ -13,11 +13,14 @@ int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
         // Если второе число отрицательное, то возвращаем 1 - TRUE
         result_code = sign_2;
     } else {
-        s21_big_decimal big_value_1 = {{value_1, get_new_decimal()}};
-        s21_big_decimal big_value_2 = {{value_2, get_new_decimal()}};
+        s21_big_decimal big_value_1 = {{get_new_decimal(), get_new_decimal()}};
+        s21_big_decimal big_value_2 = {{get_new_decimal(), get_new_decimal()}};
         s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
 
         result_code = s21_is_greater_big(big_value_1, big_value_2, sign_1, sign_2);
+
+        // 12345000000000
+        // 0.123456789
     }
 
     return result_code;
