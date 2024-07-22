@@ -9,6 +9,7 @@ TCase* decimal_helper_get_tests(void);
 
 TCase* s21_from_int_to_decimal_get_tests(void);
 TCase* s21_from_decimal_to_int_get_tests(void);
+TCase* s21_from_float_to_decimal_get_tests(void);
 
 TCase* is_equal_add_test(void);
 TCase* is_greater_add_test(void);
