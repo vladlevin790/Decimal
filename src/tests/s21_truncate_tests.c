@@ -2,7 +2,7 @@
 #include "../s21_decimal.h"
 #include <check.h>
 
-START_TEST(test_round_0) {
+START_TEST(test_truncate_0) {
   s21_decimal decimal = get_new_decimal();
   s21_decimal result = get_new_decimal();
   s21_decimal test = get_new_decimal();
@@ -89,7 +89,7 @@ END_TEST
 TCase *s21_truncate_get_tests(void) {
   TCase *test_cases = tcase_create("test_cases");
 
-  tcase_add_test(test_cases, test_round_0);
+  tcase_add_test(test_cases, test_truncate_0);
   tcase_add_test(test_cases, test_truncate_1);
   tcase_add_test(test_cases, test_truncate_2);
   tcase_add_test(test_cases, test_truncate_3);
