@@ -197,43 +197,43 @@
 // }
 // END_TEST
 
-START_TEST(test_11) {
- s21_decimal num_1 = {{216264318, 1453433234, -382457762, -2146762752}};
- s21_decimal num_2 = {{-200511848, -1589875853, 376050698, -2146959360}};
- s21_decimal result = {0};
- s21_decimal expected = {{-1921381777, -193712550, -573585406, 589824}};
-
- int res_code = s21_sub(num_1, num_2, &result);
- printf("\nчисла на входе\n");
- print_decimal(num_1);
- printf("-----^num_1^---------------num_2------\n");
- print_decimal(num_2);
-
-
- printf("\nФайлл теста\n");
- print_decimal(result);
- printf("-----^result^---------------expected------\n");
- print_decimal(expected);
- ck_assert_int_eq(res_code, 0);
- for (int i = 0; i < 4; ++i) {
-  ck_assert_int_eq(result.bits[i], expected.bits[i]);
- }
-}
-END_TEST
-
-// START_TEST(test_12) {
-//  s21_decimal num_1 = {{-969384219, -1116816725, -1141911415, -2146959360}};
-//  s21_decimal num_2 = {{-737191410, -913941580, -500833696, -2147155968}};
+// START_TEST(test_11) {
+//  s21_decimal num_1 = {{216264318, 1453433234, -382457762, -2146762752}};
+//  s21_decimal num_2 = {{-200511848, -1589875853, 376050698, -2146959360}};
 //  s21_decimal result = {0};
-//  s21_decimal expected = {{2064096651, -406018622, -503986752, 327680}};
+//  s21_decimal expected = {{-1921381777, -193712550, -573585406, 589824}};
 
 //  int res_code = s21_sub(num_1, num_2, &result);
+//  printf("\nчисла на входе\n");
+//  print_decimal(num_1);
+//  printf("-----^num_1^---------------num_2------\n");
+//  print_decimal(num_2);
+
+
+//  printf("\nФайлл теста\n");
+//  print_decimal(result);
+//  printf("-----^result^---------------expected------\n");
+//  print_decimal(expected);
 //  ck_assert_int_eq(res_code, 0);
 //  for (int i = 0; i < 4; ++i) {
 //   ck_assert_int_eq(result.bits[i], expected.bits[i]);
 //  }
 // }
 // END_TEST
+
+START_TEST(test_12) {
+ s21_decimal num_1 = {{-969384219, -1116816725, -1141911415, -2146959360}};
+ s21_decimal num_2 = {{-737191410, -913941580, -500833696, -2147155968}};
+ s21_decimal result = {0};
+ s21_decimal expected = {{2064096651, -406018622, -503986752, 327680}};
+
+ int res_code = s21_sub(num_1, num_2, &result);
+ ck_assert_int_eq(res_code, 0);
+ for (int i = 0; i < 4; ++i) {
+  ck_assert_int_eq(result.bits[i], expected.bits[i]);
+ }
+}
+END_TEST
 
 // START_TEST(test_13) {
 //  s21_decimal num_1 = {{1000107844, -1162599740, 1410826771, -2146959360}};
@@ -281,8 +281,8 @@ TCase *arithmetic_sub_tests(void) {
   // tcase_add_test(test_cases, test_8);
   // tcase_add_test(test_cases, test_9);
   // tcase_add_test(test_cases, test_10);
-  tcase_add_test(test_cases, test_11);
-  // tcase_add_test(test_cases, test_12);
+  // tcase_add_test(test_cases, test_11);
+  tcase_add_test(test_cases, test_12);
   // tcase_add_test(test_cases, test_13);
   // tcase_add_test(test_cases, test_14);
 

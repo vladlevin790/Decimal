@@ -139,6 +139,9 @@ void transpot_to_Oleg_big_decimal(s21_big_decimal* value){
     }
     i=1;
     res.decimal[0].bits[3] = value->decimal[1].bits[0];
+    res.decimal[1].bits[0] = value->decimal[1].bits[1];
+    res.decimal[1].bits[1] = value->decimal[1].bits[2];
+    res.decimal[1].bits[2] = value->decimal[1].bits[3];
     j=4;
     while (j<3) {
         res.decimal[1].bits[j] = value->decimal[1].bits[i];
@@ -148,20 +151,22 @@ void transpot_to_Oleg_big_decimal(s21_big_decimal* value){
     *value = res;
 }
 
-s21_decimal scale_down(s21_big_decimal value) {
+s21_decimal scale_down(s21_big_decimal value, int znak, int exp) {
+    printf("scale down\n");
     s21_big_decimal ten = {0}, result = {0}, div_remainder = {0}, big_count = {0}, save = {0};
-    int znak = get_decimal_sign(value.decimal[0]), exp = get_decimal_exponent(value.decimal[0]);
     ten.decimal[0].bits[0] = 10;
-    transpot_to_Oleg_big_decimal(&value);
+    //transpot_to_Oleg_big_decimal(&value);
+    super_print(value); // 69931247900283119455923536357323
     save = value;
     s21_decimal res = {0};
     int count = 0;
-    while (s21_big_decimal_cheak_on_zero(value, 1) == 1) {
+    while (!s21_is_full_equal_zero(value.decimal[1]) || value.decimal[0].bits[3] != 0) {
         s21_big_div(value, ten, &result, &div_remainder);
         value = result;
         count++;
         s21_big_decimal_zero(&result);
     }
+    super_print(value);
     exp-=count;
     big_count = get_big_decimal_ten_pow(count);
     s21_big_decimal_zero(&result);
@@ -218,19 +223,36 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
     }
 // ВСЯ ЛОГИКА ВЫЧИТАНИЯ КАК ОНА ЕСТЬ
 // Приступаем к вычитанию
+int exp = 0;
+printf("sign is %d %d\n", sign_vol1, sign_vol2);
     if (sign_vol1 ==1 && sign_vol2 == 1) { // если оба числа отрицательные
         if (super_comparison_of_numbers(val_1, val_2) == 0) { // определяем какой из чисел больше 
+        printf("first is greater\n");
             res = s21_big_sub(val_1, val_2);
             // super_logic_sub(val_1, val_2, &res);
             set_sign_sub(&res.decimal[0], sign_vol1);
             set_decimal_exponent(&res.decimal[0], get_decimal_exponent(val_1.decimal[0]));
-    } else {
+        } else {
+            printf("second is greater\n");
+
+            int exp1 = get_decimal_exponent(val_1.decimal[0]);
+
+            transpot_to_Oleg_big_decimal(&val_1);
+            transpot_to_Oleg_big_decimal(&val_2);
+
+            res = s21_big_sub(val_2, val_1);
+
+            super_print(res);
+            // 1101110010101010000000110001111001100010010111011101100111011111111010110110010101101111110110011111001011
+            // 1101110010101010000000110001111001100010010111011101100111011111111011000010010101101111110110011111001011
+            //super_logic_sub(val_2, val_1, &res);
+            printf("second is greater\n");
             // super_swap(&val_1, &val_2);
-            super_logic_sub(val_2, val_1, &res);
             sign_vol1 = 0; // так как оба числа отрицательные и первое число val1 меньше vol2 знак ответа положительный
-            set_sign_sub(&res.decimal[0], sign_vol1);
-            set_decimal_exponent(&res.decimal[0], get_decimal_exponent(val_1.decimal[0]));
-            }
+            exp = exp1;
+            //set_sign_sub(&res.decimal[0], sign_vol1);
+            //set_decimal_exponent(&res.decimal[0], exp1);
+        }
     } else if (sign_vol1 == 0 && sign_vol2 == 0) {
             if (super_comparison_of_numbers(val_1, val_2) == 0) { // определяем какой из чисел больше 
             super_logic_sub(val_1, val_2, &res);
@@ -273,7 +295,7 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
         result->bits[2] = 0;
         result->bits[3] = 0;
     } else {
-        *result = scale_down(res);
+        *result = scale_down(res, sign_vol1, exp);
         // printf("-EXPONENT_N-\n");
         // print_decimal(*result);
 
@@ -318,6 +340,7 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
                 logic_sub(value_1, value_2, result);
             }
             else if (get_decimal_sign(value_1) == 1 &&  get_decimal_sign(value_2) == 1) {  // если оба числа отрицатлльные
+            
                 if (comparison_of_numbers(value_1,value_2) == 1) {
                     swap(&value_1, &value_2); // число 1 меньше второго меняем местами;
                     set_decimal_sign(result, 0); // меняем знаковый бит число отрицательное;
