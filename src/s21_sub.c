@@ -168,10 +168,12 @@ s21_decimal scale_down(s21_big_decimal value) {
     s21_big_decimal_zero(&div_remainder);
     s21_big_div(save, big_count, &result, &div_remainder);
     save = result;
-    set_decimal_exponent(&save.decimal[0], exp); 
+
     set_decimal_exponent(&div_remainder.decimal[0], count);
-    set_sign_sub(&save.decimal[0], znak);
-    res = s21_round_banking(save.decimal[0], div_remainder.decimal[0]);                     
+    res = s21_round_banking(save.decimal[0], div_remainder.decimal[0]);   
+
+    set_decimal_exponent(&res, exp); 
+    set_sign_sub(&res, znak);
     // res = value.decimal[0]; //без банковского округления
     return res;
 }
@@ -279,12 +281,12 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
 }
 int s21_big_decimal_cheak_on_zero(s21_big_decimal value, int mode){ // mode = 0 полная проверка mode = 1 провереп только decimal[1]
     if (mode == 0) {
-    for (int i = 0; i<3; i++){
-        if (value.decimal[0].bits[i] !=0 || value.decimal[1].bits[i] !=0) return 1;
-    }
-    return 0;
-    } else {
         for (int i = 0; i<3; i++){
+            if (value.decimal[0].bits[i] !=0 || value.decimal[1].bits[i] !=0) return 1;
+        }
+        return 0;
+    } else {
+        for (int i = 0; i<4; i++){
             if (value.decimal[1].bits[i] !=0 || value.decimal[0].bits[3] != 0) { return 1;}
         }
         return 0;
