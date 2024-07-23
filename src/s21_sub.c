@@ -1,4 +1,4 @@
-#include "s21_decimal.h"decimal
+#include "s21_decimal.h"
 #include "binary/s21_binary.h"
 #include "decimal_helper/s21_decimal_helper.h"
 
@@ -39,17 +39,17 @@ void logic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result); /
 int cheak_res_on_zero(s21_decimal *res); // проверяет не равен ли результат нулю и если стояло отрицательное число убирает знак. 
 s21_big_decimal init_super_decimal(s21_decimal value);
 s21_decimal binary_and(s21_decimal decimal1, s21_decimal decimal2);
-
+int s21_big_decimal_cheak_on_zero(s21_big_decimal value, int mode); // проверка бигдесимала на ноль;
 s21_big_decimal s21_big_decimal_add_mirror(s21_big_decimal value_1, s21_big_decimal temp);
 s21_big_decimal s21_big_decimal_exp_up(s21_big_decimal digit, int exp);
 void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result);
 void super_helper_sub(s21_big_decimal *value, int number_decimal, int number_bit, int index);
 void super_logic_sub(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
 int super_comparison_of_numbers(s21_big_decimal value_1, s21_big_decimal value_2);
-void super_swap(s21_big_decimal *value_1, s21_big_decimal *value_2);
+// void super_swap(s21_big_decimal *value_1, s21_big_decimal *value_2);
 void set_sign_sub(s21_decimal* decimal, int sign); // для легкого управления знаком числа в переменную sign передовать только 0 или 1 
-
-
+void transpot_to_Oleg_big_decimal(s21_big_decimal* value);
+void s21_big_decimal_zero(s21_big_decimal* val);
 void set_sign_sub(s21_decimal* decimal, int sign) { // для легкого управления знаком числа в переменную sign передовать только 0 или 1 
     decimal->bits[3] = decimal->bits[3] | (sign << 31);
 }
@@ -122,6 +122,66 @@ s21_big_decimal s21_big_decimal_add_mirror(s21_big_decimal value_1, s21_big_deci
     return result;
 }
 
+void s21_big_decimal_zero(s21_big_decimal* val) {
+    for(int i=0; i<4; i++){
+       val->decimal[0].bits[i] = 0;
+       val->decimal[1].bits[i] = 0;
+    }
+}
+
+void transpot_to_Oleg_big_decimal(s21_big_decimal* value){
+    s21_big_decimal res = {0};
+    int i = 0, j =0;
+    while (j<3) {
+        res.decimal[0].bits[j] = value->decimal[0].bits[i];
+        j++;
+        i++;
+    }
+    i=1;
+    res.decimal[0].bits[3] = value->decimal[1].bits[0];
+    j=4;
+    while (j<3) {
+        res.decimal[1].bits[j] = value->decimal[1].bits[i];
+        j++;
+        i++;
+    }
+    *value = res;
+}
+
+s21_decimal scale_down(s21_big_decimal value) {
+    s21_big_decimal ten = {0}, result = {0}, div_remainder = {0}, big_count = {0}, save = {0};
+    int znak = get_decimal_sign(value.decimal[0]), exp = get_decimal_exponent(value.decimal[0]);
+    ten.decimal[0].bits[0] = 10;
+    transpot_to_Oleg_big_decimal(&value);
+    save = value;
+    s21_decimal res = {0};
+    int count = 0;
+    while (s21_big_decimal_cheak_on_zero(value, 1) == 1) {
+        s21_big_div(value, ten, &result, &div_remainder);
+        value = result;
+        count++;
+        s21_big_decimal_zero(&result);
+    }
+    exp-=count;
+    big_count = get_big_decimal_ten_pow(count);
+    s21_big_decimal_zero(&result);
+    s21_big_decimal_zero(&div_remainder);
+    s21_big_div(save, big_count, &result, &div_remainder);
+    div_remainder.decimal[0].bits[0]=count;
+    save = result;
+
+    set_sign_sub(&save.decimal[0], znak);
+    // set_decimal_exponent(&save.decimal[0], 14);
+    for (int i =0; i<28; i++){                                                              // temp
+        set_decimal_exponent(&save.decimal[0], i);                                              // temp
+    res = s21_round_banking(save.decimal[0], div_remainder.decimal[0]);                      // temp
+    // res = value.decimal[0]; //без банковского округления
+    printf("-\nscale_down_res");                                                               // temp
+    print_decimal(res);
+    printf("--------------count %d--------------------------\n",i); 
+    }
+    return res;
+}
 
 void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result) { // выравнивает экспоненту и не только
     s21_big_decimal val_1 = {0}, val_2 = {0}, res = {0};
@@ -132,6 +192,11 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
     if (exp1 > exp2) {
         val_1 = init_super_decimal(*value_1);
         val_2 = init_super_decimal(*value_2);
+
+                                    // printf("\n 1 SUPER_PRINT ДО ВЫЧИСЛЕНИЙ\n");
+                                    // super_print(val_1);
+                                    // printf("\n 2 SUPER_PRINT ДО ВЫЧИСЛЕНИЙ\n");
+                                    // super_print(val_2);
 
         int i = exp1 - exp2 - 1; // нужна для правильной работы super_decimal_add_mirror
         s21_big_decimal temp = val_2; // нужна для правильной работы super_decimal_add_mirror
@@ -156,16 +221,6 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
         set_sign_sub(&val_1.decimal[0], sign_vol1); // с помощью этой строки востановили знак числа (отрицательное или положительно)
         set_decimal_exponent(&val_1.decimal[0], exp2); // меняем экспоненту числа делаем ее равной большей так как уравняли
     }
-// БЛОК РАБОТЫ С ЭКСПОНЕНТОЙ УРАВНИВАНИЕ ЭКСПОНЕНТЫ
-
-    // printf("\n 1 SUPER_PRINT ДО ВЫЧИСЛЕНИЙ\n");
-    // super_print(val_1);
-    // printf("\n 2 SUPER_PRINT ДО ВЫЧИСЛЕНИЙ\n");
-    // super_print(val_2);
-    // printf("\n SUPER_PRINT res ДО ВЫЧИСЛЕНИЙ\n");
-    // super_print(res);
-    // printf("\n");
-
 // ВСЯ ЛОГИКА ВЫЧИТАНИЯ КАК ОНА ЕСТЬ
 // Приступаем к вычитанию
     if (sign_vol1 ==1 && sign_vol2 == 1) { // если оба числа отрицательные
@@ -217,26 +272,41 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
             set_decimal_exponent(&res.decimal[0], get_decimal_exponent(val_1.decimal[0]));
             }
     }
+    if (s21_big_decimal_cheak_on_zero(res, 0)== 0){ //проверка ответа на ноль если ноль и имеется знак минус меняем на плюс
+        result->bits[0] = 0;
+        result->bits[1] = 0;
+        result->bits[2] = 0;
+        result->bits[3] = 0;
+    } else {
+        *result = scale_down(res);
+        printf("-EXPONENT_N-\n");
+        print_decimal(*result);
 
+    }    
+// ВСЯ ЛОГИКА ВЫЧИТАНИЯ КАК ОНА ЕСТЬ
 
-    // if (big_digit_cheak_res_on_zero(result) == 0){ //проверка ответа на ноль если ноль и имеется знак минус меняем на плюс
+    // printf("\n 1 SUPER_PRINT\n");
+    // super_print(val_1);
+    // printf("\n 2 SUPER_PRINT\n");
+    // super_print(val_2);
+    // printf("\n SUPER_PRINT res\n");
+    // print_decimal(*result);
+    // super_print(res);
 
-    // }
-    // set_decimal_exponent(result, get_decimal_exponent(value_1)); //добавляем экспоненту в resault
-
-    
-// // ВСЯ ЛОГИКА ВЫЧИТАНИЯ КАК ОНА ЕСТЬ
-
-//     printf("\n 1 SUPER_PRINT\n");
-//     super_print(val_1);
-//     printf("\n SUPER_PRINT\n");
-//     printf("\n 2 SUPER_PRINT\n");
-//     super_print(val_2);
-//     printf("\n SUPER_PRINT\n");
-//     printf("\n SUPER_PRINT res\n");
-//     super_print(res);
-//     printf("\n SUPER_PRINT res\n");
-
+}
+int s21_big_decimal_cheak_on_zero(s21_big_decimal value, int mode){ // mode = 0 полная проверка mode = 1 провереп только decimal[1]
+    if (mode == 0) {
+    for (int i = 0; i<3; i++){
+        if (value.decimal[0].bits[i] !=0 || value.decimal[1].bits[i] !=0) return 1;
+    }
+    return 0;
+    } else {
+        for (int i = 0; i<3; i++){
+            if (value.decimal[1].bits[i] !=0 || value.decimal[0].bits[3] != 0) { return 1;}
+        }
+        return 0;
+    }
+    return -1; //ошибка
 }
 
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
@@ -297,7 +367,7 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         }
     }
     cheak_res_on_zero(result); //проверка ответа на ноль если ноль и имеется знак минус меняем на плюс
-    set_decimal_exponent(result, get_decimal_exponent(value_1)); //добавляем экспоненту в resault
+    // set_decimal_exponent(result, get_decimal_exponent(value_1)); //добавляем экспоненту в resault
 return 0;
 }
 
@@ -322,10 +392,12 @@ int cheak_res_on_zero(s21_decimal *res) {
 if (get_decimal_sign(*res) == 1) {
     for (int i = 2; i>=0; i--) { 
         for (int j = 0; j<= 31; j++) {
+            
             if (s21_get_bit(res->bits[i], j) == 1) return 1;
         }
     }
     set_decimal_sign(res, 0);
+   
 }
 return 0;
 }
@@ -368,56 +440,56 @@ void helper_sub(s21_decimal *value, int number_bit, int index) { // функци
 }
 
 
-// void super_helper_sub(s21_big_decimal *value, int number_decimal, int number_bit, int index) { // функция которая ищет у какого индекса числа можно занять десяток "1" если находит заменяет еденицу "0"
-// // далее бежит назад от наеденного индекса до начального индекса при этом попутно заменяя индексы которые были пропущены так как уних нельзя было занять десяток 
-// // были равны 0, на еденицы (1), number_bit - переменная номера бита где потребовалось занять 1, index индекс 0 для которого занимаем 1
-//     int count_bits = 0, flag = 0; // count_bits отслеживаем в каком биете нашли еденицу, flag - для определения с какого бита начинать замену 0 на 1;
-//     int count_decimal = 0; // отслеживаем в каком децимале занимаеме еденицу
-//     int k = number_decimal; // с какого децимала начинать;
-//     int i = number_bit; // с какого бита начинаем искать.
-//     int s_index; // переменаая для индекса первого вхождения еденицы;
-//     for (; k<2; k++){   
-//         int stop_for =0;
-//         for (; i<3; i++) {
-//             if (k==2) printf("\ni == %d\n", i);
-//             int  temp_index = index+1; // последние изменения;
-//             if (count_bits!=0) temp_index = 0;
-//             for (int j = temp_index; j < 32 ; j++) {
-//                 if (s21_get_bit(value->decimal[k].bits[i], j) == 1) {
-//                     s_index = j; flag = 1; stop_for = 1; break;}
-//                 if (k == 1 && i==2 && j== 31 && s21_get_bit(value->decimal[k].bits[i], j) == 0) {
-//                     s_index = index; count_bits=0; flag = -1;} // если не нашли у какого бита можно занять и достигли конца децимал скидывае счетчик битов и (index+1 было)
-//                         //устанавливаем индекс первого вхождения делаем его намерено меньше индекс для которого занимаем чтобы скипнуть цикл ниже.
-//                         // s_index = i;  выполниться если не найдеться бита у кторого можно занять еденицу;
-//             }
-//             if (stop_for == 1) break;
-//             count_bits++; // считаем биты
+void super_helper_sub(s21_big_decimal *value, int number_decimal, int number_bit, int index) { // функция которая ищет у какого индекса числа можно занять десяток "1" если находит заменяет еденицу "0"
+// далее бежит назад от наеденного индекса до начального индекса при этом попутно заменяя индексы которые были пропущены так как уних нельзя было занять десяток 
+// были равны 0, на еденицы (1), number_bit - переменная номера бита где потребовалось занять 1, index индекс 0 для которого занимаем 1
+    int count_bits = 0, flag = 0; // count_bits отслеживаем в каком биете нашли еденицу, flag - для определения с какого бита начинать замену 0 на 1;
+    int count_decimal = 0; // отслеживаем в каком децимале занимаеме еденицу
+    int k = number_decimal; // с какого децимала начинать;
+    int i = number_bit; // с какого бита начинаем искать.
+    int s_index; // переменаая для индекса первого вхождения еденицы;
+    for (; k<2; k++){   
+        int stop_for =0;
+        for (; i<3; i++) {
+            if (k==2) printf("\ni == %d\n", i);
+            int  temp_index = index+1; // последние изменения;
+            if (count_bits!=0) temp_index = 0;
+            for (int j = temp_index; j < 32 ; j++) {
+                if (s21_get_bit(value->decimal[k].bits[i], j) == 1) {
+                    s_index = j; flag = 1; stop_for = 1; break;}
+                if (k == 1 && i==2 && j== 31 && s21_get_bit(value->decimal[k].bits[i], j) == 0) {
+                    s_index = index; count_bits=0; flag = -1;} // если не нашли у какого бита можно занять и достигли конца децимал скидывае счетчик битов и (index+1 было)
+                        //устанавливаем индекс первого вхождения делаем его намерено меньше индекс для которого занимаем чтобы скипнуть цикл ниже.
+                        // s_index = i;  выполниться если не найдеться бита у кторого можно занять еденицу;
+            }
+            if (stop_for == 1) break;
+            count_bits++; // считаем биты
             
-//         }
-//         if (stop_for == 1) break;
-//         i = 0; //обнуляем i для перезапуска по битового цикла без него ответ не правильный
-//         count_decimal++; // по сути не нужная переменная обнуляем i в конце цикла.
-//     }
+        }
+        if (stop_for == 1) break;
+        i = 0; //обнуляем i для перезапуска по битового цикла без него ответ не правильный
+        count_decimal++; // по сути не нужная переменная обнуляем i в конце цикла.
+    }
     
-//     value->decimal[k].bits[i] = s21_clear_bit(value->decimal[k].bits[i], s_index); // обратить внимение внекоторыъх (может быть но это не точно) случаех возможно неврное решение.
-//    // если нашли у кого занять обнуляем бит у которого заняли десяток
-//     if (flag !=-1){
-//         for (; k>=number_decimal; k--){ //number_decimal номер децемеала переданный в функцию через параметры
+    value->decimal[k].bits[i] = s21_clear_bit(value->decimal[k].bits[i], s_index); // обратить внимение внекоторыъх (может быть но это не точно) случаех возможно неврное решение.
+   // если нашли у кого занять обнуляем бит у которого заняли десяток
+    if (flag !=-1){
+        for (; k>=number_decimal; k--){ //number_decimal номер децемеала переданный в функцию через параметры
             
-//             for (; i>= number_bit; i--){  // number_bit  номер биты переданный в функцию через параметры
+            for (; i>= number_bit; i--){  // number_bit  номер биты переданный в функцию через параметры
                 
-//                 int j;
-//                 int temp_index;  
-//                 if (flag == 1) {j = s_index-1; temp_index = index; flag=0; } //если флаг 1 j равна индексу первого вхождения еденицы у которой заняли бит flag=0;
-//                 else  {j = 31; temp_index=0; }  // иначе j равна последнему биту
-//                 for (; j >= temp_index; j--) {
-//                     value->decimal[k].bits[i] = s21_set_bit(value->decimal[k].bits[i], j); // устанавливаем биты у которых не могли занять десяток в 1
-//                 }
-//             }
-//             i = 2; s_index =32;
-//         }
-//     }
-// }
+                int j;
+                int temp_index;  
+                if (flag == 1) {j = s_index-1; temp_index = index; flag=0; } //если флаг 1 j равна индексу первого вхождения еденицы у которой заняли бит flag=0;
+                else  {j = 31; temp_index=0; }  // иначе j равна последнему биту
+                for (; j >= temp_index; j--) {
+                    value->decimal[k].bits[i] = s21_set_bit(value->decimal[k].bits[i], j); // устанавливаем биты у которых не могли занять десяток в 1
+                }
+            }
+            i = 2; s_index =32;
+        }
+    }
+}
 
 void super_logic_sub(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result){ // не посредственно осуществляет вычитание
 for(int k = 0; k<2; k++) {
@@ -467,11 +539,11 @@ int super_comparison_of_numbers(s21_big_decimal value_1, s21_big_decimal value_2
     return -1; // ошибка
 }
 
-void super_swap(s21_big_decimal *value_1, s21_big_decimal *value_2) {
-    s21_big_decimal temp = *value_2;
-    *value_2 = *value_1;
-    *value_1 = temp;
-}
+// void super_swap(s21_big_decimal *value_1, s21_big_decimal *value_2) {
+//     s21_big_decimal temp = *value_2;
+//     *value_2 = *value_1;
+//     *value_1 = temp;
+// }
 
 s21_big_decimal s21_big_sub(s21_big_decimal decimal1, s21_big_decimal decimal2) {
     s21_big_decimal result;
