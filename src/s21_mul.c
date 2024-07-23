@@ -4,10 +4,10 @@
 int s21_mul_handle(s21_big_decimal big_result, int result_exponent, int count_out_bounds, s21_decimal *result);
 
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-    int result_code = 0;
+    int result_code = S21_DECIMAL_OK;
 
     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
-        // TODO: какой код ошибки?
+        result_code = S21_DECIMAL_ERROR;
     } else {
         s21_big_decimal big_result = {{get_new_decimal(), get_new_decimal()}};
 
@@ -29,7 +29,7 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         int result_exponent = exponent_1 + exponent_2 - count_out_bounds;
 
         if (result_exponent < 0) {
-            result_code = 1;
+            result_code = ERROR_OVERFLOW;
         } else {
             result_code = s21_mul_handle(big_result, result_exponent, count_out_bounds, result);
         }
@@ -37,7 +37,7 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         if (result_code == 0) {
             set_decimal_sign(result, result_sign);
         } else if (result_code == 1 && result_sign == 1) {
-            result_code = 2;
+            result_code = ERROR_UNDERFLOW;
         }
     }
 

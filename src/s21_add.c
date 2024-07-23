@@ -451,7 +451,7 @@ int s21_add_handle(s21_big_decimal big_result, int result_exponent, int count_ou
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
-        return 1;
+        return S21_DECIMAL_ERROR;
     }
     
     int sign_1 = get_decimal_sign(value_1);
