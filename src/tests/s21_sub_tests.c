@@ -184,13 +184,27 @@
 // }
 // END_TEST
 
-START_TEST(test_10) {
- s21_decimal num_1 = {{-1577745379, 1410906814, 1975917157, -2146304000}};
- s21_decimal num_2 = {{287529920, 500118750, 933490658, -2146500608}};
+// START_TEST(test_10) {
+//  s21_decimal num_1 = {{-1577745379, 1410906814, 1975917157, -2146304000}};
+//  s21_decimal num_2 = {{287529920, 500118750, 933490658, -2146500608}};
+//  s21_decimal result = {0};
+//  s21_decimal expected = {{-943547949, -175602023, 931514740, 983040}};
+//  int res_code = s21_sub(num_1, num_2, &result);
+//  ck_assert_int_eq(res_code, 0);
+//  for (int i = 0; i < 4; ++i) {
+//   ck_assert_int_eq(result.bits[i], expected.bits[i]);
+//  }
+// }
+// END_TEST
+
+START_TEST(test_11) {
+ s21_decimal num_1 = {{216264318, 1453433234, -382457762, -2146762752}};
+ s21_decimal num_2 = {{-200511848, -1589875853, 376050698, -2146959360}};
  s21_decimal result = {0};
- s21_decimal expected = {{-943547949, -175602023, 931514740, 983040}};
+ s21_decimal expected = {{-1921381777, -193712550, -573585406, 589824}};
+
  int res_code = s21_sub(num_1, num_2, &result);
-printf("\nчисла на входе\n");
+ printf("\nчисла на входе\n");
  print_decimal(num_1);
  printf("-----^num_1^---------------num_2------\n");
  print_decimal(num_2);
@@ -206,20 +220,6 @@ printf("\nчисла на входе\n");
  }
 }
 END_TEST
-
-// START_TEST(test_11) {
-//  s21_decimal num_1 = {{216264318, 1453433234, -382457762, -2146762752}};
-//  s21_decimal num_2 = {{-200511848, -1589875853, 376050698, -2146959360}};
-//  s21_decimal result = {0};
-//  s21_decimal expected = {{-1921381777, -193712550, -573585406, 589824}};
-
-//  int res_code = s21_sub(num_1, num_2, &result);
-//  ck_assert_int_eq(res_code, 0);
-//  for (int i = 0; i < 4; ++i) {
-//   ck_assert_int_eq(result.bits[i], expected.bits[i]);
-//  }
-// }
-// END_TEST
 
 // START_TEST(test_12) {
 //  s21_decimal num_1 = {{-969384219, -1116816725, -1141911415, -2146959360}};
@@ -270,21 +270,21 @@ END_TEST
 TCase *arithmetic_sub_tests(void) {
   TCase *test_cases = tcase_create("test_cases");
 
-//   tcase_add_test(test_cases, test_0);
-//   tcase_add_test(test_cases, test_1);
-//   tcase_add_test(test_cases, test_2);
-//   tcase_add_test(test_cases, test_3);
-//   tcase_add_test(test_cases, test_4);
-//   tcase_add_test(test_cases, test_5);
-//   tcase_add_test(test_cases, test_6);
-//   tcase_add_test(test_cases, test_7);
-//   tcase_add_test(test_cases, test_8);
-//   tcase_add_test(test_cases, test_9);
-  tcase_add_test(test_cases, test_10);
-//   tcase_add_test(test_cases, test_11);
-//   tcase_add_test(test_cases, test_12);
-//   tcase_add_test(test_cases, test_13);
-//   tcase_add_test(test_cases, test_14);
+  // tcase_add_test(test_cases, test_0);
+  // tcase_add_test(test_cases, test_1);
+  // tcase_add_test(test_cases, test_2);
+  // tcase_add_test(test_cases, test_3);
+  // tcase_add_test(test_cases, test_4);
+  // tcase_add_test(test_cases, test_5);
+  // tcase_add_test(test_cases, test_6);
+  // tcase_add_test(test_cases, test_7);
+  // tcase_add_test(test_cases, test_8);
+  // tcase_add_test(test_cases, test_9);
+  // tcase_add_test(test_cases, test_10);
+  tcase_add_test(test_cases, test_11);
+  // tcase_add_test(test_cases, test_12);
+  // tcase_add_test(test_cases, test_13);
+  // tcase_add_test(test_cases, test_14);
 
   return test_cases;
 }

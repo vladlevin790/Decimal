@@ -167,19 +167,12 @@ s21_decimal scale_down(s21_big_decimal value) {
     s21_big_decimal_zero(&result);
     s21_big_decimal_zero(&div_remainder);
     s21_big_div(save, big_count, &result, &div_remainder);
-    div_remainder.decimal[0].bits[0]=count;
     save = result;
-
+    set_decimal_exponent(&save.decimal[0], exp); 
+    set_decimal_exponent(&div_remainder.decimal[0], count);
     set_sign_sub(&save.decimal[0], znak);
-    // set_decimal_exponent(&save.decimal[0], 14);
-    for (int i =0; i<28; i++){                                                              // temp
-        set_decimal_exponent(&save.decimal[0], i);                                              // temp
-    res = s21_round_banking(save.decimal[0], div_remainder.decimal[0]);                      // temp
+    res = s21_round_banking(save.decimal[0], div_remainder.decimal[0]);                     
     // res = value.decimal[0]; //без банковского округления
-    printf("-\nscale_down_res");                                                               // temp
-    print_decimal(res);
-    printf("--------------count %d--------------------------\n",i); 
-    }
     return res;
 }
 
@@ -279,20 +272,10 @@ void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result)
         result->bits[3] = 0;
     } else {
         *result = scale_down(res);
-        printf("-EXPONENT_N-\n");
-        print_decimal(*result);
+        // printf("-EXPONENT_N-\n");
+        // print_decimal(*result);
 
     }    
-// ВСЯ ЛОГИКА ВЫЧИТАНИЯ КАК ОНА ЕСТЬ
-
-    // printf("\n 1 SUPER_PRINT\n");
-    // super_print(val_1);
-    // printf("\n 2 SUPER_PRINT\n");
-    // super_print(val_2);
-    // printf("\n SUPER_PRINT res\n");
-    // print_decimal(*result);
-    // super_print(res);
-
 }
 int s21_big_decimal_cheak_on_zero(s21_big_decimal value, int mode){ // mode = 0 полная проверка mode = 1 провереп только decimal[1]
     if (mode == 0) {
@@ -310,36 +293,40 @@ int s21_big_decimal_cheak_on_zero(s21_big_decimal value, int mode){ // mode = 0 
 }
 
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+    int fflag = 0; 
     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
         printf("в папраметр функции sub_21 передан неверный параметр (resualt == NULL, либо ошибка в экспоненте первого или второго числа)");
         return 9;
     }
     else {
-        if (get_decimal_exponent(value_1) != get_decimal_exponent(value_2)) { // выполняется если есть экспонента; // если эуспонента разная то выполняем
+        if (get_decimal_exponent(value_1) != get_decimal_exponent(value_2)) { // выполняется если есть экспонента и она разная; // если эуспонента равная  выполняем else
             for (int i = 0; i<3; result->bits[i]=0, i++); // за нуляем структуру result
             EXPONENT_N(&value_1, &value_2, result);
             }
-
         else if (get_decimal_exponent(value_1) == get_decimal_exponent(value_2)){
+            fflag = 1;
             for (int i = 0; i<3; result->bits[i]=0, i++); // за нуляем структуру result
             if (get_decimal_sign(value_1) == 0 &&  get_decimal_sign(value_2) == 0) { // если оба числа положительные
-                if (comparison_of_numbers(value_1,value_2) == 1) {
+                if (comparison_of_numbers(value_1,value_2) == 1) {   //сравнивает value1  с вторым если 1-ое больше возвращает 0 иначе 1  
+                    printf("\n!!!!!!!!!!!!!!!!!!!\n");
                     swap(&value_1, &value_2); // число 1 меньше второго меняем местами;
                     set_decimal_sign(result, 1); // меняем знаковый бит число отрицательное;
                 }
+                printf("\n1 \n");
                 logic_sub(value_1, value_2, result);
             }
-            else if (get_decimal_sign(value_1) == 1 &&  get_decimal_sign(value_2) == 1) {  // оба числа отрицатлльные
+            else if (get_decimal_sign(value_1) == 1 &&  get_decimal_sign(value_2) == 1) {  // если оба числа отрицатлльные
                 if (comparison_of_numbers(value_1,value_2) == 1) {
                     swap(&value_1, &value_2); // число 1 меньше второго меняем местами;
                     set_decimal_sign(result, 0); // меняем знаковый бит число отрицательное;
+                    printf("\n 2 \n");
                     logic_sub(value_1, value_2, result); // число положительное
                 }
                 else {
+                    printf("\n3 \n");
                     logic_sub(value_1, value_2, result);
                     set_decimal_sign(result, 1); // число отрицательное;
                 }
-
             }
             else { 
                 if (comparison_of_numbers(value_1, value_2) == 1) { // если value2 больше
@@ -347,17 +334,22 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
                         set_decimal_sign(&value_2, 0);
                         s21_add(value_1, value_2, result);
                         set_decimal_sign(result, 0);
+                        printf("\n4 \n");
                     } else {
                         set_decimal_sign(&value_1, 0);
                         s21_add(value_1, value_2, result);
                         set_decimal_sign(result, 1);
+                        printf("\n5 \n");
                     }
                 }else { // если value1 больше
                     if (get_decimal_sign(value_1) == 1) {
                         set_decimal_sign(&value_1, 0);
                         s21_add(value_1, value_2, result);
                         set_decimal_sign(result, 1);
+                        printf("\n6 \n");
+
                     } else {
+                        printf("\n7 \n");
                         set_decimal_sign(&value_2, 0);
                         s21_add(value_1, value_2, result);
                         set_decimal_sign(result, 0);
@@ -366,8 +358,11 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
             }
         }
     }
+    printf("\n результат в функции s21_sub\n");
+    print_decimal(*result);
+    printf("\n ========================================== \n");
     cheak_res_on_zero(result); //проверка ответа на ноль если ноль и имеется знак минус меняем на плюс
-    // set_decimal_exponent(result, get_decimal_exponent(value_1)); //добавляем экспоненту в resault
+    if (fflag == 1) set_decimal_exponent(result, get_decimal_exponent(value_1)); //добавляем экспоненту в resault
 return 0;
 }
 
