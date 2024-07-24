@@ -114,6 +114,8 @@ void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_dec
     *div_remainder = remainder;
 }
 
+// whole  цедая часть отделения  расчтиываем коолличестов раз сколько надо поделить на 10 чтобы влезло в децемал. возводим 10 в степень сколько раз поделил
+//число которое после вычитания резаулт мы делим на возведенноую в степень 10 после чего я получу целую и дрбоную часть после чего я вызываю див хэндел
 int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole, s21_big_decimal remainder, s21_decimal *result) {
     int result_code = 0;
 

@@ -3,6 +3,22 @@
 #include "helper_tests.h"
 #include <check.h>
 #include <limits.h>
+#include "../s21_decimal.h"
+#include "../decimal_helper/s21_decimal_helper.h"
+#include "../s21_sub.h"
+// void print_bits(int digit) {
+//     for (int i =31; i>=0; i--) printf("%d", (digit >> i) & 1);
+//     // printf(" ");
+// }
+
+// void print_decimal(s21_decimal digit) { 
+//     for (int i = 3; i >= 0; i--) {
+//         print_bits(digit.bits[i]);
+//    if (i==3) printf("    <-знаковый бит     ");}
+//    printf("\n");
+// }
+
+
 
 START_TEST(test_0) {
   s21_decimal num_1 = {{3, 0, 0, 0}};
@@ -10,9 +26,18 @@ START_TEST(test_0) {
   s21_decimal result = {0};
   s21_decimal expected = {{1, 0, 0, -2147483648}};
 
-  int res_code = s21_sub(num_1, num_2, &result);
-  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	// for (int i = 0; i < 4; ++i) {
+  //       for (int j = 31; j >= 0; j--) {
+  //           printf("%d", s21_get_bit(result.bits[i], j));
+  //       }
+  //       printf("\n");
+	// }
+		ck_assert_int_eq(result.bits[0], expected.bits[0]);
+    ck_assert_int_eq(result.bits[1], expected.bits[1]);
+    ck_assert_int_eq(result.bits[2], expected.bits[2]);
+    ck_assert_int_eq(result.bits[3], expected.bits[3]);
 }
 END_TEST
 
