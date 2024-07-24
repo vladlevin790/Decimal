@@ -27,7 +27,7 @@ int main(void) {
   suite_add_tcase(suite, s21_round_get_tests());
   suite_add_tcase(suite, s21_floor_get_tests());
   suite_add_tcase(suite, s21_truncate_get_tests());
-  suite_add_tcase(suite, s21_round_get_tests());
+  suite_add_tcase(suite, s21_negate_get_tests());
 
   runner = srunner_create(suite);
   srunner_run_all(runner, CK_NORMAL);
