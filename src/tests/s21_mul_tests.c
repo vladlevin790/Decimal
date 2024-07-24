@@ -672,8 +672,24 @@ START_TEST(test_56) {
 }
 END_TEST
 
+START_TEST(test_57) {
+  // num_1: 10
+  // num_2: 1.0000
+  // result: 10.0000
+
+  s21_decimal num_1 = {{10, 0, 0, 0}};
+  s21_decimal num_2 = {{10000, 0, 0, 262144}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{100000, 0, 0, 262144}};
+
+  int res_code = s21_mul(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
 TCase *arithmetic_mul_tests(void) {
-  TCase *test_cases = tcase_create("test_cases");
+  TCase *test_cases = tcase_create("test_cases_s21_mul");
 
   tcase_add_test(test_cases, test_0);
   tcase_add_test(test_cases, test_1);
@@ -730,6 +746,7 @@ TCase *arithmetic_mul_tests(void) {
   tcase_add_test(test_cases, test_54);
   tcase_add_test(test_cases, test_55);
   tcase_add_test(test_cases, test_56);
+  tcase_add_test(test_cases, test_57);
 
   return test_cases;
 }
