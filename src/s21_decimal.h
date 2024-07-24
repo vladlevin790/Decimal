@@ -35,7 +35,8 @@ enum s21_arithmetic_code_error {
     // TRUE = 1,
     ERROR_OVERFLOW = 1, //  the number is too large or equal to infinity
     ERROR_UNDERFLOW = 2, // the number is too small or equal to negative infinity;
-    ERROR_DIVISION_BY_ZERO = 3
+    ERROR_DIVISION_BY_ZERO = 3,
+    S21_DECIMAL_ERROR = 4
 };
 // #define S21_DECIMAL_OK 0
 // #define S21_DECIMAL_OVERFLOW 1
