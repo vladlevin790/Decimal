@@ -1,7 +1,8 @@
 #include <check.h>
-#include "../s21_decimal.h"
+
 #include "../binary/s21_binary.h"
 #include "../decimal_helper/s21_decimal_helper.h"
+#include "../s21_decimal.h"
 
 START_TEST(test_0) {
   s21_decimal decimal = {0};
@@ -38,7 +39,7 @@ START_TEST(test_3) {
   int result = s21_from_int_to_decimal(-1, &decimal);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(1, decimal.bits[0]); // 1, 0, 0, -2147483648
+  ck_assert_int_eq(1, decimal.bits[0]);  // 1, 0, 0, -2147483648
   ck_assert_int_eq(0, decimal.bits[1]);
   ck_assert_int_eq(0, decimal.bits[2]);
   ck_assert_int_eq(-2147483648, decimal.bits[3]);
@@ -58,7 +59,7 @@ END_TEST
 START_TEST(test_5) {
   s21_decimal decimal = {0};
   int result = s21_from_int_to_decimal(-2147483648, &decimal);
-  
+
   ck_assert_int_eq(0, result);
   ck_assert_int_eq(1, get_decimal_sign(decimal));
   ck_assert_int_eq(-2147483648, decimal.bits[0]);

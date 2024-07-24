@@ -1,8 +1,9 @@
+#include <check.h>
+#include <limits.h>
+
 #include "../decimal_helper/s21_decimal_helper.h"
 #include "../s21_decimal.h"
 #include "helper_tests.h"
-#include <check.h>
-#include <limits.h>
 
 START_TEST(test_s21_add_simple) {
   s21_decimal num_1 = {{1, 0, 0, 0}};
@@ -32,7 +33,6 @@ START_TEST(test_s21_add_with_scale) {
 END_TEST
 
 START_TEST(test_s21_add_check_boards_mantissa_1) {
-
   s21_decimal num_1 = {{0xFFFFFFFF, 0, 0, 0}};
   s21_decimal num_2 = {{1, 0, 0, 0}};
   s21_decimal expected = {{0, 1, 0, 0}};
@@ -45,7 +45,6 @@ START_TEST(test_s21_add_check_boards_mantissa_1) {
 END_TEST
 
 START_TEST(test_s21_add_check_boards_mantissa_2) {
-
   s21_decimal num_1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0, 0}};
   s21_decimal num_2 = {{1, 0, 0, 0}};
   s21_decimal expected = {{0, 0, 1, 0}};
@@ -58,7 +57,6 @@ START_TEST(test_s21_add_check_boards_mantissa_2) {
 END_TEST
 
 START_TEST(test_s21_add_with_diff_scale) {
-
   s21_decimal num_1 = {{2, 1, 0, 131072}};
   s21_decimal num_2 = {{1, 0, 0, 196608}};
   s21_decimal expected = {{21, 10, 0, 196608}};
@@ -81,7 +79,6 @@ START_TEST(test_s21_add_large_numbers) {
 END_TEST
 
 START_TEST(test_s21_add_negative_numbers) {
-
   s21_decimal num_1 = {{5, 0, 0, 0x80000000}};
   s21_decimal num_2 = {{10, 0, 0, 0x80000000}};
   s21_decimal result = {0};
@@ -94,7 +91,6 @@ START_TEST(test_s21_add_negative_numbers) {
 END_TEST
 
 START_TEST(test_s21_add_negative_first_num_1) {
-
   s21_decimal num_1 = {{8, 0, 0, 0}};
   set_decimal_sign(&num_1, 1);
   s21_decimal num_2 = {{2, 0, 0, 0}};
@@ -108,7 +104,6 @@ START_TEST(test_s21_add_negative_first_num_1) {
 END_TEST
 
 START_TEST(test_s21_add_negative_first_num_2) {
-
   s21_decimal num_1 = {{8, 0, 0, 0}};
   set_decimal_sign(&num_1, 1);
   s21_decimal num_2 = {{19, 0, 0, 0}};
@@ -135,7 +130,6 @@ START_TEST(test_s21_add_negative_second_num_1) {
 END_TEST
 
 START_TEST(test_s21_add_negative_second_num_2) {
-
   s21_decimal num_1 = {{8, 0, 0, 0}};
   s21_decimal num_2 = {{19, 0, 0, 0}};
   set_decimal_sign(&num_2, 1);
@@ -150,7 +144,6 @@ END_TEST
 
 // Тест для сложения с нулем
 START_TEST(test_s21_add_with_zero) {
-
   s21_decimal num_1 = {{123456789, 0, 0, 0}};
   s21_decimal num_2 = {{0, 0, 0, 0}};
   s21_decimal result = {0};
@@ -238,7 +231,7 @@ START_TEST(case_0_add_minus_0) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{0, 0, 0, 0x80000000}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {{0, 0, 0, 0}}; // возможно будет -0
+  s21_decimal expected = {{0, 0, 0, 0}};  // возможно будет -0
   int res_code = s21_add(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
   check_decimal_bits(result, expected);
@@ -250,7 +243,7 @@ START_TEST(case_minus_0_add_0) {
   s21_decimal num_2 = {{0, 0, 0, 0x80000000}};
   s21_decimal result = {{0}};
   s21_decimal expected = {
-      {0, 0, 0, 0}}; // возможно будет -0 что тоже верно -0 == +0
+      {0, 0, 0, 0}};  // возможно будет -0 что тоже верно -0 == +0
   int res_code = s21_add(num_2, num_1, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
   check_decimal_bits(result, expected);

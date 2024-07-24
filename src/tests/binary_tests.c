@@ -1,6 +1,7 @@
 #include <check.h>
-#include "../s21_decimal.h"
+
 #include "../binary/s21_binary.h"
+#include "../s21_decimal.h"
 
 START_TEST(test_set_bit_0) {
   s21_decimal decimal = {0};
@@ -25,7 +26,6 @@ START_TEST(test_set_bit_2) {
   ck_assert_int_eq(decimal.bits[3], 0x1);
 }
 END_TEST
-
 
 START_TEST(test_get_bit_0) {
   s21_decimal decimal = {0};

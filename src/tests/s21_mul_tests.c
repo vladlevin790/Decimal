@@ -1,8 +1,9 @@
+#include <check.h>
+#include <limits.h>
+
 #include "../decimal_helper/s21_decimal_helper.h"
 #include "../s21_decimal.h"
 #include "helper_tests.h"
-#include <check.h>
-#include <limits.h>
 
 START_TEST(test_0) {
   s21_decimal num_1 = {{1, 0, 0, 0}};
@@ -143,7 +144,7 @@ START_TEST(test_11) {
   s21_decimal expected = {{-1885176809, -1419499196, -659590793, 1310720}};
 
   int res_code = s21_mul(num_1, num_2, &result);
-  
+
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
   check_decimal_bits(result, expected);
 }

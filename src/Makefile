@@ -8,7 +8,7 @@ s21_decimal.a: $(C_OBJS)
 	ar rcs ./$@ $^
 
 %.o: %.c
-	gcc -c -std=c11 -g -Wall -Werror -Wextra $< -o $@
+	gcc -c -std=c11 -g -Wall -Werror -Wextra $< -o $@ -fsanitize=address
 
 test: clean s21_decimal.a $(TESTS_DIR)/main.c
 	gcc -std=c11 -Wall -Werror -Wextra $(TESTS_DIR)/*.c -o $(TESTS_DIR)/test.o -L. s21_decimal.a -lcheck -lsubunit -lm

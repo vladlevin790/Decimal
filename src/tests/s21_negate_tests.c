@@ -1,6 +1,7 @@
 #include <check.h>
-#include "../s21_decimal.h"
+
 #include "../other_func/s21_other_func.h"
+#include "../s21_decimal.h"
 
 START_TEST(test_negate_0) {
   s21_decimal decimal = get_new_decimal();
@@ -25,7 +26,6 @@ START_TEST(test_negate_1) {
   ck_assert_int_eq(0, get_decimal_sign(result));
 }
 END_TEST
-
 
 TCase *s21_negate_get_tests(void) {
   TCase *test_cases = tcase_create("test_cases");

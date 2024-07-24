@@ -1,6 +1,7 @@
+#include <check.h>
+
 #include "../other_func/s21_other_func.h"
 #include "../s21_decimal.h"
-#include <check.h>
 #include "helper_tests.h"
 START_TEST(test_truncate_0) {
   s21_decimal decimal = {{1302546422, -1587415236, 4052, -2146762752}};

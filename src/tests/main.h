@@ -1,8 +1,9 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include "../s21_decimal.h"
 #include <check.h>
+
+#include "../s21_decimal.h"
 
 TCase *binary_get_tests(void);
 TCase *decimal_helper_get_tests(void);
