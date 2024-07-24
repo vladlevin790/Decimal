@@ -1,5 +1,5 @@
 TESTS_DIR := ./tests
-C_SRCS := $(wildcard *.c ./*/*.c)
+C_SRCS := $(wildcard *.c ./binary/*.c ./other_func/*.c ./decimal_helper/*.c)
 C_OBJS := $(C_SRCS:%.c=%.o)
 
 all: clean s21_decimal.a
