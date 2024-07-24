@@ -1,5 +1,6 @@
 #ifndef HELPER_TESTS_H
 #define HELPER_TESTS_H
+#include "../s21_decimal.h"
 
 #include "../s21_decimal.h"
 

@@ -958,7 +958,7 @@ START_TEST(test_63) {
 END_TEST
 
 TCase *arithmetic_sub_tests(void) {
-  TCase *test_cases = tcase_create("test_cases");
+  TCase *test_cases = tcase_create("test_cases_s21_sub");
 
   tcase_add_test(test_cases, test_0);
   tcase_add_test(test_cases, test_1);
