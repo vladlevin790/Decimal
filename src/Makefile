@@ -19,7 +19,7 @@ clean:
 	rm -rf *.gcno *.gcda *.info report.out *.gcov
 
 gcov_report: clean s21_decimal.a
-	gcc -fprofile-arcs -ftest-coverage -Wall -Werror -Wextra -std=c11 $(TESTS_DIR)/*.c -o tmp_gcov.o -L. s21_decimal.a -lcheck -lm
+	gcc -fprofile-arcs -ftest-coverage -Wall -Werror -Wextra -std=c11 $(TESTS_DIR)/*.c -o tmp_gcov.o -L. s21_decimal.a -lcheck -lm -lsubunit
 	./tmp_gcov.o
 	gcov -f $(C_SRCS)
 	lcov -t "gcov_report" -o Coverage_Report.info -c -d .
