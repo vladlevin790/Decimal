@@ -42,7 +42,7 @@ s21_decimal binary_and(s21_decimal decimal1, s21_decimal decimal2);
 int s21_big_decimal_cheak_on_zero(s21_big_decimal value, int mode); // проверка бигдесимала на ноль;
 s21_big_decimal s21_big_decimal_add_mirror(s21_big_decimal value_1, s21_big_decimal temp);
 s21_big_decimal s21_big_decimal_exp_up(s21_big_decimal digit, int exp);
-void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result);
+int EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result);
 void super_helper_sub(s21_big_decimal *value, int number_decimal, int number_bit, int index);
 void super_logic_sub(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
 int super_comparison_of_numbers(s21_big_decimal value_1, s21_big_decimal value_2);
@@ -165,21 +165,23 @@ s21_decimal scale_down(s21_big_decimal value, int znak, int exp) {
             s21_big_decimal_zero(&result);
         }
         exp-=count;
-        big_count = get_big_decimal_ten_pow(count);
+        big_count = s21_get_big_decimal_ten_pow(count);
         s21_big_decimal_zero(&result);
         s21_big_decimal_zero(&div_remainder);
         s21_big_div(save, big_count, &result, &div_remainder);
         save = result;
 
         set_decimal_exponent(&div_remainder.decimal[0], count);
-        res = s21_round_banking(save.decimal[0], div_remainder.decimal[0]);   
+        res = s21_round_banking(save.decimal[0], div_remainder.decimal[0]).decimal[0];
         set_decimal_exponent(&res, exp); 
         set_sign_sub(&res, znak);
     // res = value.decimal[0]; //без банковского округления
     return res;
 }
 
-void EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result) { // выравнивает экспоненту и не только
+int EXPONENT_N(s21_decimal *value_1, s21_decimal *value_2, s21_decimal* result) { // выравнивает экспоненту и не только
+    int result_code = 0;
+
     s21_big_decimal val_1 = {0}, val_2 = {0}, res = {0};
     int sign_vol1 = get_decimal_sign(*value_1), sign_vol2 = get_decimal_sign(*value_2);  //сохраняем знак чисел
 // БЛОК РАБОТЫ С ЭКСПОНЕНТОЙ УРАВНИВАНИЕ ЭКСПОНЕНТЫ
@@ -311,7 +313,9 @@ int ffflag = 0;
         // printf("-EXPONENT_N-\n");
         // print_decimal(*result);
 
-    }    
+    }
+
+    return result_code;
 }
 int s21_big_decimal_cheak_on_zero(s21_big_decimal value, int mode){ // mode = 0 полная проверка mode = 1 проверка что заполнен только decimal[0]
     if (mode == 0) {
@@ -333,16 +337,17 @@ int s21_big_decimal_cheak_on_zero(s21_big_decimal value, int mode){ // mode = 0 
 }
 
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+    int result_code = 0;
+
     int fflag = 0; 
     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
-        printf("в папраметр функции sub_21 передан неверный параметр (resualt == NULL, либо ошибка в экспоненте первого или второго числа)");
-        return 9;
+        result_code = 4;
     }
     else {
         if (get_decimal_exponent(value_1) != get_decimal_exponent(value_2)) { // выполняется если есть экспонента и она разная; // если эуспонента равная  выполняем else
             for (int i = 0; i<3; result->bits[i]=0, i++); // за нуляем структуру result
             
-            EXPONENT_N(&value_1, &value_2, result);
+            result_code = EXPONENT_N(&value_1, &value_2, result);
             }
         else if (get_decimal_exponent(value_1) == get_decimal_exponent(value_2)){
             fflag = 1;
@@ -394,7 +399,8 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     }
     cheak_res_on_zero(result); //проверка ответа на ноль если ноль и имеется знак минус меняем на плюс
     if (fflag == 1) set_decimal_exponent(result, get_decimal_exponent(value_1)); //добавляем экспоненту в resault
-return 0;
+
+return result_code;
 }
 
 void logic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result){ // не посредственно осуществляет вычитание

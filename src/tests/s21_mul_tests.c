@@ -672,6 +672,90 @@ START_TEST(test_56) {
 }
 END_TEST
 
+START_TEST(test_57) {
+  s21_decimal num_1 = {{894784853, -819591186, 1807003620, 0}};
+  s21_decimal num_2 = {{100000003, 0, 0, 524288}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{334845269, 82818484, 1807003675, 0}};
+
+  int res_code = s21_mul(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
+START_TEST(test_58) {
+  s21_decimal num_1 = {{894784853, -819591186, 1807003620, 0}};
+  s21_decimal num_2 = {{15, 0, 0, 65536}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{1342177280, 918096869, -1584461865, 0}};
+
+  int res_code = s21_mul(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
+START_TEST(test_59) {
+  s21_decimal num_1 = {{894784853, -819591186, 1807003620, 0}};
+  s21_decimal num_2 = {{153, 0, 0, 131072}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{939524095, -695628766, -1530251757, 0}};
+
+  int res_code = s21_mul(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
+START_TEST(test_60) {
+  s21_decimal num_1 = {{894784854, -819591186, 1807003620, 0}};
+  s21_decimal num_2 = {{12, 0, 0, 65536}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{1073741825, -124515964, -2126562952, 0}};
+
+  int res_code = s21_mul(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
+START_TEST(test_61) {
+  s21_decimal num_1 = {{-402653185, -1613725636, 54210108, 0}};
+  s21_decimal num_2 = {{-402653183, -1613725636, 54210108, 1769472}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{268435456, 1042612833, 542101086, 65536}};
+
+  int res_code = s21_mul(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
+START_TEST(test_62) {
+  s21_decimal num_1 = {{268435455, 1042612833, 542101086, 0}};
+  s21_decimal num_2 = {{268435457, 1042612833, 542101086, 1835008}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{268435456, 1042612833, 542101086, 0}};
+
+  int res_code = s21_mul(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
+START_TEST(test_63) {
+  s21_decimal num_1 = {{268435456, 1042612833, 542101086, 1769472}};
+  s21_decimal num_2 = {{11, 0, 0, 65536}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{-134217728, -571112803, 596311194, 1769472}};
+
+  int res_code = s21_mul(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
 TCase *arithmetic_mul_tests(void) {
   TCase *test_cases = tcase_create("test_cases");
 
@@ -730,6 +814,13 @@ TCase *arithmetic_mul_tests(void) {
   tcase_add_test(test_cases, test_54);
   tcase_add_test(test_cases, test_55);
   tcase_add_test(test_cases, test_56);
+  tcase_add_test(test_cases, test_57);
+  tcase_add_test(test_cases, test_58);
+  tcase_add_test(test_cases, test_59);
+  tcase_add_test(test_cases, test_60);
+  tcase_add_test(test_cases, test_61);
+  tcase_add_test(test_cases, test_62);
+  tcase_add_test(test_cases, test_63);
 
   return test_cases;
 }
