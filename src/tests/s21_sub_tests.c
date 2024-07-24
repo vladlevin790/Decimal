@@ -3,7 +3,6 @@
 #include "helper_tests.h"
 #include <check.h>
 #include <limits.h>
-#include "../s21_sub.h"
 
 START_TEST(test_0) {
   s21_decimal num_1 = {{3, 0, 0, 0}};
@@ -940,6 +939,146 @@ START_TEST(test_63) {
 }
 END_TEST
 
+START_TEST(test_64) {
+	s21_decimal num_1 = {{-545094277, -845229340, 677280337, -2146107392}};
+	s21_decimal num_2 = {{-40286452, 135710988, 359361990, 524288}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{-827685762, 1360018786, -701347396, -2146893824}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_65) {
+	s21_decimal num_1 = {{-481263282, 414974053, -1632242189, -2146435072}};
+	s21_decimal num_2 = {{-1566695876, 1467647794, 1769656798, -2146041856}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{695546439, 1889013952, -1632243959, -2146435072}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_66) {
+	s21_decimal num_1 = {{-106947193, 1552635177, -835852774, 1376256}};
+	s21_decimal num_2 = {{1684621492, -100420738, -423955410, 1638400}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{1261260925, 742184891, -836239875, 1376256}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_67) {
+	s21_decimal num_1 = {{1008024429, 1274041519, -371838153, 720896}};
+	s21_decimal num_2 = {{-230692850, -1625724429, -1504730336, -2147155968}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{2126588074, -1071058193, -1504726413, 327680}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_68) {
+	s21_decimal num_1 = {{-470469060, 1615994755, 306589040, 1441792}};
+	s21_decimal num_2 = {{466219629, -1988026465, 999145981, -2146304000}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{722152633, 1894785570, 999176640, 1179648}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_69) {
+	s21_decimal num_1 = {{1303610063, -2100327507, -662347578, -2146959360}};
+	s21_decimal num_2 = {{-1139722871, 1026381884, -812100980, 1245184}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{-1935380106, -1950739538, -662347578, -2146959360}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_70) {
+	s21_decimal num_1 = {{581677060, -574891414, 375118760, 720896}};
+	s21_decimal num_2 = {{-1608663099, -677177284, 1206571201, -2146369536}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{-1376929160, 1604148999, -543767622, 786432}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_71) {
+	s21_decimal num_1 = {{2007364877, -59993199, 390017536, 196608}};
+	s21_decimal num_2 = {{2016613614, 976424241, -65355661, 393216}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{-1464303519, -2112934782, -437088043, 262144}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_72) {
+	s21_decimal num_1 = {{2037257346, 1655898722, 974261345, -2147090432}};
+	s21_decimal num_2 = {{-233750107, -1345572337, 1054537182, -2145910784}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{-235650995, 1655898717, 974261345, -2147090432}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
+START_TEST(test_73) {
+	s21_decimal num_1 = {{2130228336, -1818477427, -1869901495, -2147090432}};
+	s21_decimal num_2 = {{-579670104, 1437447303, 857674077, 851968}};
+	s21_decimal result = {0};
+	s21_decimal expected = {{1886744864, 1477513691, -1869901409, -2147090432}};
+
+	int res_code = s21_sub(num_1, num_2, &result);
+	ck_assert_int_eq(res_code, 0);
+	for (int i = 0; i < 4; ++i) {
+		ck_assert_int_eq(result.bits[i], expected.bits[i]);
+	}
+}
+END_TEST
+
 TCase *arithmetic_sub_tests(void) {
   TCase *test_cases = tcase_create("test_cases_s21_sub");
 
@@ -1007,6 +1146,16 @@ TCase *arithmetic_sub_tests(void) {
   tcase_add_test(test_cases, test_61);
   tcase_add_test(test_cases, test_62);
   tcase_add_test(test_cases, test_63);
+  tcase_add_test(test_cases, test_64);
+  tcase_add_test(test_cases, test_65);
+  tcase_add_test(test_cases, test_66);
+  tcase_add_test(test_cases, test_67);
+  tcase_add_test(test_cases, test_68);
+  tcase_add_test(test_cases, test_69);
+  tcase_add_test(test_cases, test_70);
+  tcase_add_test(test_cases, test_71);
+  tcase_add_test(test_cases, test_72);
+  tcase_add_test(test_cases, test_73);
 
   return test_cases;
 }
