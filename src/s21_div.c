@@ -58,58 +58,35 @@ void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_dec
     if (s21_is_less_big(decimal1, decimal2, 0, 0)) {
         remainder = decimal1;
     } else if (!s21_is_full_equal_zero(decimal1.decimal[0]) || !s21_is_full_equal_zero(decimal1.decimal[1])) {
-        // Рассчитываем предварительный сдвиг делителя
+        // Деление целых чисел (без знака) с остатком (википедия)
+        // for i := n − 1 .. 0 do  -- Здесь n равно числу бит в N
+        //     R := R << 1         -- Сдвиг влево числа R на 1 бит
+        //     R(0) := N(i)        -- Полагаем младший бит R равным биту i делимого
+        //     if R >= D then
+        //         R := R − D
+        //         Q(i) := 1
+        //     end
+        // end
+
         int left_1 = get_count_full_digits(decimal1.decimal[1]) - 1;
         left_1 = left_1 == -1 ? get_count_full_digits(decimal1.decimal[0]) - 1 : DECIMAL_MAX_BITS + left_1;
 
-        int left_2 = get_count_full_digits(decimal2.decimal[1]) - 1;
-        left_2 = left_2 == -1 ? get_count_full_digits(decimal2.decimal[0]) - 1 : DECIMAL_MAX_BITS + left_2;
+        while (left_1 >= 0) {
+            remainder = s21_left_shift_big_decimal(remainder, 1);
 
-        int shift = left_1 - left_2;
-
-        s21_big_decimal shifted_divisor = s21_left_shift_big_decimal(decimal2, shift); // Сдвинутый делитель
-        
-        // Флаг необходимости проводить вычитание
-        int is_current_sub = 1;
-        // Повторяем действия k+1 раз (один раз пп.2-3 алгоритма и k раз пп.4-6)
-        while (shift >= 0) {
-            // Определяем необходимое действие (Прибавлять или вычитать Сдвинутый делитель)
-            if (is_current_sub == 1) {
-                remainder = s21_big_sub(decimal1, shifted_divisor);
-            } else {
-                remainder = s21_big_add(decimal1, shifted_divisor);
+            if (s21_get_bit(decimal1.decimal[left_1 / 128].bits[(left_1 % 128) / 32], left_1 % 32)) {
+                remainder.decimal[0].bits[0] = s21_set_bit(remainder.decimal[0].bits[0], 0);
             }
 
-            // Сдвигаем влево на 1 частное и записываем в младший бит результата 1,
-            // если старший бит частичного остатка равен 1
-            whole = s21_left_shift_big_decimal(whole, 1);
-            if (!s21_get_bit(remainder.decimal[1].bits[3], 31)) {
-                whole.decimal[0].bits[0] = s21_set_bit(whole.decimal[0].bits[0], 0);
+            if (s21_is_greater_or_equal_big(remainder, decimal2, 0, 0)) {
+                remainder = s21_big_sub(remainder, decimal2);
+                whole.decimal[left_1 / 128].bits[(left_1 % 128) / 32] = s21_set_bit(whole.decimal[left_1 / 128].bits[(left_1 % 128) / 32], left_1 % 32);
             }
 
-            // Рассчитываем делимое для следующей итерации цикла (сдвиг влево на 1 частичного остатка)
-            decimal1 = s21_left_shift_big_decimal(remainder, 1);
-
-            // Если старший бит частичного остатка равен 0, то на следующей итерации
-            // необходимо проводить вычитание (Шаг 5 алгоритма)
-            if (!s21_get_bit(remainder.decimal[1].bits[3], 31)) {
-                is_current_sub = 1;
-            } else {
-                is_current_sub = 0;
-            }
-            shift--;
+            left_1--;
         }
-    
-        // Определяем, требуется ли коррекция остатка (п.8 алгоритма)
-        if (s21_get_bit(remainder.decimal[1].bits[3], 31)) {
-            remainder = s21_big_add(remainder, shifted_divisor);
-        }
-
-        // Возвращаем на место частичный остаток (п.9 алгоритма)
-        remainder = s21_right_shift_big_decimal(remainder, left_1 - left_2);
     }
-
-    // Заполняем переменные результата (частное и остаток)
+    
     *div_whole = whole;
     *div_remainder = remainder;
 }
