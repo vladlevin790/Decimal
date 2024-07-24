@@ -42,7 +42,7 @@ END_TEST
 START_TEST(test_3) {
   s21_decimal decimal = {0};
   decimal.bits[0] = 1;
-  set_decimal_sign(&decimal, 1);
+  s21_set_decimal_sign(&decimal, 1);
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);
@@ -55,7 +55,7 @@ END_TEST
 START_TEST(test_4) {
   s21_decimal decimal = {0};
   decimal.bits[0] = 0X80000000;
-  set_decimal_sign(&decimal, 1);
+  s21_set_decimal_sign(&decimal, 1);
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);
@@ -91,7 +91,7 @@ END_TEST
 
 START_TEST(test_7) {
   s21_decimal decimal = {0};
-  set_decimal_sign(&decimal, 1);
+  s21_set_decimal_sign(&decimal, 1);
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);
@@ -104,8 +104,8 @@ END_TEST
 START_TEST(test_8) {
   s21_decimal decimal = {0};
   decimal.bits[0] = 12345;
-  set_decimal_sign(&decimal, 1);
-  set_decimal_exponent(&decimal, 1);
+  s21_set_decimal_sign(&decimal, 1);
+  s21_set_decimal_exponent(&decimal, 1);
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);
@@ -118,8 +118,8 @@ END_TEST
 START_TEST(test_9) {
   s21_decimal decimal = {0};
   decimal.bits[0] = 12345;
-  set_decimal_sign(&decimal, 1);
-  set_decimal_exponent(&decimal, 7);
+  s21_set_decimal_sign(&decimal, 1);
+  s21_set_decimal_exponent(&decimal, 7);
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);
@@ -132,8 +132,8 @@ END_TEST
 START_TEST(test_10) {
   s21_decimal decimal = {0};
   decimal.bits[0] = 199999999;
-  set_decimal_sign(&decimal, 1);
-  set_decimal_exponent(&decimal, 3);
+  s21_set_decimal_sign(&decimal, 1);
+  s21_set_decimal_exponent(&decimal, 3);
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);
@@ -146,7 +146,7 @@ END_TEST
 START_TEST(test_11) {
   s21_decimal decimal = {0};
   decimal.bits[0] = 0b00000000000000000000000000001111;
-  set_decimal_exponent(&decimal, 1);
+  s21_set_decimal_exponent(&decimal, 1);
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);

@@ -18,11 +18,11 @@ END_TEST
 
 START_TEST(test_s21_add_with_scale) {
   s21_decimal num_1 = {{1, 1, 1, 0}};
-  set_decimal_exponent(&num_1, 3);
+  s21_set_decimal_exponent(&num_1, 3);
   s21_decimal num_2 = {{2, 1, 1, 0}};
-  set_decimal_exponent(&num_2, 3);
+  s21_set_decimal_exponent(&num_2, 3);
   s21_decimal expected = {{3, 2, 2, 0}};
-  set_decimal_exponent(&expected, 3);
+  s21_set_decimal_exponent(&expected, 3);
 
   s21_decimal result = {0};
 
@@ -92,7 +92,7 @@ END_TEST
 
 START_TEST(test_s21_add_negative_first_num_1) {
   s21_decimal num_1 = {{8, 0, 0, 0}};
-  set_decimal_sign(&num_1, 1);
+  s21_set_decimal_sign(&num_1, 1);
   s21_decimal num_2 = {{2, 0, 0, 0}};
   s21_decimal result = {0};
   s21_decimal expected = {{6, 0, 0, 0x80000000}};
@@ -105,7 +105,7 @@ END_TEST
 
 START_TEST(test_s21_add_negative_first_num_2) {
   s21_decimal num_1 = {{8, 0, 0, 0}};
-  set_decimal_sign(&num_1, 1);
+  s21_set_decimal_sign(&num_1, 1);
   s21_decimal num_2 = {{19, 0, 0, 0}};
   s21_decimal result = {0};
   s21_decimal expected = {{11, 0, 0, 0}};
@@ -119,7 +119,7 @@ END_TEST
 START_TEST(test_s21_add_negative_second_num_1) {
   s21_decimal num_1 = {{25, 0, 0, 0}};
   s21_decimal num_2 = {{3, 0, 0, 0}};
-  set_decimal_sign(&num_2, 1);
+  s21_set_decimal_sign(&num_2, 1);
   s21_decimal result = {0};
   s21_decimal expected = {{22, 0, 0, 0}};
   int res_code = s21_add(num_1, num_2, &result);
@@ -132,7 +132,7 @@ END_TEST
 START_TEST(test_s21_add_negative_second_num_2) {
   s21_decimal num_1 = {{8, 0, 0, 0}};
   s21_decimal num_2 = {{19, 0, 0, 0}};
-  set_decimal_sign(&num_2, 1);
+  s21_set_decimal_sign(&num_2, 1);
   s21_decimal result = {0};
   s21_decimal expected = {{11, 0, 0, 0x80000000}};
   int res_code = s21_add(num_1, num_2, &result);
@@ -157,12 +157,12 @@ END_TEST
 
 START_TEST(test_0) {
   s21_decimal num_1 = {{0, 5, 3, 0}};
-  set_decimal_exponent(&num_1, 3);
+  s21_set_decimal_exponent(&num_1, 3);
   s21_decimal num_2 = {{65, 0, 4, 0}};
-  set_decimal_exponent(&num_2, 2);
+  s21_set_decimal_exponent(&num_2, 2);
   s21_decimal result = {0};
   s21_decimal expected = {{650, 5, 43, 0}};
-  set_decimal_exponent(&expected, 3);
+  s21_set_decimal_exponent(&expected, 3);
 
   int res_code = s21_add(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);

@@ -7,9 +7,10 @@ int s21_is_equal(s21_decimal value_1, s21_decimal value_2) {
   value_1 = s21_remove_useless_zeros(value_1);
   value_2 = s21_remove_useless_zeros(value_2);
 
-  int sign_1 = get_decimal_sign(value_1), sign_2 = get_decimal_sign(value_2);
-  int exp_1 = get_decimal_exponent(value_1),
-      exp_2 = get_decimal_exponent(value_2);
+  int sign_1 = s21_get_decimal_sign(value_1),
+      sign_2 = s21_get_decimal_sign(value_2);
+  int exp_1 = s21_get_decimal_exponent(value_1),
+      exp_2 = s21_get_decimal_exponent(value_2);
 
   if (value_1.bits[0] == 0 && value_1.bits[1] == 0 && value_1.bits[2] == 0 &&
       value_2.bits[0] == 0 && value_2.bits[1] == 0 && value_2.bits[2] == 0) {
@@ -49,10 +50,10 @@ int s21_is_equal_big(s21_big_decimal value_1, s21_big_decimal value_2,
   }
 
   if (result_code == 1 &&
-      (!s21_is_equal(value_1.decimal[0], get_decimal_with_int_value(0)) ||
-       !s21_is_equal(value_1.decimal[1], get_decimal_with_int_value(0))) &&
-      (!s21_is_equal(value_2.decimal[0], get_decimal_with_int_value(0)) ||
-       !s21_is_equal(value_2.decimal[1], get_decimal_with_int_value(0)))) {
+      (!s21_is_equal(value_1.decimal[0], s21_get_decimal_with_int_value(0)) ||
+       !s21_is_equal(value_1.decimal[1], s21_get_decimal_with_int_value(0))) &&
+      (!s21_is_equal(value_2.decimal[0], s21_get_decimal_with_int_value(0)) ||
+       !s21_is_equal(value_2.decimal[1], s21_get_decimal_with_int_value(0)))) {
     result_code = sign_1 == sign_2;
   }
 

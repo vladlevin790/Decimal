@@ -8,7 +8,7 @@ START_TEST(test_0) {
   s21_decimal decimal = {0};
   decimal.bits[3] = s21_set_bit(decimal.bits[3], 31);
 
-  ck_assert_int_eq(get_decimal_sign(decimal), NEGATIVE);
+  ck_assert_int_eq(s21_get_decimal_sign(decimal), NEGATIVE);
 }
 END_TEST
 
@@ -16,14 +16,14 @@ START_TEST(test_1) {
   s21_decimal decimal = {0};
   decimal.bits[3] = s21_clear_bit(decimal.bits[3], 31);
 
-  ck_assert_int_eq(get_decimal_sign(decimal), POSITIVE);
+  ck_assert_int_eq(s21_get_decimal_sign(decimal), POSITIVE);
 }
 END_TEST
 
 START_TEST(test_2) {
   s21_decimal decimal = {0};
 
-  ck_assert_int_eq(get_decimal_sign(decimal), POSITIVE);
+  ck_assert_int_eq(s21_get_decimal_sign(decimal), POSITIVE);
 }
 END_TEST
 

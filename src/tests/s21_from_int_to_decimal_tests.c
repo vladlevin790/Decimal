@@ -9,7 +9,7 @@ START_TEST(test_0) {
   int result = s21_from_int_to_decimal(0, &decimal);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(0, get_decimal_sign(decimal));
+  ck_assert_int_eq(0, s21_get_decimal_sign(decimal));
   ck_assert_int_eq(0, decimal.bits[0]);
 }
 END_TEST
@@ -19,7 +19,7 @@ START_TEST(test_1) {
   int result = s21_from_int_to_decimal(3, &decimal);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(0, get_decimal_sign(decimal));
+  ck_assert_int_eq(0, s21_get_decimal_sign(decimal));
   ck_assert_int_eq(3, decimal.bits[0]);
 }
 END_TEST
@@ -29,7 +29,7 @@ START_TEST(test_2) {
   int result = s21_from_int_to_decimal(2147483647, &decimal);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(0, get_decimal_sign(decimal));
+  ck_assert_int_eq(0, s21_get_decimal_sign(decimal));
   ck_assert_int_eq(2147483647, decimal.bits[0]);
 }
 END_TEST
@@ -51,7 +51,7 @@ START_TEST(test_4) {
   int result = s21_from_int_to_decimal(-123, &decimal);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(1, get_decimal_sign(decimal));
+  ck_assert_int_eq(1, s21_get_decimal_sign(decimal));
   ck_assert_int_eq(-123, decimal.bits[0] * -1);
 }
 END_TEST
@@ -61,7 +61,7 @@ START_TEST(test_5) {
   int result = s21_from_int_to_decimal(-2147483648, &decimal);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(1, get_decimal_sign(decimal));
+  ck_assert_int_eq(1, s21_get_decimal_sign(decimal));
   ck_assert_int_eq(-2147483648, decimal.bits[0]);
   ck_assert_int_eq(0, decimal.bits[1]);
   ck_assert_int_eq(0, decimal.bits[2]);

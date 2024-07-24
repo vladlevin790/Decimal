@@ -751,7 +751,7 @@ END_TEST
 START_TEST(test_52) {
   s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
   s21_decimal num_2 = {{-1, -1, -1, -2147483648}};
-  s21_decimal expected = get_new_decimal();
+  s21_decimal expected = s21_get_new_decimal();
   s21_decimal result = {{0, 0, 0, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);

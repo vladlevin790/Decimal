@@ -31,10 +31,6 @@ enum s21_arithmetic_code_error {
   ERROR_DIVISION_BY_ZERO = 3,
   S21_DECIMAL_ERROR = 4
 };
-// #define S21_DECIMAL_OK 0
-// #define S21_DECIMAL_OVERFLOW 1
-// #define S21_DECIMAL_UNDERFLOW 2
-// #define S21_DECIMAL_DIVISION_BY_ZERO 3
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst);
 int s21_from_decimal_to_int(s21_decimal src, int *dst);
