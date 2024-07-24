@@ -9,7 +9,7 @@ int s21_negate(s21_decimal value, s21_decimal *result) {
     clear_decimal(result);
 
     *result = value;
-    set_decimal_sign(result, ~(get_decimal_sign(value)));
+    set_decimal_sign(result, !(get_decimal_sign(value)));
   }
   return result_code;
 }
@@ -71,8 +71,7 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
       if (get_decimal_sign(value)) {
         s21_truncate(value, &value);
         s21_add(value, get_decimal_with_int_value(-1), &value);
-      }
-      else {
+      } else {
         s21_truncate(value, &value);
       }
     }

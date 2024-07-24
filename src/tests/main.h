@@ -26,6 +26,7 @@ TCase *arithmetic_mul_tests(void);
 
 TCase *s21_round_get_tests(void);
 TCase *s21_truncate_get_tests(void);
-TCase *s21_floor_tests(void);
+TCase *s21_floor_get_tests(void);
+TCase *s21_negate_get_tests(void);
 
 #endif
