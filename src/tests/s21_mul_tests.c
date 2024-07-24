@@ -164,7 +164,6 @@ START_TEST(test_11) {
 	s21_decimal expected = {{-1885176809, -1419499196, -659590793, 1310720}};
 
 	int res_code = s21_mul(num_1, num_2, &result);
-    print_m_decimal(result);
 	ck_assert_int_eq(res_code, 0);
 	for (int i = 0; i < 4; ++i) {
 		ck_assert_int_eq(result.bits[i], expected.bits[i]);

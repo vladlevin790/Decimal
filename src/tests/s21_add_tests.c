@@ -278,7 +278,7 @@ START_TEST(case_NULL_result) {
   s21_decimal num_1 = {{1, 2, 3, 0}};
   s21_decimal num_2 = {{1, 2, 3, 0}};
   int return_s21 = s21_add(num_1, num_2, NULL);
-  ck_assert_int_eq(return_s21, 1);
+  ck_assert_int_eq(return_s21, 4);
 }
 END_TEST
 
@@ -510,6 +510,7 @@ START_TEST(case_MAX_add_minus_0_6) {
   ck_assert_int_eq(return_s21, 0);
 }
 END_TEST
+
 START_TEST(case_MIN_add_0_6) {
   s21_decimal num_1 = {{4294967295, 4294967295, 4294967295, 2147483648}};
   s21_decimal num_2 = {{6, 0, 0, 65536}};
@@ -531,11 +532,12 @@ START_TEST(case_1e_28_add_1e_28) {
   s21_decimal orig_res = {{2, 0, 0, 1835008}};
   s21_decimal s21_res = {{0, 0, 0, 0}};
   int return_s21 = s21_add(num_1, num_2, &s21_res);
+  ck_assert_int_eq(return_s21, 0);
   ck_assert_int_eq(s21_res.bits[0], orig_res.bits[0]);
   ck_assert_int_eq(s21_res.bits[1], orig_res.bits[1]);
+  printf("%d %d\n", s21_res.bits[3], s21_res.bits[3]);
   ck_assert_int_eq(s21_res.bits[2], orig_res.bits[2]);
   ck_assert_int_eq(s21_res.bits[3], orig_res.bits[3]);
-  ck_assert_int_eq(return_s21, 0);
 }
 END_TEST
 
@@ -849,7 +851,7 @@ END_TEST
 
 START_TEST(case_1000000000000000000000000000_add_minus_0_1) {
   s21_decimal num_1 = {{3892314112, 2681241660, 54210108, 0}};
-  s21_decimal num_2 = {{1, 0, 0, 2147549184}};
+  s21_decimal num_2 = {{1, 0, 0, -2147418112}};
   s21_decimal orig_res = {{268435455, 1042612833, 542101086, 65536}};
   s21_decimal s21_res = {{0, 0, 0, 0}};
   int return_s21 = s21_add(num_1, num_2, &s21_res);
@@ -878,8 +880,8 @@ END_TEST
 
 START_TEST(
     case_1000000000000000000000000000_add_0_999999999999999999999999999) {
-  s21_decimal num_1 = {{3892314112, 2681241660, 54210108, 0}};
-  s21_decimal num_2 = {{3892314111, 2681241660, 54210108, 1769472}};
+  s21_decimal num_1 = {{-402653184, -1613725636, 54210108, 0}};
+  s21_decimal num_2 = {{-402653185, -1613725636, 54210108, 1769472}};
   s21_decimal orig_res = {{268435466, 1042612833, 542101086, 65536}};
   s21_decimal s21_res = {{0, 0, 0, 0}};
   int return_s21 = s21_add(num_1, num_2, &s21_res);

@@ -130,26 +130,10 @@ int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole, s21_big_decim
 
     // Устанавливаем полученную степень для нашего остатка
     set_decimal_exponent(&second_remainder.decimal[0], power2);
-
-    s21_decimal half_one_decimal = get_decimal_with_int_value(5);
-    set_decimal_exponent(&half_one_decimal, 1);
-
-    // TODO: Удалить?
-    // if (s21_is_equal(second_remainder.decimal[0], half_one_decimal)) {
-    //     if (!s21_is_full_equal_zero(remainder.decimal[0]) || !s21_is_full_equal_zero(remainder.decimal[1])) {
-    //         // Если остаток от деления в виде decimal получился ровно 0.5, но после вычисления остаток от
-    //         // деления не равен 0, то корректируем остаток, т.к. фактически он больше 0.5:
-    //         // 0.5 + 0.0000000000000000000000000001 = 0.5000000000000000000000000001
-    //         s21_decimal min_decimal = get_decimal_with_int_value(1);
-    //         set_decimal_exponent(&min_decimal, 28);
-
-    //         s21_add(second_remainder.decimal[0], min_decimal, &second_remainder.decimal[0]);
-    //     }
-    // }
     
     // Выполняем банковское округления результата, исходя из остатка от деления
-    whole.decimal[0] = s21_round_banking(whole.decimal[0], second_remainder.decimal[0]);
-    
+    whole = s21_round_banking(whole.decimal[0], second_remainder.decimal[0]);
+
     // Устанавливаем степень результата
     if (!s21_is_full_equal_zero(whole.decimal[0])) {
         set_decimal_exponent(&whole.decimal[0], power1);

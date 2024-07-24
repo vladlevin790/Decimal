@@ -7,7 +7,7 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int result_code = 0;
 
     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
-        // TODO: какой код ошибки?
+        result_code = 4;
     } else {
         s21_big_decimal big_result = {{get_new_decimal(), get_new_decimal()}};
 
@@ -64,16 +64,16 @@ int s21_mul_handle(s21_big_decimal big_result, int result_exponent, int count_ou
     }
     
     s21_big_decimal remainder = {{get_new_decimal(), get_new_decimal()}};
-    s21_big_decimal powerten = get_big_decimal_ten_pow(count_out_bounds);
+    s21_big_decimal powerten = s21_get_big_decimal_ten_pow(count_out_bounds);
     
     // Окончательно убираем переполненную часть
     // Сохраняем остаток для округления и округляем
     s21_big_div(big_result, powerten, &big_result, &remainder);
     set_decimal_exponent(&remainder.decimal[0], count_out_bounds);
-    big_result.decimal[0] = s21_round_banking(big_result.decimal[0], remainder.decimal[0]);
 
-    if (!s21_is_full_equal_zero(big_result.decimal[1]) || check_decimal(big_result.decimal[0]) ||
-        s21_get_range_bits(big_result.decimal[0].bits[3], 0, 15) || s21_get_range_bits(big_result.decimal[0].bits[3], 24, 30)) {
+    big_result = s21_round_banking(big_result.decimal[0], remainder.decimal[0]);
+
+    if (!s21_is_full_equal_zero(big_result.decimal[1]) || big_result.decimal[0].bits[3] != 0) {
         result_code = 1;
     } else {
         *result = big_result.decimal[0];
