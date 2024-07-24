@@ -24,8 +24,8 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         s21_big_decimal div_remainder = {{get_new_decimal(), get_new_decimal()}};
         s21_big_decimal div_whole = {{get_new_decimal(), get_new_decimal()}};
         
-        // Делим делимое на делитель. В div_whole будет целая часть деления
-        // в div_remainder остаток от деления
+        // Делим делимое на делитель
+        // div_whole - целая часть деления, div_remainder - остаток от деления
         s21_big_div(big_value_1, big_value_2, &div_whole, &div_remainder);
 
         // Если целая часть деления не влезает в s21_decimal
@@ -36,10 +36,9 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
                 result_code = 1;
             }
         } else {
-            // Получаем конечный результат на основе целой части деления и его остатка
+            // Получаем конечный результат на основе целой части и остатка от деления
             result_code = s21_div_handle(big_value_2, div_whole, div_remainder, result);
-
-            // Если знаки делимого и делителя отличаются, то необходимо сделать результат отрицательным
+            
             if (result_code == 0 && sign1 != sign2) {
                 set_decimal_sign(result, 1);
             } else if (result_code == 1 && sign1 != sign2) {
@@ -51,6 +50,11 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     return result_code;
 }
 
+/// @brief Устанавливает целую часть деления и остаток на основе делимого и делителя
+/// @param decimal1 Делимое
+/// @param decimal2 Делитель
+/// @param div_whole Целая часть деления
+/// @param div_remainder Остаток от деления
 void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_decimal *div_whole, s21_big_decimal *div_remainder) {
     s21_big_decimal whole = {{get_new_decimal(), get_new_decimal()}}; // частное
     s21_big_decimal remainder = {{get_new_decimal(), get_new_decimal()}}; // остаток
@@ -91,35 +95,33 @@ void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2, s21_big_dec
     *div_remainder = remainder;
 }
 
-// whole  цедая часть отделения  расчтиываем коолличестов раз сколько надо поделить на 10 чтобы влезло в децемал. возводим 10 в степень сколько раз поделил
-//число которое после вычитания резаулт мы делим на возведенноую в степень 10 после чего я получу целую и дрбоную часть после чего я вызываю див хэндел
+/// @brief Получает дробную часть деления на основе остатка
+/// @param value_2 Делитель
+/// @param whole Целая часть деления (частное)
+/// @param remainder Остаток от деления
+/// @param result Результат высчитывания числа
+/// @return Код ошибки
 int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole, s21_big_decimal remainder, s21_decimal *result) {
     int result_code = 0;
-
-    // рассчитываем дробную часть нашего результата и получаем в whole результат, включая дробную часть
-    // после расчетов в remainder останется остаток от деления (который не поместился в дробную часть)
-    // power1 - значение степени результата
+    
+    // Получаем дробную часть из остатка
+    // и записываем в remainder остаток, который не влез в decimal
     int power1 = s21_div_calc_fractional(&whole, value_2, &remainder);
 
     s21_big_decimal second_remainder = {{get_new_decimal(), get_new_decimal()}};
 
-    // Переводим остаток, полученный в расчете выше, в decimal, чтобы использовать его для округления
-    // power2 - значение степени данного decimal
+    // Получаем дробную часть, которая не влезла в decimal
+    // и используем ее в банковском округлении
     int power2 = s21_div_calc_fractional(&second_remainder, value_2, &remainder);
-
-    // Устанавливаем полученную степень для нашего остатка
     set_decimal_exponent(&second_remainder.decimal[0], power2);
-    
-    // Выполняем банковское округления результата, исходя из остатка от деления
     whole = s21_round_banking(whole.decimal[0], second_remainder.decimal[0]);
 
-    // Устанавливаем степень результата
+    // Удаляем лишние нули из дробной части
     if (!s21_is_full_equal_zero(whole.decimal[0])) {
         set_decimal_exponent(&whole.decimal[0], power1);
         whole.decimal[0] = s21_remove_useless_zeros(whole.decimal[0]);
     }
     
-    // Анализируем результат на корректность (переполнение)
     if (!s21_is_full_equal_zero(whole.decimal[1]) || check_decimal(whole.decimal[0])
         || s21_get_range_bits(whole.decimal[0].bits[3], 0, 15) != 0
         || s21_get_range_bits(whole.decimal[0].bits[3], 24, 30) != 0) {
@@ -132,7 +134,7 @@ int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole, s21_big_decim
 }
 
 /// @brief Высчитывание дробной части на основе остатка и запись её в res
-/// @param res целая часть деления
+/// @param res частное
 /// @param value_2l делитель
 /// @param remainder остаток от деления
 /// @return количество знаков после запятой у res
