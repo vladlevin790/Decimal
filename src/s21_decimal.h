@@ -22,9 +22,9 @@ typedef enum s21_decimal_sign { POSITIVE = 0, NEGATIVE = 1 } s21_decimal_sign;
 
 enum s21_arithmetic_code_error {
   S21_DECIMAL_OK = 0,
-  // CODE_CONVERTATION_ERROR = 1,
+  CODE_CONVERTATION_ERROR = 1,
   FALSE = 0,
-  // TRUE = 1,
+  TRUE = 1,
   ERROR_OVERFLOW = 1,  //  the number is too large or equal to infinity
   ERROR_UNDERFLOW =
       2,  // the number is too small or equal to negative infinity;

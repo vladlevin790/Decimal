@@ -10,13 +10,13 @@ int s21_div_calc_fractional(s21_big_decimal *res, s21_big_decimal value_2l,
                             s21_big_decimal *remainder);
 
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  int result_code = 0;
+  int result_code = S21_DECIMAL_OK;
 
   if (s21_check_decimal(value_1) || s21_check_decimal(value_2) ||
       result == NULL) {
-    result_code = 4;
+    result_code = S21_DECIMAL_ERROR;
   } else if (s21_is_equal(value_2, s21_get_decimal_with_int_value(0))) {
-    result_code = 3;
+    result_code = ERROR_DIVISION_BY_ZERO;
   } else {
     *result = s21_get_new_decimal();
     int sign1 = s21_get_decimal_sign(value_1),
@@ -41,9 +41,9 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     if (div_whole.decimal[0].bits[3] != 0 ||
         !s21_is_full_equal_zero(div_whole.decimal[1])) {
       if (sign1 != sign2) {
-        result_code = 2;
+        result_code = ERROR_UNDERFLOW;
       } else {
-        result_code = 1;
+        result_code = ERROR_OVERFLOW;
       }
     } else {
       // Получаем конечный результат на основе целой части и остатка от деления
@@ -115,7 +115,7 @@ void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2,
 /// @return Код ошибки
 int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole,
                    s21_big_decimal remainder, s21_decimal *result) {
-  int result_code = 0;
+  int result_code = S21_DECIMAL_OK;
 
   // Получаем дробную часть из остатка
   // и записываем в remainder остаток, который не влез в decimal

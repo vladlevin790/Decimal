@@ -6,7 +6,7 @@ int s21_add_handle(s21_decimal value_1, s21_decimal value_2,
                    s21_decimal *result);
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  int result_code = 0;
+  int result_code = S21_DECIMAL_OK;
 
   if (s21_check_decimal(value_1) || s21_check_decimal(value_2) ||
       result == NULL) {
@@ -32,10 +32,10 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
       s21_set_decimal_sign(&value_2, 0);
 
       result_code = s21_add_handle(value_1, value_2, result);
-      if (result_code == 0) {
+      if (result_code == S21_DECIMAL_OK) {
         s21_set_decimal_sign(result, 1);
-      } else if (result_code == 1) {
-        result_code = 2;
+      } else if (result_code == ERROR_OVERFLOW) {
+        result_code = ERROR_UNDERFLOW;
       }
     }
   }
@@ -45,7 +45,7 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 
 int s21_add_handle(s21_decimal value_1, s21_decimal value_2,
                    s21_decimal *result) {
-  int result_code = 0;
+  int result_code = S21_DECIMAL_OK;
 
   int exponent_1 = s21_get_decimal_exponent(value_1),
       exponent_2 = s21_get_decimal_exponent(value_2);
@@ -63,7 +63,7 @@ int s21_add_handle(s21_decimal value_1, s21_decimal value_2,
   result_exponent -= count_out_bounds;
 
   if (result_exponent < 0) {
-    result_code = 1;
+    result_code = ERROR_OVERFLOW;
   } else {
     s21_big_decimal div_whole = {
         {s21_get_new_decimal(), s21_get_new_decimal()}};
@@ -78,7 +78,7 @@ int s21_add_handle(s21_decimal value_1, s21_decimal value_2,
 
     if (!s21_is_full_equal_zero(div_whole.decimal[1]) ||
         div_whole.decimal[0].bits[3] != 0) {
-      result_code = 1;
+      result_code = ERROR_OVERFLOW;
     } else {
       *result = div_whole.decimal[0];
       s21_set_decimal_exponent(result, result_exponent);

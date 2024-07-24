@@ -4,7 +4,7 @@
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   if (dst == NULL) {
-    return 1;
+    return CODE_CONVERTATION_ERROR;
   }
 
   s21_clear_decimal(dst);
@@ -17,5 +17,5 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
 
   dst->bits[0] = src;
 
-  return 0;
+  return S21_DECIMAL_OK;
 }

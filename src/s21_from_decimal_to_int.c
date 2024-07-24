@@ -5,10 +5,10 @@
 #include "s21_decimal.h"
 
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
-  int result_code = 0;
+  int result_code = S21_DECIMAL_OK;
 
   if (dst == NULL || s21_check_decimal(src) || s21_check_int_range(src)) {
-    result_code = 1;
+    result_code = CODE_CONVERTATION_ERROR;
   } else {
     s21_decimal truncated_decimal = s21_get_new_decimal();
     s21_truncate(src, &truncated_decimal);

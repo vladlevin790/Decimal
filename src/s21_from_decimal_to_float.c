@@ -4,10 +4,10 @@
 #include "s21_decimal.h"
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
-  int result_code = 0;
+  int result_code = S21_DECIMAL_OK;
 
   if (dst == NULL || s21_check_decimal(src)) {
-    result_code = 1;
+    result_code = CODE_CONVERTATION_ERROR;
   } else {
     *dst = 0;
 

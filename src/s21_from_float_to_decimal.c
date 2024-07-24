@@ -7,13 +7,13 @@ s21_decimal s21_parse_float_str_to_decimal(char* float_str, int exponent);
 int s21_get_exponent_from_float_str(char* float_str);
 
 int s21_from_float_to_decimal(float src, s21_decimal* dst) {
-  int result_code = 0;
+  int result_code = S21_DECIMAL_OK;
 
   if (dst == NULL || isnan(src) || isinf(src) ||
       fabsf(src) > 79228162514264337593543950335.0f) {
     result_code = 1;
   } else if (fabsf(src) > 0 && fabsf(src) < 1e-28) {
-    result_code = 1;
+    result_code = CODE_CONVERTATION_ERROR;
     *dst = s21_get_new_decimal();
   } else {
     s21_clear_decimal(dst);
