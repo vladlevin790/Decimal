@@ -63,15 +63,15 @@ int s21_mul_handle(s21_big_decimal big_result, int result_exponent, int count_ou
         count_out_bounds--;
     }
     
-    s21_big_decimal remainder = {{get_new_decimal(), get_new_decimal()}};
-    s21_big_decimal powerten = s21_get_big_decimal_ten_pow(count_out_bounds);
+    s21_big_decimal div_remainder = {{get_new_decimal(), get_new_decimal()}};
+    s21_big_decimal big_ten_pow = s21_get_big_decimal_ten_pow(count_out_bounds);
     
     // Окончательно убираем переполненную часть
     // Сохраняем остаток для округления и округляем
-    s21_big_div(big_result, powerten, &big_result, &remainder);
-    set_decimal_exponent(&remainder.decimal[0], count_out_bounds);
+    s21_big_div(big_result, big_ten_pow, &big_result, &div_remainder);
+    set_decimal_exponent(&div_remainder.decimal[0], count_out_bounds);
 
-    big_result = s21_round_banking(big_result.decimal[0], remainder.decimal[0]);
+    big_result = s21_round_banking(big_result.decimal[0], div_remainder.decimal[0]);
 
     if (!s21_is_full_equal_zero(big_result.decimal[1]) || big_result.decimal[0].bits[3] != 0) {
         result_code = 1;
@@ -79,7 +79,7 @@ int s21_mul_handle(s21_big_decimal big_result, int result_exponent, int count_ou
         *result = big_result.decimal[0];
         set_decimal_exponent(result, result_exponent);
 
-        if (s21_is_equal(*result, get_decimal_with_int_value(0)) && s21_is_equal(remainder.decimal[0], get_decimal_with_int_value(0))) {
+        if (s21_is_equal(*result, get_decimal_with_int_value(0)) && s21_is_equal(div_remainder.decimal[0], get_decimal_with_int_value(0))) {
             *result = s21_remove_useless_zeros(*result);
         }
     }

@@ -256,7 +256,7 @@ START_TEST(test_15) {
 
   s21_decimal num_1 = {{2, 1, 0, 131072}};
   s21_decimal num_2 = {{1, 0, 0, 196608}};
-  s21_decimal expected = {{21, 10, 0, 196608}};
+  s21_decimal expected = {{19, 10, 0, 196608}};
   s21_decimal result = {0};
 
   int res_code = s21_sub(num_1, num_2, &result);
@@ -354,11 +354,10 @@ END_TEST
 
 START_TEST(test_22) {
 
-  s21_decimal num_1 = {{8, 0, 0, 0}};
-  set_decimal_sign(&num_1, 1);
+  s21_decimal num_1 = {{8, 0, 0, -2147483648}};
   s21_decimal num_2 = {{2, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{6, 0, 0, 0x80000000}};
+  s21_decimal expected = {{10, 0, 0, -2147483648}};
   int res_code = s21_sub(num_1, num_2, &result);
 
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
@@ -536,7 +535,7 @@ START_TEST(test_33) {
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
+  check_decimal_bits(result, expected);
 }
 END_TEST
 
