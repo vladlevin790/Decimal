@@ -30,12 +30,6 @@ void set_decimal_exponent(s21_decimal* decimal, int exponent);
 // @return Значение бита (0 или 1)
 int get_decimal_digit_by_index(s21_decimal decimal, int index);
 
-// @brief Устанавливает бит для decimal в указанной позиции
-// @param s21_decimal* Указатель на структуру s21_decimal, в которой устанавливается значение разряда
-// @param index Индекс разряда (0 - 95)
-// @param value Значение, которое устанавливается в разряд (0 или 1)
-void set_decimal_digit_by_index(s21_decimal* decimal, int index, int value);
-
 // @brief Создает и инициализирует новый экземпляр структуры s21_decimal
 // @return Новый экземпляр структуры s21_decimal
 s21_decimal get_new_decimal();
@@ -77,7 +71,6 @@ int check_int_range(s21_decimal decimal);
 
 void s21_decimal_equalize(s21_decimal value_1, s21_decimal value_2, s21_big_decimal *big_value_1, s21_big_decimal *big_value_2);
 s21_big_decimal s21_left_shift_big_decimal(s21_big_decimal value, int shift_count);
-s21_big_decimal s21_right_shift_big_decimal(s21_big_decimal value, int count_shift);
 s21_big_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional);
 s21_big_decimal s21_get_big_decimal_ten_pow(int pow);
 s21_decimal s21_decimal_not(s21_decimal decimal);

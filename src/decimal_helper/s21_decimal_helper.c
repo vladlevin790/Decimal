@@ -41,21 +41,6 @@ int get_decimal_digit_by_index(s21_decimal decimal, int index) {
     return s21_get_bit(decimal.bits[bit_number], bit_index);
 }
 
-void set_decimal_digit_by_index(s21_decimal* decimal, int index, int value) {
-    if (index < 0 || index >= 96) {
-        return;
-    }
-
-    int bit_number = index / 32;
-    int bit_index = index % 32;
-
-    if (value != 0) {
-        decimal->bits[bit_number] = s21_set_bit(decimal->bits[bit_number], bit_index);
-    } else {
-        decimal->bits[bit_number] = s21_clear_bit(decimal->bits[bit_number], bit_index);
-    }
-}
-
 s21_decimal get_new_decimal() {
     s21_decimal decimal = {0};
     clear_decimal(&decimal);
@@ -71,31 +56,11 @@ s21_decimal get_decimal_with_int_value(int value) {
     return decimal;
 }
 
-s21_decimal get_decimal_with_float_value(float value) {
-    s21_decimal decimal = get_new_decimal();
-
-    s21_from_float_to_decimal(value, &decimal);
-
-    return decimal;
-}
-
 void clear_decimal(s21_decimal* decimal) {
     decimal->bits[0] = 0;
     decimal->bits[1] = 0;
     decimal->bits[2] = 0;
     decimal->bits[3] = 0;
-}
-
-int get_count_digits(s21_decimal decimal) {
-    int count = 0;
-
-    for (int i = 95; i >= 0 && count == 0; i--) {
-        if (get_decimal_digit_by_index(decimal, i)) {
-            count = i + 1;
-        }
-    }
-
-    return count;
 }
 
 int get_count_full_digits(s21_decimal decimal) {
@@ -196,28 +161,6 @@ s21_big_decimal s21_left_shift_big_decimal(s21_big_decimal value, int count_shif
     return value;
 }
 
-s21_big_decimal s21_right_shift_big_decimal(s21_big_decimal value, int count_shift) {
-    while (count_shift > 0) {
-        int is_set_one = 0;
-        for (int i = 7; i >= 0; i--) {
-            int decimal_index = i / 4;
-            
-            int tmp_is_set_one = s21_get_bit(value.decimal[decimal_index].bits[i % 4], 0);
-
-            value.decimal[decimal_index].bits[i % 4] = (unsigned int)(value.decimal[decimal_index].bits[i % 4]) >> 1;
-            if (is_set_one == 1) {
-                value.decimal[decimal_index].bits[i % 4] = s21_set_bit(value.decimal[decimal_index].bits[i % 4], 31);
-            }
-
-            is_set_one = tmp_is_set_one;
-        }
-
-        count_shift--;
-    }
-
-    return value;
-}
-
 s21_big_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional) {
     s21_decimal half_one = get_decimal_with_int_value(5);
     set_decimal_exponent(&half_one, 1);
@@ -282,7 +225,6 @@ s21_decimal s21_remove_useless_zeros(s21_decimal value) {
     s21_big_decimal ten_big_decimal = {{get_decimal_with_int_value(10), get_new_decimal()}};
 
     if (exponent > 0 && !check_decimal(value)) {
-        s21_decimal div_remainder = get_new_decimal();
         s21_decimal div_integral = value;
 
         set_decimal_exponent(&div_integral, 0);
@@ -296,7 +238,7 @@ s21_decimal s21_remove_useless_zeros(s21_decimal value) {
             s21_big_div(tmp_div_integral, ten_big_decimal, &tmp_div_integral, &tmp_div_remainder);
 
             div_integral = tmp_div_integral.decimal[0];
-            div_remainder = tmp_div_remainder.decimal[0];
+            s21_decimal div_remainder = tmp_div_remainder.decimal[0];
 
             if (s21_is_equal(div_remainder, get_decimal_with_int_value(0))) {
                 result = div_integral;

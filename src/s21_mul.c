@@ -9,8 +9,6 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
         result_code = 4;
     } else {
-        s21_big_decimal big_result = {{get_new_decimal(), get_new_decimal()}};
-
         int result_sign = get_decimal_sign(value_1) != get_decimal_sign(value_2);
         int exponent_1 = get_decimal_exponent(value_1), exponent_2 = get_decimal_exponent(value_2);
 
@@ -23,7 +21,7 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         s21_big_decimal big_value_1 = {{value_1, get_new_decimal()}};
         s21_big_decimal big_value_2 = {{value_2, get_new_decimal()}};
 
-        big_result = s21_big_mul(big_value_1, big_value_2);
+        s21_big_decimal big_result = s21_big_mul(big_value_1, big_value_2);
 
         int count_out_bounds = s21_count_digits_out_bounds(big_result);
         int result_exponent = exponent_1 + exponent_2 - count_out_bounds;
