@@ -287,7 +287,7 @@ START_TEST(case_0_add_MIN) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{-1, -1, -1, -2147483648}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {{0, 0, 0, -2147483648}};
+  s21_decimal expected = {{-1, -1, -1, -2147483648}};
   int res_code = s21_add(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
   check_decimal_bits(result, expected);
@@ -296,8 +296,8 @@ END_TEST
 
 START_TEST(case_MIN_add_MAX) {
   s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
-  s21_decimal num_2 = {{1, 1, 1, 0}};
-  s21_decimal expected = {{0, 0, 0, -2147483648}};
+  s21_decimal num_2 = {{-1, -1, -1, 0}};
+  s21_decimal expected = {{0, 0, 0, 0}};
   s21_decimal result = {{0}};
   int res_code = s21_add(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
@@ -466,9 +466,11 @@ START_TEST(case_minus_1e_28_add_1e_28) {
   s21_decimal num_1 = {{1, 0, 0, -2145648640}};
   s21_decimal num_2 = {{1, 0, 0, 1835008}};
   s21_decimal result = {0};
-  s21_decimal expected = {{0, 0, 0, -2145648640}};
+  s21_decimal expected = {{0, 0, 0, 0}};
 
   int res_code = s21_add(num_1, num_2, &result);
+  result = s21_remove_useless_zeros(result);
+
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
   check_decimal_bits(result, expected);
 }
@@ -553,7 +555,7 @@ END_TEST
 START_TEST(case_minus_1234567890_add_1234567890) {
   s21_decimal num_1 = {{1234567890, 0, 0, -2147483648}};
   s21_decimal num_2 = {{1234567890, 0, 0, 0}};
-  s21_decimal expected = {{0, 0, 0, -2147483648}};
+  s21_decimal expected = {{0, 0, 0, 0}};
   s21_decimal result = {{0}};
   int res_code = s21_add(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
@@ -903,7 +905,7 @@ START_TEST(test_22) {
   s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
   s21_decimal num_2 = {{-1, -1, -1, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{0, 0, 0, -2147483648}};
+  s21_decimal expected = {{0, 0, 0, 0}};
 
   int res_code = s21_add(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);

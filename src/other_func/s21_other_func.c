@@ -1,4 +1,5 @@
-#include "s21_other_func.h"
+#include "../decimal_helper/s21_decimal_helper.h"
+#include "../s21_decimal.h"
 
 int s21_negate(s21_decimal value, s21_decimal *result) {
   int result_code = 0;

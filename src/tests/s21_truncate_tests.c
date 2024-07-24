@@ -1,6 +1,6 @@
 #include <check.h>
 
-#include "../other_func/s21_other_func.h"
+#include "../decimal_helper/s21_decimal_helper.h"
 #include "../s21_decimal.h"
 #include "helper_tests.h"
 START_TEST(test_truncate_0) {

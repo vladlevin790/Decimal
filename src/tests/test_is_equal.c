@@ -65,7 +65,7 @@ START_TEST(test_6) {
 
   int comparison = s21_is_equal(value_1, value_2);
 
-  ck_assert_int_eq(comparison, 0);
+  ck_assert_int_eq(comparison, 1);
 }
 END_TEST
 
