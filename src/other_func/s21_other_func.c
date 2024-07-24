@@ -3,7 +3,7 @@
 int s21_negate(s21_decimal value, s21_decimal *result) {
   int result_code = 0;
 
-  if (result == s21_NULL || check_decimal(value)) {
+  if (result == NULL || check_decimal(value)) {
     result_code = 1;
   } else {
     clear_decimal(result);
@@ -17,7 +17,7 @@ int s21_negate(s21_decimal value, s21_decimal *result) {
 int s21_truncate(s21_decimal value, s21_decimal *result) {
   int result_code = 0;
 
-  if (result == s21_NULL || check_decimal(value)) {
+  if (result == NULL || check_decimal(value)) {
     result_code = 1;
   } else {
     clear_decimal(result);
@@ -44,7 +44,7 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
 
 int s21_round(s21_decimal value, s21_decimal *result) {
   int result_code = 0;
-  if (result == s21_NULL || check_decimal(value)) {
+  if (result == NULL || check_decimal(value)) {
     result_code = 1;
   } else if (!get_decimal_sign(value)) {
     clear_decimal(result);
@@ -63,7 +63,7 @@ int s21_round(s21_decimal value, s21_decimal *result) {
 int s21_floor(s21_decimal value, s21_decimal *result) {
   int result_code = 0;
 
-  if (result == s21_NULL || check_decimal(value)) {
+  if (result == NULL || check_decimal(value)) {
     result_code = 1;
   } else {
     clear_decimal(result);

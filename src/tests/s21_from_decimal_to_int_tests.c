@@ -28,13 +28,13 @@ END_TEST
 
 START_TEST(test_2) {
   s21_decimal decimal = {0};
-  decimal.bits[0] = INT_MAX;
+  decimal.bits[0] = 2147483647;
   int value = 0;
 
   int result = s21_from_decimal_to_int(decimal, &value);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(INT_MAX, value);
+  ck_assert_int_eq(2147483647, value);
 }
 END_TEST
 
@@ -60,7 +60,7 @@ START_TEST(test_4) {
   int result = s21_from_decimal_to_int(decimal, &value);
 
   ck_assert_int_eq(0, result);
-  ck_assert_int_eq(INT_MIN, value);
+  ck_assert_int_eq(-2147483648, value);
 }
 END_TEST
 

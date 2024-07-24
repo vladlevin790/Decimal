@@ -8,7 +8,7 @@ int get_exponent_from_float_str(char* float_str);
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     int result_code = 0;
 
-    if (dst == s21_NULL || isnan(src) || isinf(src) ||
+    if (dst == NULL || isnan(src) || isinf(src) ||
         fabsf(src) > 79228162514264337593543950335.0f) {
         result_code = 1;
     } else if (fabsf(src) > 0 && fabsf(src) < 1e-28) {
@@ -81,7 +81,7 @@ s21_decimal parse_float_str_to_decimal(char* float_str, int exponent) {
 }
 
 int get_exponent_from_float_str(char* float_str) {
-    if (float_str == s21_NULL) {
+    if (float_str == NULL) {
         return 0;
     }
 

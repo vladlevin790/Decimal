@@ -3,7 +3,7 @@
 #include "decimal_helper/s21_decimal_helper.h"
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
-    if (dst == s21_NULL) {
+    if (dst == NULL) {
         return 1;
     }
 
@@ -11,7 +11,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
     set_decimal_sign(dst, src < 0);
     set_decimal_exponent(dst, 0);
 
-    if (src < 0 && src != INT_MIN) {
+    if (src < 0 && src != -2147483648) {
         src = -src;
     }
 

@@ -124,8 +124,6 @@ int check_decimal(s21_decimal decimal) {
 int check_int_range(s21_decimal decimal) {
     int is_error = 0;
 
-    // decimal.bits[0] = decimal.bits[0]; // TODO: Это заглушка, нужно удалить, когда все функции доделаются!
-
     s21_decimal truncated_decimal = {0};
     s21_truncate(decimal, &truncated_decimal);
     

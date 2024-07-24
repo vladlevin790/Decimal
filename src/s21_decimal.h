@@ -1,17 +1,8 @@
 #ifndef S21_DECIMAL_H_
 #define S21_DECIMAL_H_
 
-#include <stdio.h> // TODO: убрать
+#include <stdio.h>
 
-#ifndef INT_MIN
-#define INT_MIN -2147483648
-#endif
-
-#ifndef INT_MAX
-#define INT_MAX 2147483647
-#endif
-
-#define s21_NULL ((void*)0)
 #define DECIMAL_MAX_BITS 128
 
 typedef struct s21_decimal {

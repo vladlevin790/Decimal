@@ -6,7 +6,7 @@
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
     int result_code = 0;
 
-    if (dst == s21_NULL || check_decimal(src) || check_int_range(src)) {
+    if (dst == NULL || check_decimal(src) || check_int_range(src)) {
         result_code = 1;
     } else {
         s21_decimal truncated_decimal = get_new_decimal();
@@ -17,7 +17,7 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
             *dst += get_decimal_digit_by_index(truncated_decimal, i) * pow(2, i);
         }
 
-        if (get_decimal_sign(src) && *dst != INT_MIN) {
+        if (get_decimal_sign(src) && *dst != -2147483648) {
             *dst *= -1;
         }
     }
