@@ -1002,7 +1002,6 @@ START_TEST(test_81) {
   // num_1: экспонента более 28
   // num_2: 0.001
   // result: ошибка
-
   s21_decimal num_1 = {{55, 0, 0, 2835008}};
   s21_decimal num_2 = {{1, 0, 0, 196608}};
   s21_decimal result = {0};
@@ -1012,8 +1011,25 @@ START_TEST(test_81) {
 }
 END_TEST
 
+
+START_TEST(test_82) {
+  // num_1: 10
+  // num_2: 1.0000
+  // result: 10
+
+  s21_decimal num_1 = {{10, 0, 0, 0}};
+  s21_decimal num_2 = {{10000, 0, 0, 262144}};
+  s21_decimal result = {0};
+  s21_decimal expected = {{10, 0, 0, 0}};
+ 
+  int res_code = s21_div(num_1, num_2, &result);
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
+}
+END_TEST
+
 TCase *arithmetic_div_tests(void) {
-  TCase *test_cases = tcase_create("test_cases");
+  TCase *test_cases = tcase_create("test_cases_s21_div");
 
   tcase_add_test(test_cases, test_0);
   tcase_add_test(test_cases, test_1);
@@ -1097,6 +1113,7 @@ TCase *arithmetic_div_tests(void) {
   tcase_add_test(test_cases, test_79);
   tcase_add_test(test_cases, test_80);
   tcase_add_test(test_cases, test_81);
+  tcase_add_test(test_cases, test_82);
 
   return test_cases;
 }
