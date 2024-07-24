@@ -587,20 +587,17 @@ int s21_add_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result
 }
 
 s21_big_decimal s21_big_add(s21_big_decimal value_1, s21_big_decimal value_2) {
-  s21_big_decimal result = value_1;
-    s21_big_decimal tmp = value_2;
+    s21_big_decimal carry = {{get_new_decimal(), get_new_decimal()}};
     
-    while (!s21_is_full_equal_zero(tmp.decimal[0]) || !s21_is_full_equal_zero(tmp.decimal[1])) {
-        s21_big_decimal overflow_bits;
-        overflow_bits.decimal[0] = s21_decimal_and(result.decimal[0], tmp.decimal[0]);
-        overflow_bits.decimal[1] = s21_decimal_and(result.decimal[1], tmp.decimal[1]);
+    while (!s21_is_full_equal_zero(value_2.decimal[0]) || !s21_is_full_equal_zero(value_2.decimal[1])) {
+        carry.decimal[0] = s21_decimal_and(value_1.decimal[0], value_2.decimal[0]);
+        carry.decimal[1] = s21_decimal_and(value_1.decimal[1], value_2.decimal[1]);
 
-        overflow_bits = s21_left_shift_big_decimal(overflow_bits, 1);
-        result.decimal[0] = s21_decimal_xor(result.decimal[0], tmp.decimal[0]);
-        result.decimal[1] = s21_decimal_xor(result.decimal[1], tmp.decimal[1]);
+        value_1.decimal[0] = s21_decimal_xor(value_1.decimal[0], value_2.decimal[0]);
+        value_1.decimal[1] = s21_decimal_xor(value_1.decimal[1], value_2.decimal[1]);
 
-        tmp = overflow_bits;
+        value_2 = s21_left_shift_big_decimal(carry, 1);
     }
     
-    return result;
+    return value_1;
 }

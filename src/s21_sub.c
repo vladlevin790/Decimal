@@ -578,14 +578,14 @@ int super_comparison_of_numbers(s21_big_decimal value_1, s21_big_decimal value_2
 // }
 
 s21_big_decimal s21_big_sub(s21_big_decimal decimal1, s21_big_decimal decimal2) {
-    s21_big_decimal result;
+    // Вычитатель в дополнительных кодах
+    s21_big_decimal one = {{get_decimal_with_int_value(1), get_new_decimal()}};
+
     decimal2.decimal[0] = s21_decimal_not(decimal2.decimal[0]);
     decimal2.decimal[1] = s21_decimal_not(decimal2.decimal[1]);
 
-    s21_big_decimal one = {{get_decimal_with_int_value(1), get_new_decimal()}};
+    decimal1 = s21_big_add(decimal1, decimal2);
+    decimal1 = s21_big_add(decimal1, one);
 
-    decimal2 = s21_big_add(decimal2, one);
-    result = s21_big_add(decimal1, decimal2);
-
-    return result;
+    return decimal1;
 }
