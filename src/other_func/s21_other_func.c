@@ -79,10 +79,3 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
   }
   return result_code;
 }
-
-// #include "s21_decimal.h"
-// #include "decimal_helper/s21_decimal_helper.h"
-
-// int s21_truncate(s21_decimal value, s21_decimal *result) {
-
-// }

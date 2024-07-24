@@ -18,6 +18,10 @@ typedef struct s21_decimal {
     int bits[4];
 } s21_decimal;
 
+typedef enum s21_comparison_result{
+    S21_COMPARISON_TRUE = 1,
+    S21_COMPARISON_FALSE = 0,
+} s21_comparison_result;
 
 typedef struct s21_big_decimal {
     s21_decimal decimal[2];

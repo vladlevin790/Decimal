@@ -245,14 +245,6 @@ s21_big_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional) 
     return big_result;
 }
 
-void print_m_decimal(s21_decimal value) {
-    printf("%d %d %d %d\n", value.bits[3], value.bits[2], value.bits[1], value.bits[0]);
-}
-
-void print_big_decimal(s21_big_decimal value) {
-    printf("%d %d %d %d | %d %d %d %d\n", value.decimal[1].bits[3], value.decimal[1].bits[2], value.decimal[1].bits[1], value.decimal[1].bits[0], value.decimal[0].bits[3], value.decimal[0].bits[2], value.decimal[0].bits[1], value.decimal[0].bits[0]);
-}
-
 s21_decimal s21_decimal_not(s21_decimal decimal) {
     s21_decimal result = get_new_decimal();
     result.bits[0] = ~decimal.bits[0];

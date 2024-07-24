@@ -62,7 +62,6 @@ int s21_sub_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result
     s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
 
     s21_big_decimal big_result = s21_big_sub(big_value_1, big_value_2);
-    print_big_decimal(big_result);
 
     int count_out_bounds = s21_count_digits_out_bounds(big_result);
     result_exponent -= count_out_bounds;

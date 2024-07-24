@@ -36,12 +36,6 @@ int get_decimal_digit_by_index(s21_decimal decimal, int index);
 // @param value Значение, которое устанавливается в разряд (0 или 1)
 void set_decimal_digit_by_index(s21_decimal* decimal, int index, int value);
 
-// @brief Побитово сдвигает число влево
-// @param s21_decimal* Указатель на структуру s21_decimal
-// @param shift Количество позиций для сдвига
-// @return Код результата операции (0, если сдвиг возможен без потерь битов, 1 в противном случае)
-int left_shift_decimal(s21_decimal *decimal, int shift);
-
 // @brief Создает и инициализирует новый экземпляр структуры s21_decimal
 // @return Новый экземпляр структуры s21_decimal
 s21_decimal get_new_decimal();
@@ -86,8 +80,6 @@ s21_big_decimal s21_left_shift_big_decimal(s21_big_decimal value, int shift_coun
 s21_big_decimal s21_right_shift_big_decimal(s21_big_decimal value, int count_shift);
 s21_big_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional);
 s21_big_decimal s21_get_big_decimal_ten_pow(int pow);
-void print_m_decimal(s21_decimal value);
-void print_big_decimal(s21_big_decimal value);
 s21_decimal s21_decimal_not(s21_decimal decimal);
 s21_decimal s21_decimal_and(s21_decimal decimal, s21_decimal decimal2);
 s21_decimal s21_decimal_xor(s21_decimal decimal, s21_decimal decimal2);

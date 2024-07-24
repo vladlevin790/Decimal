@@ -9,9 +9,6 @@ START_TEST(test_negate_0) {
   s21_from_int_to_decimal(x, &decimal);
   s21_negate(decimal, &result);
 
-  print_m_decimal(result);
-  print_m_decimal(decimal);
-
   ck_assert_int_eq(0, get_decimal_sign(decimal));
   ck_assert_int_eq(1, get_decimal_sign(result));
 }
@@ -23,8 +20,6 @@ START_TEST(test_negate_1) {
   int x = -65634235;
   s21_from_int_to_decimal(x, &decimal);
   s21_negate(decimal, &result);
-  print_m_decimal(result);
-  print_m_decimal(decimal);
 
   ck_assert_int_eq(1, get_decimal_sign(decimal));
   ck_assert_int_eq(0, get_decimal_sign(result));

@@ -3,25 +3,9 @@
 #include "helper_tests.h"
 #include <check.h>
 #include <limits.h>
-#include "../s21_decimal.h"
-#include "../decimal_helper/s21_decimal_helper.h"
 #include "../s21_sub.h"
-// void print_bits(int digit) {
-//     for (int i =31; i>=0; i--) printf("%d", (digit >> i) & 1);
-//     // printf(" ");
-// }
-
-// void print_decimal(s21_decimal digit) { 
-//     for (int i = 3; i >= 0; i--) {
-//         print_bits(digit.bits[i]);
-//    if (i==3) printf("    <-знаковый бит     ");}
-//    printf("\n");
-// }
-
-
 
 START_TEST(test_0) {
-  printf("test0\n");
   s21_decimal num_1 = {{3, 0, 0, 0}};
   s21_decimal num_2 = {{4, 0, 0, 0}};
   s21_decimal result = {0};
@@ -774,7 +758,7 @@ START_TEST(test_52) {
   s21_decimal result = {{0, 0, 0, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
-  
+
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
   check_decimal_bits(result, expected);
 }
