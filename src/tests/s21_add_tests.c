@@ -1108,7 +1108,6 @@ TCase *arithmetic_add_tests(void) {
   tcase_add_test(test_cases, test_s21_add_negative_first_num_2);
   tcase_add_test(test_cases, test_s21_add_negative_second_num_1);
   tcase_add_test(test_cases, test_s21_add_negative_second_num_2);
-
   tcase_add_test(test_cases, test_s21_add_with_zero);
   tcase_add_test(test_cases, test_s21_add_large_numbers);
   tcase_add_test(test_cases, test_0);
@@ -1149,12 +1148,10 @@ TCase *arithmetic_add_tests(void) {
   tcase_add_test(test_cases, case_0_add_0);
   tcase_add_test(test_cases, case_0_add_minus_0);
   tcase_add_test(test_cases, case_minus_0_add_0);
-
   tcase_add_test(test_cases, case_MAX_add_04);
   tcase_add_test(test_cases, case_MIN_add_minus_0_6);
   tcase_add_test(test_cases, case_MIN_add_minus_0_5);
   tcase_add_test(test_cases, case_MIN_add_minus_0_4);
-
   tcase_add_test(test_cases, case_MAX_add_06);
   tcase_add_test(test_cases, case_MAX_add_05);
   tcase_add_test(test_cases, case_MAX_add_minus_0_6);

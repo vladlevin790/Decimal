@@ -411,105 +411,180 @@
 
 
 // 47 из 78 *******************************************************
-int s21_add_handle(s21_big_decimal big_result, int result_exponent, int count_out_bounds, s21_decimal *result) {
+// int s21_add_handle(s21_big_decimal big_result, int result_exponent, int count_out_bounds, s21_decimal *result) {
+//     int result_code = 0;
+
+//     s21_big_decimal ten_big_decimal = {{get_decimal_with_int_value(10), get_new_decimal()}};
+
+//     if (result_exponent > 28) {
+//         count_out_bounds = result_exponent - 28 + count_out_bounds;
+//         result_exponent = 28;
+//     }
+
+//     while (count_out_bounds > 17) {
+//         s21_big_decimal tmp = {{get_new_decimal(), get_new_decimal()}};
+//         s21_big_div(big_result, ten_big_decimal, &big_result, &tmp);
+//         count_out_bounds--;
+//     }
+
+//     s21_big_decimal remainder = {{get_new_decimal(), get_new_decimal()}};
+//     s21_big_decimal powerten = get_big_decimal_ten_pow(count_out_bounds);
+
+//     s21_big_div(big_result, powerten, &big_result, &remainder);
+//     set_decimal_exponent(&(remainder.decimal[0]), count_out_bounds);
+//     big_result.decimal[0] = s21_round_banking(big_result.decimal[0], remainder.decimal[0]);
+
+//     if (!s21_is_full_equal_zero(big_result.decimal[1]) || check_decimal(big_result.decimal[0]) ||
+//         s21_get_range_bits(big_result.decimal[0].bits[3], 0, 15) || s21_get_range_bits(big_result.decimal[0].bits[3], 24, 30)) {
+//         result_code = 1;
+//     } else {
+//         *result = big_result.decimal[0];
+//         set_decimal_exponent(result, result_exponent);
+
+//         if (s21_is_equal(*result, get_decimal_with_int_value(0)) && s21_is_equal(remainder.decimal[0], get_decimal_with_int_value(0))) {
+//             *result = s21_remove_useless_zeros(*result);
+//         }
+//     }
+
+//     return result_code;
+// }
+
+// int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+//     if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
+//         return 1;
+//     }
+    
+//     int sign_1 = get_decimal_sign(value_1);
+//     int sign_2 = get_decimal_sign(value_2);
+
+//     s21_decimal zero = get_decimal_with_int_value(0);
+
+//     if (s21_is_equal(value_1, zero)) {
+//         *result = value_2;
+//         return 0;
+//     } else if (s21_is_equal(value_2, zero)) {
+//         *result = value_1;
+//         return 0;
+//     }
+
+//     if (sign_1 == sign_2) {
+//         s21_big_decimal big_value_1 = {{value_1, zero}};
+//         s21_big_decimal big_value_2 = {{value_2, zero}};
+//         s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
+
+//         s21_big_decimal big_result = s21_big_add(big_value_1, big_value_2);
+//         set_decimal_sign(&(big_result.decimal[0]), sign_1);
+
+//         int result_exponent = get_decimal_exponent(value_1); // We use equalized exponents
+//         int count_out_bounds = s21_count_digits_out_bounds(big_result);
+
+//         return s21_add_handle(big_result, result_exponent, count_out_bounds, result);
+//     } else {
+//         if (s21_is_greater_or_equal(value_1, value_2)) {
+//             s21_big_decimal big_value_1 = {{value_1, zero}};
+//             s21_big_decimal big_value_2 = {{value_2, zero}};
+//             s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
+
+//             s21_big_decimal big_result = s21_big_sub(big_value_1, big_value_2);
+//             set_decimal_sign(&(big_result.decimal[0]), sign_1);
+
+//             int result_exponent = get_decimal_exponent(value_1); // We use equalized exponents
+//             int count_out_bounds = s21_count_digits_out_bounds(big_result);
+
+//             return s21_add_handle(big_result, result_exponent, count_out_bounds, result);
+//         } else {
+//             s21_big_decimal big_value_1 = {{value_1, zero}};
+//             s21_big_decimal big_value_2 = {{value_2, zero}};
+//             s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
+
+//             s21_big_decimal big_result = s21_big_sub(big_value_2, big_value_1);
+//             set_decimal_sign(&(big_result.decimal[0]), sign_2);
+
+
+//             int result_exponent = get_decimal_exponent(value_2); // We use equalized exponents
+//             int count_out_bounds = s21_count_digits_out_bounds(big_result);
+
+//             return s21_add_handle(big_result, result_exponent, count_out_bounds, result);
+//         }
+//     }
+// }
+// ******************************************************************
+
+int s21_add_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+
+int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int result_code = 0;
 
-    s21_big_decimal ten_big_decimal = {{get_decimal_with_int_value(10), get_new_decimal()}};
-
-    if (result_exponent > 28) {
-        count_out_bounds = result_exponent - 28 + count_out_bounds;
-        result_exponent = 28;
-    }
-
-    while (count_out_bounds > 17) {
-        s21_big_decimal tmp = {{get_new_decimal(), get_new_decimal()}};
-        s21_big_div(big_result, ten_big_decimal, &big_result, &tmp);
-        count_out_bounds--;
-    }
-
-    s21_big_decimal remainder = {{get_new_decimal(), get_new_decimal()}};
-    s21_big_decimal powerten = get_big_decimal_ten_pow(count_out_bounds);
-
-    s21_big_div(big_result, powerten, &big_result, &remainder);
-    set_decimal_exponent(&(remainder.decimal[0]), count_out_bounds);
-    big_result.decimal[0] = s21_round_banking(big_result.decimal[0], remainder.decimal[0]);
-
-    if (!s21_is_full_equal_zero(big_result.decimal[1]) || check_decimal(big_result.decimal[0]) ||
-        s21_get_range_bits(big_result.decimal[0].bits[3], 0, 15) || s21_get_range_bits(big_result.decimal[0].bits[3], 24, 30)) {
-        result_code = 1;
+    if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
+        result_code = 4;
     } else {
-        *result = big_result.decimal[0];
-        set_decimal_exponent(result, result_exponent);
+        int sign_1 = get_decimal_sign(value_1), sign_2 = get_decimal_sign(value_2);
 
-        if (s21_is_equal(*result, get_decimal_with_int_value(0)) && s21_is_equal(remainder.decimal[0], get_decimal_with_int_value(0))) {
-            *result = s21_remove_useless_zeros(*result);
+        // + +    a + b
+        // + -    a - b    5 - 3
+        // - +    b - a    -5 + 3
+        // - -    a + b
+        if (sign_1 == 0 && sign_2 == 0) {
+            result_code = s21_add_handle(value_1, value_2, result);
+        } else if (sign_1 == 0 && sign_2 == 1) {
+            set_decimal_sign(&value_2, 0);
+            result_code = s21_sub(value_1, value_2, result);
+        } else if (sign_1 == 1 && sign_2 == 0) {
+            set_decimal_sign(&value_1, 0);
+            result_code = s21_sub(value_2, value_1, result);
+        } else if (sign_1 == 1 && sign_2 == 1) {
+            set_decimal_sign(&value_1, 0);
+            set_decimal_sign(&value_2, 0);
+            
+            result_code = s21_add_handle(value_1, value_2, result);
+            if (result_code == 0) {
+                set_decimal_sign(result, 1);
+            } else if (result_code == 1) {
+                result_code = 2;
+            }
         }
     }
 
     return result_code;
 }
 
-int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-    if (check_decimal(value_1) || check_decimal(value_2) || result == NULL) {
-        return S21_DECIMAL_ERROR;
-    }
-    
-    int sign_1 = get_decimal_sign(value_1);
-    int sign_2 = get_decimal_sign(value_2);
+int s21_add_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+    int result_code = 0;
 
-    s21_decimal zero = get_decimal_with_int_value(0);
+    int exponent_1 = get_decimal_exponent(value_1), exponent_2 = get_decimal_exponent(value_2);
+    int result_exponent = exponent_1 > exponent_2 ? exponent_1 : exponent_2;
 
-    if (s21_is_equal(value_1, zero)) {
-        *result = value_2;
-        return 0;
-    } else if (s21_is_equal(value_2, zero)) {
-        *result = value_1;
-        return 0;
-    }
+    s21_big_decimal big_value_1 = {{get_new_decimal(), get_new_decimal()}};
+    s21_big_decimal big_value_2 = {{get_new_decimal(), get_new_decimal()}};
+    s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
 
-    if (sign_1 == sign_2) {
-        s21_big_decimal big_value_1 = {{value_1, zero}};
-        s21_big_decimal big_value_2 = {{value_2, zero}};
-        s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
+    s21_big_decimal big_result = s21_big_add(big_value_1, big_value_2);
 
-        s21_big_decimal big_result = s21_big_add(big_value_1, big_value_2);
-        set_decimal_sign(&(big_result.decimal[0]), sign_1);
+    int count_out_bounds = s21_count_digits_out_bounds(big_result);
+    result_exponent -= count_out_bounds;
 
-        int result_exponent = get_decimal_exponent(value_1); // We use equalized exponents
-        int count_out_bounds = s21_count_digits_out_bounds(big_result);
-
-        return s21_add_handle(big_result, result_exponent, count_out_bounds, result);
+    if (result_exponent < 0) {
+        result_code = 1;
     } else {
-        if (s21_is_greater_or_equal(value_1, value_2)) {
-            s21_big_decimal big_value_1 = {{value_1, zero}};
-            s21_big_decimal big_value_2 = {{value_2, zero}};
-            s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
+        s21_big_decimal div_whole = {{get_new_decimal(), get_new_decimal()}};
+        s21_big_decimal div_remainder = {{get_new_decimal(), get_new_decimal()}};
+        s21_big_div(big_result, s21_get_big_decimal_ten_pow(count_out_bounds), &div_whole, &div_remainder);
+        //print_big_decimal(div_whole);
+        //print_big_decimal(div_remainder);
 
-            s21_big_decimal big_result = s21_big_sub(big_value_1, big_value_2);
-            set_decimal_sign(&(big_result.decimal[0]), sign_1);
+        set_decimal_exponent(&div_remainder.decimal[0], count_out_bounds);
+        div_whole = s21_round_banking(div_whole.decimal[0], div_remainder.decimal[0]);
 
-            int result_exponent = get_decimal_exponent(value_1); // We use equalized exponents
-            int count_out_bounds = s21_count_digits_out_bounds(big_result);
-
-            return s21_add_handle(big_result, result_exponent, count_out_bounds, result);
+        if (!s21_is_full_equal_zero(div_whole.decimal[1]) || div_whole.decimal[0].bits[3] != 0) {
+            result_code = 1;
         } else {
-            s21_big_decimal big_value_1 = {{value_1, zero}};
-            s21_big_decimal big_value_2 = {{value_2, zero}};
-            s21_decimal_equalize(value_1, value_2, &big_value_1, &big_value_2);
-
-            s21_big_decimal big_result = s21_big_sub(big_value_2, big_value_1);
-            set_decimal_sign(&(big_result.decimal[0]), sign_2);
-
-
-            int result_exponent = get_decimal_exponent(value_2); // We use equalized exponents
-            int count_out_bounds = s21_count_digits_out_bounds(big_result);
-
-            return s21_add_handle(big_result, result_exponent, count_out_bounds, result);
+            *result = div_whole.decimal[0];
+            set_decimal_exponent(result, result_exponent);
         }
     }
-}
-// ******************************************************************
 
+    return result_code;
+}
 
 s21_big_decimal s21_big_add(s21_big_decimal value_1, s21_big_decimal value_2) {
   s21_big_decimal result = value_1;

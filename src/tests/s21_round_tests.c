@@ -29,7 +29,6 @@ START_TEST(s21_round_2) {
 	s21_decimal test = {{-1941491922, 0, 0, -2147483648}};
   s21_decimal result = get_new_decimal();
   int res = s21_round(decimal, &result);
-  print_m_decimal(result);
   ck_assert(res == S21_DECIMAL_OK && s21_is_equal(result, test));
 }
 END_TEST

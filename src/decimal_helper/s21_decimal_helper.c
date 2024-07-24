@@ -157,13 +157,13 @@ void s21_decimal_equalize(s21_decimal value_1, s21_decimal value_2, s21_big_deci
     big_value_2->decimal[0] = value_2;
     
     if (exponent_1 > exponent_2) {
-       *big_value_2 = s21_big_mul(*big_value_2, get_big_decimal_ten_pow(exponent_1 - exponent_2));
+       *big_value_2 = s21_big_mul(*big_value_2, s21_get_big_decimal_ten_pow(exponent_1 - exponent_2));
     } else if (exponent_1 < exponent_2) {
-        *big_value_1 = s21_big_mul(*big_value_1, get_big_decimal_ten_pow(exponent_2 - exponent_1));
+        *big_value_1 = s21_big_mul(*big_value_1, s21_get_big_decimal_ten_pow(exponent_2 - exponent_1));
     }
 }
 
-s21_big_decimal get_big_decimal_ten_pow(int pow) {
+s21_big_decimal s21_get_big_decimal_ten_pow(int pow) {
     s21_big_decimal big_decimal = {{get_decimal_with_int_value(1), get_new_decimal()}};
 
     for (int i = 0; i < pow; i++) {
@@ -220,25 +220,29 @@ s21_big_decimal s21_right_shift_big_decimal(s21_big_decimal value, int count_shi
     return value;
 }
 
-s21_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional) {
+s21_big_decimal s21_round_banking(s21_decimal integral, s21_decimal fractional) {
     s21_decimal half_one = get_decimal_with_int_value(5);
     set_decimal_exponent(&half_one, 1);
-
-    s21_decimal result = get_new_decimal();
     
+    s21_big_decimal big_one = {{get_decimal_with_int_value(1), get_new_decimal()}};
+    s21_big_decimal big_integral = {{integral, get_new_decimal()}};
+    s21_big_decimal big_result = {{get_new_decimal(), get_new_decimal()}};
+
     if (s21_is_equal(fractional, half_one)) {
         if ((integral.bits[0] & 1) == 0) {
-            result = integral;
+            big_result.decimal[0] = integral;
         } else {
-            s21_add(integral, get_decimal_with_int_value(1), &result);
+            big_result = s21_big_add(big_integral, big_one);
+            // result_code = s21_add(integral, get_decimal_with_int_value(1), result);
         }
     } else if (s21_is_greater(fractional, half_one)) {
-        s21_add(integral, get_decimal_with_int_value(1), &result);
+        big_result = s21_big_add(big_integral, big_one);
+        // result_code = s21_add(integral, get_decimal_with_int_value(1), result);
     } else {
-        result = integral;
+        big_result.decimal[0] = integral;
     }
 
-    return result;
+    return big_result;
 }
 
 void print_m_decimal(s21_decimal value) {

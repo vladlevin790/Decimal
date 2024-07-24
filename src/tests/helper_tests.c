@@ -1,6 +1,5 @@
 
 #include "helper_tests.h"
-#include "../s21_decimal.h"
 #include <check.h>
 #include <limits.h>
 
