@@ -11,8 +11,8 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         result_code = S21_DECIMAL_ERROR;
     } else {
         int sign_1 = get_decimal_sign(value_1), sign_2 = get_decimal_sign(value_2);
-        
-        // + +    a + b
+
+        // + +    a + b    5 + 3
         // + -    a - b    5 - 3
         // - +    b - a    -5 + 3
         // - -    a + b
@@ -61,8 +61,6 @@ int s21_add_handle(s21_decimal value_1, s21_decimal value_2, s21_decimal *result
         s21_big_decimal div_whole = {{get_new_decimal(), get_new_decimal()}};
         s21_big_decimal div_remainder = {{get_new_decimal(), get_new_decimal()}};
         s21_big_div(big_result, s21_get_big_decimal_ten_pow(count_out_bounds), &div_whole, &div_remainder);
-        //print_big_decimal(div_whole);
-        //print_big_decimal(div_remainder);
 
         set_decimal_exponent(&div_remainder.decimal[0], count_out_bounds);
         div_whole = s21_round_banking(div_whole.decimal[0], div_remainder.decimal[0]);

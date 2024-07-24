@@ -21,6 +21,7 @@
 
 
 START_TEST(test_0) {
+  printf("test0\n");
   s21_decimal num_1 = {{3, 0, 0, 0}};
   s21_decimal num_2 = {{4, 0, 0, 0}};
   s21_decimal result = {0};
@@ -28,12 +29,6 @@ START_TEST(test_0) {
 
 	int res_code = s21_sub(num_1, num_2, &result);
 	ck_assert_int_eq(res_code, 0);
-	// for (int i = 0; i < 4; ++i) {
-  //       for (int j = 31; j >= 0; j--) {
-  //           printf("%d", s21_get_bit(result.bits[i], j));
-  //       }
-  //       printf("\n");
-	// }
 		ck_assert_int_eq(result.bits[0], expected.bits[0]);
     ck_assert_int_eq(result.bits[1], expected.bits[1]);
     ck_assert_int_eq(result.bits[2], expected.bits[2]);
@@ -266,11 +261,11 @@ START_TEST(test_15) {
 END_TEST
 
 START_TEST(test_16) {
-  s21_decimal num_1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}};
+  s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
   s21_decimal num_2 = {{1, 0, 0, 0}};
   s21_decimal result = {0};
   int res_code = s21_sub(num_1, num_2, &result);
-  ck_assert_int_eq(res_code, ERROR_OVERFLOW);
+  ck_assert_int_eq(res_code, ERROR_UNDERFLOW);
 }
 END_TEST
 
@@ -775,9 +770,13 @@ END_TEST
 START_TEST(test_52) {
   s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
   s21_decimal num_2 = {{-1, -1, -1, -2147483648}};
-  s21_decimal result = {{0}};
+  s21_decimal expected = get_new_decimal();
+  s21_decimal result = {{0, 0, 0, -2147483648}};
+
   int res_code = s21_sub(num_1, num_2, &result);
-  ck_assert_int_eq(res_code, ERROR_UNDERFLOW);
+  
+  ck_assert_int_eq(res_code, S21_DECIMAL_OK);
+  check_decimal_bits(result, expected);
 }
 END_TEST
 
