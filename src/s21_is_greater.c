@@ -2,7 +2,7 @@
 #include "s21_decimal.h"
 
 int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
-  int result_code = 0;
+  int result_code = FALSE;
 
   int sign_1 = s21_get_decimal_sign(value_1),
       sign_2 = s21_get_decimal_sign(value_2);
