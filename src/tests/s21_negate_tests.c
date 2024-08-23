@@ -27,11 +27,13 @@ START_TEST(test_negate_1) {
 }
 END_TEST
 
-TCase *s21_negate_get_tests(void) {
-  TCase *test_cases = tcase_create("test_cases");
+Suite *s21_negate_tests(void) {
+  Suite *s = suite_create("\033[1;35ms21_negate\033[0m\n");
+  TCase *testCase = tcase_create("s21_test_negate");
 
-  tcase_add_test(test_cases, test_negate_0);
-  tcase_add_test(test_cases, test_negate_1);
+  suite_add_tcase(s, testCase);
+  tcase_add_test(testCase, test_negate_0);
+  tcase_add_test(testCase, test_negate_1);
 
-  return test_cases;
+  return s;
 }

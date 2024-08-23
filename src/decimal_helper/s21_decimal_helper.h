@@ -1,7 +1,7 @@
 #ifndef S21_DECIMAL_HELPER_H_
 #define S21_DECIMAL_HELPER_H_
 
-#include "../binary/s21_binary.h"
+#include "../binary/s21_binary_operations.h"
 #include "../s21_decimal.h"
 
 // @brief Получение знака десятичного числа

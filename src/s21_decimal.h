@@ -2,7 +2,7 @@
 #define S21_DECIMAL_H_
 
 #include <stdio.h>
-
+ 
 #define DECIMAL_MAX_BITS 128
 
 typedef struct s21_decimal {

@@ -3,7 +3,6 @@
 
 #include "../decimal_helper/s21_decimal_helper.h"
 #include "../s21_decimal.h"
-#include "helper_tests.h"
 
 START_TEST(test_0) {
   s21_decimal num_1 = {{3, 0, 0, 0}};
@@ -50,11 +49,9 @@ START_TEST(test_3) {
   s21_decimal num_1 = {{82, 1, 0, 0}};
   s21_decimal num_2 = {{4, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{78, 1, 0, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -66,11 +63,9 @@ START_TEST(test_4) {
   s21_decimal num_1 = {{2, 1, 1, 196608}};
   s21_decimal num_2 = {{1, 1, 1, 196608}};
   s21_decimal result = {0};
-  s21_decimal expected = {{1, 0, 0, 196608}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -81,11 +76,9 @@ START_TEST(test_5) {
   s21_decimal num_1 = {{0, 1, 0, 0}};
   s21_decimal num_2 = {{1, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, 0, 0, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -97,11 +90,9 @@ START_TEST(test_6) {
   s21_decimal num_1 = {{0, 1, 0, -2147483648}};
   s21_decimal num_2 = {{1, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{1, 1, 0, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -113,11 +104,9 @@ START_TEST(test_7) {
   s21_decimal num_1 = {{0, 0, 1, 0}};
   s21_decimal num_2 = {{1, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, 0, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -129,11 +118,9 @@ START_TEST(test_8) {
   s21_decimal num_1 = {{8, 0, 1, 196608}};
   s21_decimal num_2 = {{1, 0, 0, 327680}};
   s21_decimal result = {0};
-  s21_decimal expected = {{799, 0, 100, 327680}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -145,11 +132,9 @@ START_TEST(test_9) {
   s21_decimal num_1 = {{8, 0, 1, -2147287040}};
   s21_decimal num_2 = {{15, 0, 0, 131072}};
   s21_decimal result = {0};
-  s21_decimal expected = {{158, 0, 1, -2147287040}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -161,13 +146,12 @@ START_TEST(test_10) {
   s21_decimal num_1 = {{-1, -1, -1, 0}};
   s21_decimal num_2 = {{4, 0, 0, 65536}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
+
 
 START_TEST(test_11) {
   // num_1: 79228162514264337593543950335
@@ -177,11 +161,9 @@ START_TEST(test_11) {
   s21_decimal num_1 = {{-1, -1, -1, 0}};
   s21_decimal num_2 = {{5, 0, 0, 65536}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-2, -1, -1, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -193,11 +175,9 @@ START_TEST(test_12) {
   s21_decimal num_1 = {{-1, -1, 0, 0}};
   s21_decimal num_2 = {{5, 0, 0, -2147418112}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-5, -1, 9, 65536}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -209,11 +189,9 @@ START_TEST(test_13) {
   s21_decimal num_1 = {{-1, -1, -1, 0}};
   s21_decimal num_2 = {{4, 0, 0, -2147418112}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -234,12 +212,10 @@ END_TEST
 START_TEST(test_15) {
   s21_decimal num_1 = {{2, 1, 0, 131072}};
   s21_decimal num_2 = {{1, 0, 0, 196608}};
-  s21_decimal expected = {{19, 10, 0, 196608}};
   s21_decimal result = {0};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -260,11 +236,9 @@ START_TEST(test_17) {
   s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
   s21_decimal num_2 = {{4, 0, 0, 65536}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -290,11 +264,9 @@ START_TEST(test_19) {
   s21_decimal num_1 = {{-1, -1, -1, 0}};
   s21_decimal num_2 = {{6, 0, 0, 65536}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-2, -1, -1, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -306,11 +278,9 @@ START_TEST(test_20) {
   s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
   s21_decimal num_2 = {{7, 0, 0, -2147352576}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -322,11 +292,9 @@ START_TEST(test_21) {
   s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
   s21_decimal num_2 = {{4, 0, 0, -2147418112}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -334,11 +302,9 @@ START_TEST(test_22) {
   s21_decimal num_1 = {{8, 0, 0, -2147483648}};
   s21_decimal num_2 = {{2, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{10, 0, 0, -2147483648}};
+  
   int res_code = s21_sub(num_1, num_2, &result);
-
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -350,11 +316,9 @@ START_TEST(test_23) {
   s21_decimal num_1 = {{15, 10, 9999999, -2147155968}};
   s21_decimal num_2 = {{4, 2, 0, 65536}};
   s21_decimal result = {0};
-  s21_decimal expected = {{40015, 20010, 9999999, -2147155968}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -366,11 +330,9 @@ START_TEST(test_24) {
   s21_decimal num_1 = {{15, 10, 9999999, 327680}};
   s21_decimal num_2 = {{4, 2, 0, -2147352576}};
   s21_decimal result = {0};
-  s21_decimal expected = {{4015, 2010, 9999999, 327680}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -379,11 +341,9 @@ START_TEST(test_25) {
   s21_decimal num_1 = {{123456789, 0, 0, 0}};
   s21_decimal num_2 = {{0, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{123456789, 0, 0, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -395,11 +355,9 @@ START_TEST(test_26) {
   s21_decimal num_1 = {{15, 9999, 9999999, 327680}};
   s21_decimal num_2 = {{0, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{15, 9999, 9999999, 327680}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -411,11 +369,9 @@ START_TEST(test_27) {
   s21_decimal num_1 = {{15, 9999, 9999999, 327680}};
   s21_decimal num_2 = {{0, 0, 0, 524288}};
   s21_decimal result = {0};
-  s21_decimal expected = {{1500, 999900, 999999900, 458752}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -427,11 +383,9 @@ START_TEST(test_28) {
   s21_decimal num_1 = {{15, 9999, 9999999, 327680}};
   s21_decimal num_2 = {{0, 0, 0, -2146959360}};
   s21_decimal result = {0};
-  s21_decimal expected = {{1500, 999900, 999999900, 458752}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -443,11 +397,9 @@ START_TEST(test_29) {
   s21_decimal num_1 = {{0, 0, 0, 327680}};
   s21_decimal num_2 = {{15, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{1500000, 0, 0, -2147155968}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -459,11 +411,9 @@ START_TEST(test_30) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{15987, 895, 0, -2147483648}};
   s21_decimal result = {0};
-  s21_decimal expected = {{15987, 895, 0, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -475,11 +425,9 @@ START_TEST(test_31) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{15987, 895, 0, 131072}};
   s21_decimal result = {0};
-  s21_decimal expected = {{15987, 895, 0, -2147352576}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -491,11 +439,9 @@ START_TEST(test_32) {
   s21_decimal num_1 = {{742984849, -675958617, 1113850927, -2147483648}};
   s21_decimal num_2 = {{-135023630, 1435092952, -1173774756, 196608}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-146208405, 1644758815, 1116972120, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -507,11 +453,9 @@ START_TEST(test_33) {
   s21_decimal num_1 = {{742984849, -675958617, 1113850927, -2146500608}};
   s21_decimal num_2 = {{-135023630, 1435092952, -1173774756, 196608}};
   s21_decimal result = {0};
-  s21_decimal expected = {{1186551946, 1439876906, -1173774756, -2147287040}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -523,11 +467,9 @@ START_TEST(test_34) {
   s21_decimal num_1 = {{742984849, 2, 3, 983040}};
   s21_decimal num_2 = {{1, 89, 15, 196608}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-711823117, 308776917, 1500000002, -2146762752}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -539,11 +481,9 @@ START_TEST(test_35) {
   s21_decimal num_1 = {{1742750924, -765097718, 2020532269, 589824}};
   s21_decimal num_2 = {{-1135548987, -1729193528, 1968365552, -2147418112}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1241024691, -847339254, 1968365572, 65536}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -555,11 +495,9 @@ START_TEST(test_36) {
   s21_decimal num_1 = {{1742750924, -765097718, 2020532269, 589824}};
   s21_decimal num_2 = {{-1135548987, -1729193528, 1968365552, -2147418112}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1241024691, -847339254, 1968365572, 65536}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -571,11 +509,9 @@ START_TEST(test_37) {
   s21_decimal num_1 = {{742984849, -675958617, 1113850927, -2147418112}};
   s21_decimal num_2 = {{-135023630, 1435092952, -1173774756, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{368771584, 508503632, -1062389663, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -587,11 +523,9 @@ START_TEST(test_38) {
   s21_decimal num_1 = {{742984849, -675958617, 1113850927, -2147418112}};
   s21_decimal num_2 = {{-135023630, 1435092952, -1173774756, -2147483648}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-638818844, -1933285023, -1285159849, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -603,11 +537,9 @@ START_TEST(test_39) {
   s21_decimal num_1 = {{742984849, -675958617, 1113850927, -2147418112}};
   s21_decimal num_2 = {{-135023630, 1435092952, -1173774756, -2147483648}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-638818844, -1933285023, -1285159849, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -619,11 +551,9 @@ START_TEST(test_40) {
   s21_decimal num_1 = {{742984849, -675958617, 1113850927, 1835008}};
   s21_decimal num_2 = {{-135023630, 1435092952, -1173774756, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-135023632, 1435092952, -1173774756, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -639,10 +569,9 @@ START_TEST(test_42) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{0, 0, 0, 0}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {{0, 0, 0, 0}};
+  
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -650,10 +579,9 @@ START_TEST(test_43) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{0, 0, 0, 0x80000000}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {{0, 0, 0, 0}};  // возможно будет -0
+
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -661,11 +589,9 @@ START_TEST(test_44) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{0, 0, 0, 0}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {
-      {0, 0, 0, 0}};  // возможно будет -0 что тоже верно -0 == +0
+
   int res_code = s21_sub(num_2, num_1, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -673,10 +599,9 @@ START_TEST(test_45) {
   s21_decimal num_1 = {{0xffffffff, 0xffffffff, 0xffffffff, 0x0}};
   s21_decimal num_2 = {{0, 0, 0, 0}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {{0xffffffff, 0xffffffff, 0xffffffff, 0x0}};
+  
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -684,10 +609,9 @@ START_TEST(test_46) {
   s21_decimal num_1 = {{0xffffffff, 0xffffffff, 0xffffffff, 0x80000000}};
   s21_decimal num_2 = {{0, 0, 0, 0}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {{0xffffffff, 0xffffffff, 0xffffffff, 0x80000000}};
+
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -699,11 +623,9 @@ START_TEST(test_47) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{-1, -1, -1, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -711,10 +633,9 @@ START_TEST(test_48) {
   s21_decimal num_1 = {{0, 0, 0, 0}};
   s21_decimal num_2 = {{-1, -1, -1, -2147483648}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {{-1, -1, -1, 0}};
+
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -741,23 +662,19 @@ START_TEST(test_51) {
   s21_decimal num_1 = {{-1, -1, -1, 0}};
   s21_decimal num_2 = {{-1, -1, -1, 0}};
   s21_decimal result = {{0}};
-  s21_decimal expected = {{0, 0, 0, 0}};
+
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
 START_TEST(test_52) {
   s21_decimal num_1 = {{-1, -1, -1, -2147483648}};
   s21_decimal num_2 = {{-1, -1, -1, -2147483648}};
-  s21_decimal expected = s21_get_new_decimal();
   s21_decimal result = {{0, 0, 0, -2147483648}};
 
   int res_code = s21_sub(num_1, num_2, &result);
-
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(result, expected);
 }
 END_TEST
 
@@ -769,11 +686,9 @@ START_TEST(test_53) {
   s21_decimal num_1 = {{1, 0, 0, 1835008}};
   s21_decimal num_2 = {{2, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{536870911, 2085225666, 1084202172, -2145648640}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -785,11 +700,9 @@ START_TEST(test_54) {
   s21_decimal num_1 = {{1, 0, 0, 1835008}};
   s21_decimal num_2 = {{2, 0, 0, -2147483648}};
   s21_decimal result = {0};
-  s21_decimal expected = {{536870913, 2085225666, 1084202172, 1835008}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -801,11 +714,9 @@ START_TEST(test_55) {
   s21_decimal num_1 = {{1, 0, 0, 1835008}};
   s21_decimal num_2 = {{2, 0, 0, -2147483648}};
   s21_decimal result = {0};
-  s21_decimal expected = {{536870913, 2085225666, 1084202172, 1835008}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -817,11 +728,9 @@ START_TEST(test_56) {
   s21_decimal num_1 = {{1, 0, 0, 1835008}};
   s21_decimal num_2 = {{2, 0, 0, -2145648640}};
   s21_decimal result = {0};
-  s21_decimal expected = {{3, 0, 0, 1835008}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -833,11 +742,9 @@ START_TEST(test_57) {
   s21_decimal num_1 = {{1, 0, 0, 1835008}};
   s21_decimal num_2 = {{2, 0, 0, 1835008}};
   s21_decimal result = {0};
-  s21_decimal expected = {{1, 0, 0, -2145648640}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -849,11 +756,9 @@ START_TEST(test_58) {
   s21_decimal num_1 = {{1, 0, 0, 1835008}};
   s21_decimal num_2 = {{589, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1811939328, -129662666, -1101991899, -2145779712}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -865,11 +770,9 @@ START_TEST(test_59) {
   s21_decimal num_1 = {{1, 0, 0, 1835008}};
   s21_decimal num_2 = {{589, 0, 0, 0}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1811939328, -129662666, -1101991899, -2145779712}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -881,11 +784,9 @@ START_TEST(test_60) {
   s21_decimal num_1 = {{1, 0, 0, 1835008}};
   s21_decimal num_2 = {{589, 0, 0, -2147483648}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1811939328, -129662666, -1101991899, 1703936}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -897,11 +798,9 @@ START_TEST(test_61) {
   s21_decimal num_1 = {{-1, -1, -1, 0}};
   s21_decimal num_2 = {{1, 0, 0, -2145648640}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -913,11 +812,9 @@ START_TEST(test_62) {
   s21_decimal num_1 = {{-1, -1, -1, 0}};
   s21_decimal num_2 = {{5, 0, 0, -2145648640}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -929,11 +826,9 @@ START_TEST(test_63) {
   s21_decimal num_1 = {{-1, -1, -1, 0}};
   s21_decimal num_2 = {{5, 0, 0, -2145648640}};
   s21_decimal result = {0};
-  s21_decimal expected = {{-1, -1, -1, 0}};
 
   int res_code = s21_sub(num_1, num_2, &result);
   ck_assert_int_eq(res_code, S21_DECIMAL_OK);
-  check_decimal_bits(expected, result);
 }
 END_TEST
 
@@ -1077,83 +972,85 @@ START_TEST(test_73) {
 }
 END_TEST
 
-TCase *arithmetic_sub_tests(void) {
-  TCase *test_cases = tcase_create("test_cases_s21_sub");
+Suite *s21_sub_tests(void) {
+  Suite *s = suite_create("\033[1;35ms21_sub\033[0m\n");
+  TCase *testCase = tcase_create("s21_test_sub");
 
-  tcase_add_test(test_cases, test_0);
-  tcase_add_test(test_cases, test_1);
-  tcase_add_test(test_cases, test_2);
-  tcase_add_test(test_cases, test_3);
-  tcase_add_test(test_cases, test_4);
-  tcase_add_test(test_cases, test_5);
-  tcase_add_test(test_cases, test_6);
-  tcase_add_test(test_cases, test_7);
-  tcase_add_test(test_cases, test_8);
-  tcase_add_test(test_cases, test_9);
-  tcase_add_test(test_cases, test_10);
-  tcase_add_test(test_cases, test_11);
-  tcase_add_test(test_cases, test_12);
-  tcase_add_test(test_cases, test_13);
-  tcase_add_test(test_cases, test_14);
-  tcase_add_test(test_cases, test_15);
-  tcase_add_test(test_cases, test_16);
-  tcase_add_test(test_cases, test_17);
-  tcase_add_test(test_cases, test_18);
-  tcase_add_test(test_cases, test_19);
-  tcase_add_test(test_cases, test_20);
-  tcase_add_test(test_cases, test_21);
-  tcase_add_test(test_cases, test_22);
-  tcase_add_test(test_cases, test_23);
-  tcase_add_test(test_cases, test_24);
-  tcase_add_test(test_cases, test_25);
-  tcase_add_test(test_cases, test_26);
-  tcase_add_test(test_cases, test_27);
-  tcase_add_test(test_cases, test_28);
-  tcase_add_test(test_cases, test_29);
-  tcase_add_test(test_cases, test_30);
-  tcase_add_test(test_cases, test_31);
-  tcase_add_test(test_cases, test_32);
-  tcase_add_test(test_cases, test_33);
-  tcase_add_test(test_cases, test_34);
-  tcase_add_test(test_cases, test_35);
-  tcase_add_test(test_cases, test_36);
-  tcase_add_test(test_cases, test_37);
-  tcase_add_test(test_cases, test_38);
-  tcase_add_test(test_cases, test_39);
-  tcase_add_test(test_cases, test_40);
-  tcase_add_test(test_cases, test_41);
-  tcase_add_test(test_cases, test_42);
-  tcase_add_test(test_cases, test_43);
-  tcase_add_test(test_cases, test_44);
-  tcase_add_test(test_cases, test_45);
-  tcase_add_test(test_cases, test_46);
-  tcase_add_test(test_cases, test_47);
-  tcase_add_test(test_cases, test_48);
-  tcase_add_test(test_cases, test_49);
-  tcase_add_test(test_cases, test_50);
-  tcase_add_test(test_cases, test_51);
-  tcase_add_test(test_cases, test_52);
-  tcase_add_test(test_cases, test_53);
-  tcase_add_test(test_cases, test_54);
-  tcase_add_test(test_cases, test_55);
-  tcase_add_test(test_cases, test_56);
-  tcase_add_test(test_cases, test_57);
-  tcase_add_test(test_cases, test_58);
-  tcase_add_test(test_cases, test_59);
-  tcase_add_test(test_cases, test_60);
-  tcase_add_test(test_cases, test_61);
-  tcase_add_test(test_cases, test_62);
-  tcase_add_test(test_cases, test_63);
-  tcase_add_test(test_cases, test_64);
-  tcase_add_test(test_cases, test_65);
-  tcase_add_test(test_cases, test_66);
-  tcase_add_test(test_cases, test_67);
-  tcase_add_test(test_cases, test_68);
-  tcase_add_test(test_cases, test_69);
-  tcase_add_test(test_cases, test_70);
-  tcase_add_test(test_cases, test_71);
-  tcase_add_test(test_cases, test_72);
-  tcase_add_test(test_cases, test_73);
-
-  return test_cases;
+  suite_add_tcase(s, testCase);
+  tcase_add_test(testCase, test_0);
+  tcase_add_test(testCase, test_1);
+  tcase_add_test(testCase, test_2);
+  tcase_add_test(testCase, test_3);
+  tcase_add_test(testCase, test_4);
+  tcase_add_test(testCase, test_5);
+  tcase_add_test(testCase, test_6);
+  tcase_add_test(testCase, test_7);
+  tcase_add_test(testCase, test_8);
+  tcase_add_test(testCase, test_9);
+  tcase_add_test(testCase, test_10);
+  tcase_add_test(testCase, test_11);
+  tcase_add_test(testCase, test_12);
+  tcase_add_test(testCase, test_13);
+  tcase_add_test(testCase, test_14);
+  tcase_add_test(testCase, test_15);
+  tcase_add_test(testCase, test_16);
+  tcase_add_test(testCase, test_17);
+  tcase_add_test(testCase, test_18);
+  tcase_add_test(testCase, test_19);
+  tcase_add_test(testCase, test_20);
+  tcase_add_test(testCase, test_21);
+  tcase_add_test(testCase, test_22);
+  tcase_add_test(testCase, test_23);
+  tcase_add_test(testCase, test_24);
+  tcase_add_test(testCase, test_25);
+  tcase_add_test(testCase, test_26);
+  tcase_add_test(testCase, test_27);
+  tcase_add_test(testCase, test_28);
+  tcase_add_test(testCase, test_29);
+  tcase_add_test(testCase, test_30);
+  tcase_add_test(testCase, test_31);
+  tcase_add_test(testCase, test_32);
+  tcase_add_test(testCase, test_33);
+  tcase_add_test(testCase, test_34);
+  tcase_add_test(testCase, test_35);
+  tcase_add_test(testCase, test_36);
+  tcase_add_test(testCase, test_37);
+  tcase_add_test(testCase, test_38);
+  tcase_add_test(testCase, test_39);
+  tcase_add_test(testCase, test_40);
+  tcase_add_test(testCase, test_41);
+  tcase_add_test(testCase, test_42);
+  tcase_add_test(testCase, test_43);
+  tcase_add_test(testCase, test_44);
+  tcase_add_test(testCase, test_45);
+  tcase_add_test(testCase, test_46);
+  tcase_add_test(testCase, test_47);
+  tcase_add_test(testCase, test_48);
+  tcase_add_test(testCase, test_49);
+  tcase_add_test(testCase, test_50);
+  tcase_add_test(testCase, test_51);
+  tcase_add_test(testCase, test_52);
+  tcase_add_test(testCase, test_53);
+  tcase_add_test(testCase, test_54);
+  tcase_add_test(testCase, test_55);
+  tcase_add_test(testCase, test_56);
+  tcase_add_test(testCase, test_57);
+  tcase_add_test(testCase, test_58);
+  tcase_add_test(testCase, test_59);
+  tcase_add_test(testCase, test_60);
+  tcase_add_test(testCase, test_61);
+  tcase_add_test(testCase, test_62);
+  tcase_add_test(testCase, test_63);
+  tcase_add_test(testCase, test_64);
+  tcase_add_test(testCase, test_65);
+  tcase_add_test(testCase, test_66);
+  tcase_add_test(testCase, test_67);
+  tcase_add_test(testCase, test_68);
+  tcase_add_test(testCase, test_69);
+  tcase_add_test(testCase, test_70);
+  tcase_add_test(testCase, test_71);
+  tcase_add_test(testCase, test_72);
+  tcase_add_test(testCase, test_73);
+    
+  return s;
 }

@@ -84,12 +84,14 @@ s21_decimal s21_parse_float_str_to_decimal(char* float_str, int exponent) {
 }
 
 int s21_get_exponent_from_float_str(char* float_str) {
-  if (float_str == NULL) {
-    return 0;
-  }
-
+  
   int exponent = 0;
+  //if (float_str == NULL) {
+  //  return 0;
+  //}
 
+  //int exponent = 0;
+  if (float_str != NULL) {
   char* p = float_str;
   while (*p && *p != 'e') {
     p++;
@@ -109,6 +111,6 @@ int s21_get_exponent_from_float_str(char* float_str) {
   if (sign) {
     exponent = -exponent;
   }
-
+  }
   return exponent;
 }

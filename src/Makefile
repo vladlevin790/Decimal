@@ -1,5 +1,5 @@
 TESTS_DIR := ./tests
-C_SRCS := $(wildcard *.c ./binary/*.c ./other_func/*.c ./decimal_helper/*.c)
+C_SRCS := $(wildcard *.c ./binary/*.c ./other_func/*.c ./decimal_helper/*.c ./s21_add/*.c)
 C_OBJS := $(C_SRCS:%.c=%.o)
 
 all: clean s21_decimal.a
@@ -10,7 +10,7 @@ s21_decimal.a: $(C_OBJS)
 %.o: %.c
 	gcc -c -std=c11 -g -Wall -Werror -Wextra $< -o $@
 
-test: clean s21_decimal.a $(TESTS_DIR)/main.c
+test: clean s21_decimal.a $(TESTS_DIR)/s21_core_test.c
 	gcc -std=c11 -Wall -Werror -Wextra $(TESTS_DIR)/*.c -o $(TESTS_DIR)/test.o -L. s21_decimal.a -lcheck -lsubunit -lm 
 	$(TESTS_DIR)/test.o
 

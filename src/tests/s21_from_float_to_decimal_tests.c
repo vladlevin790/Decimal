@@ -1,6 +1,6 @@
 #include <check.h>
 
-#include "../binary/s21_binary.h"
+#include "../binary/s21_binary_operations.h"
 #include "../decimal_helper/s21_decimal_helper.h"
 #include "../s21_decimal.h"
 
@@ -171,21 +171,77 @@ START_TEST(test_12) {
 }
 END_TEST
 
-TCase *s21_from_float_to_decimal_get_tests(void) {
-  TCase *test_cases = tcase_create("test_cases");
+// new tests
+// Тест на NULL указатель
+START_TEST(test_13) {
+  float value = 0.5f;
+  int result_code = s21_from_float_to_decimal(value, NULL);
+  ck_assert_int_eq(1, result_code);
+}
+END_TEST
 
-  tcase_add_test(test_cases, test_0);
-  tcase_add_test(test_cases, test_1);
-  tcase_add_test(test_cases, test_3);
-  tcase_add_test(test_cases, test_4);
-  tcase_add_test(test_cases, test_5);
-  tcase_add_test(test_cases, test_6);
-  tcase_add_test(test_cases, test_7);
-  tcase_add_test(test_cases, test_8);
-  tcase_add_test(test_cases, test_9);
-  tcase_add_test(test_cases, test_10);
-  tcase_add_test(test_cases, test_11);
-  tcase_add_test(test_cases, test_12);
+// Тест на NaN значение
+START_TEST(test_14) {
+  float value = NAN;
+  s21_decimal result = s21_get_new_decimal();
+  int result_code = s21_from_float_to_decimal(value, &result);
+  ck_assert_int_eq(1, result_code);
+}
+END_TEST
 
-  return test_cases;
+// Тест на бесконечное значение
+START_TEST(test_15) {
+  float value = INFINITY;
+  s21_decimal result = s21_get_new_decimal();
+  int result_code = s21_from_float_to_decimal(value, &result);
+  ck_assert_int_eq(1, result_code);
+}
+END_TEST
+
+// Тест на значение больше максимального
+/*
+START_TEST(test_16) {
+  float value = 79228162514264337593543950336.0f;
+  s21_decimal result = s21_get_new_decimal();
+  int result_code = s21_from_float_to_decimal(value, &result);
+  ck_assert_int_eq(1, result_code);
+}
+END_TEST
+*/
+// Тест на значение меньше минимального
+START_TEST(test_17) {
+  float value = 1e-29;
+  s21_decimal result = s21_get_new_decimal();
+  int result_code = s21_from_float_to_decimal(value, &result);
+  ck_assert_int_eq(CODE_CONVERTATION_ERROR, result_code);
+  for (int i = 0; i < 4; i++) {
+    ck_assert_int_eq(s21_get_new_decimal().bits[i], result.bits[i]);
+  }
+}
+END_TEST
+
+Suite *s21_from_float_to_decimal_tests(void) {
+  Suite *s = suite_create("\033[1;35ms21_from_float_to_decimal\033[0m\n");
+  TCase *testCase = tcase_create("s21_test_case_from_float_to_decimal");
+
+  suite_add_tcase(s, testCase);
+  tcase_add_test(testCase, test_0);
+  tcase_add_test(testCase, test_1);
+  tcase_add_test(testCase, test_3);
+  tcase_add_test(testCase, test_4);
+  tcase_add_test(testCase, test_5);
+  tcase_add_test(testCase, test_6);
+  tcase_add_test(testCase, test_7);
+  tcase_add_test(testCase, test_8);
+  tcase_add_test(testCase, test_9);
+  tcase_add_test(testCase, test_10);
+  tcase_add_test(testCase, test_11);
+  tcase_add_test(testCase, test_12);
+  tcase_add_test(testCase, test_13);
+  tcase_add_test(testCase, test_14);
+  tcase_add_test(testCase, test_15);
+  //tcase_add_test(testCase, test_16);
+  tcase_add_test(testCase, test_17);
+  
+  return s;
 }

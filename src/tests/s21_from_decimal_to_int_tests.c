@@ -1,6 +1,6 @@
 #include <check.h>
 
-#include "../binary/s21_binary.h"
+#include "../binary/s21_binary_operations.h"
 #include "../decimal_helper/s21_decimal_helper.h"
 #include "../s21_decimal.h"
 
@@ -156,21 +156,23 @@ START_TEST(test_11) {
 }
 END_TEST
 
-TCase *s21_from_decimal_to_int_get_tests(void) {
-  TCase *test_cases = tcase_create("test_cases");
+Suite *s21_from_decimal_to_int_tests(void) {
+  Suite *s = suite_create("\033[1;35ms21_from_decimal_to_int\033[0m\n");
+  TCase *testCase = tcase_create("s21_test_case_from_decimal_to_int");
 
-  tcase_add_test(test_cases, test_0);
-  tcase_add_test(test_cases, test_1);
-  tcase_add_test(test_cases, test_2);
-  tcase_add_test(test_cases, test_3);
-  tcase_add_test(test_cases, test_4);
-  tcase_add_test(test_cases, test_5);
-  tcase_add_test(test_cases, test_6);
-  tcase_add_test(test_cases, test_7);
-  tcase_add_test(test_cases, test_8);
-  tcase_add_test(test_cases, test_9);
-  tcase_add_test(test_cases, test_10);
-  tcase_add_test(test_cases, test_11);
+  suite_add_tcase(s, testCase);
+  tcase_add_test(testCase, test_0);
+  tcase_add_test(testCase, test_1);
+  tcase_add_test(testCase, test_2);
+  tcase_add_test(testCase, test_3);
+  tcase_add_test(testCase, test_4);
+  tcase_add_test(testCase, test_5);
+  tcase_add_test(testCase, test_6);
+  tcase_add_test(testCase, test_7);
+  tcase_add_test(testCase, test_8);
+  tcase_add_test(testCase, test_9);
+  tcase_add_test(testCase, test_10);
+  tcase_add_test(testCase, test_11);
 
-  return test_cases;
+  return s;
 }
