@@ -1,5 +1,5 @@
 TESTS_DIR := ./tests
-C_SRCS := $(wildcard *.c ./binary/*.c ./other_func/*.c ./decimal_helper/*.c ./s21_add/*.c)
+C_SRCS := $(wildcard *.c ./binary/*.c ./other_func/*.c ./decimal_helper/*.c ./s21_add/*.c ./s21_div/*.c ./s21_mul/*.c ./s21_sub/*.c ./s21_is_greather/*.c ./s21_is_less/*.c ./s21_is_greather_or_equal/*.c ./s21_is_less_or_equal/*.c)
 C_OBJS := $(C_SRCS:%.c=%.o)
 
 all: clean s21_decimal.a
