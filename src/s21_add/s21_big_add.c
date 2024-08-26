@@ -1,6 +1,4 @@
-#include "../binary/s21_binary_operations.h"
-#include "../decimal_helper/s21_decimal_helper.h"
-#include "../s21_decimal.h"
+#include "s21_add.h"
 
 s21_big_decimal s21_big_add(s21_big_decimal value_1, s21_big_decimal value_2) {
   s21_big_decimal carry = {{s21_get_new_decimal(), s21_get_new_decimal()}};

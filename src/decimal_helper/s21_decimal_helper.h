@@ -1,6 +1,7 @@
 #ifndef S21_DECIMAL_HELPER_H_
 #define S21_DECIMAL_HELPER_H_
 
+#include "../s21_is_greater/s21_is_greater.h"
 #include "../binary/s21_binary_operations.h"
 #include "../s21_decimal.h"
 

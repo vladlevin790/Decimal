@@ -1,5 +1,4 @@
-#include "decimal_helper/s21_decimal_helper.h"
-#include "s21_decimal.h"
+#include "s21_is_greater.h"
 
 int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
   int result_code = FALSE;

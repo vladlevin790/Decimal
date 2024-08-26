@@ -1,6 +1,5 @@
 #include "s21_div.h"
 
-
 int s21_div_handle(s21_big_decimal value_2, s21_big_decimal whole,
                    s21_big_decimal remainder, s21_decimal *result) {
   int result_code = S21_DECIMAL_OK;

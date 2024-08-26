@@ -1,5 +1,4 @@
-#include "../decimal_helper/s21_decimal_helper.h"
-#include "../s21_decimal.h"
+#include "s21_other_func.h"
 
 int s21_round(s21_decimal value, s21_decimal *result) {
   //int result_code = 0;

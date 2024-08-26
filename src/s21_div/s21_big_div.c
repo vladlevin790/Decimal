@@ -1,6 +1,5 @@
 #include "s21_div.h"
 
-
 void s21_big_div(s21_big_decimal decimal1, s21_big_decimal decimal2,
                  s21_big_decimal *div_whole, s21_big_decimal *div_remainder) {
   s21_big_decimal whole = {
