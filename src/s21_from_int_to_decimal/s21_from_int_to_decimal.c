@@ -1,16 +1,11 @@
-#include "binary/s21_binary_operations.h"
-#include "decimal_helper/s21_decimal_helper.h"
-#include "s21_decimal.h"
+#include "s21_from_int_to_decimal.h"
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
-  //int return_code = S21_DECIMAL_OK;
   int return_code = CODE_CONVERTATION_ERROR;
-  
+
   if (dst != NULL) {
     return_code = S21_DECIMAL_OK;
-  //if (dst == NULL) {
-  //  return_code = CODE_CONVERTATION_ERROR;
-  //} else {
+
     s21_clear_decimal(dst);
     s21_set_decimal_sign(dst, src < 0);
     s21_set_decimal_exponent(dst, 0);
